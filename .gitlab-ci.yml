@@ -1,0 +1,7 @@
+variables:
+  PROJECT_NAME: l3-casino-holdem-poker-service
+  
+include:
+  - project: "ci/repos-ci/nex3_l3_casino_holdem_poker_service"
+    ref: master
+    file: "gitlab-ci.yml"

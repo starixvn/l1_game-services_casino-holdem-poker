@@ -1,0 +1,72 @@
+{
+  "env": "PRO",
+  "hostingPort": 5000,
+  "apiSettings": {
+    "enabledApi": true,
+    "apiUrl": "http://l3_game_api_prod:5000",
+    "authUrl": "http://l3_auth_api_prod:5000",
+    "client": {
+      "id": "game-server",
+      "secret": "gameserver@20luminet&"
+    },
+    "useAuthenticate": true,
+    "requestTimeout": 10000,
+    "placeBetTimeout": 4500,
+    "enableApiLogs": true
+  },
+  "mainServerApiSettings": {
+    "url": "http://l3_game_api_prod:5000/api",
+    "auth": {
+      "url": "http://l3_auth_api_prod:5000",
+      "id": "game-services",
+      "secret": "gameservices-nex3@20luminet&"
+    },
+    "requestTimeout": 10000,
+    "placeBetTimeout": 4500,
+    "useAuthenticate": true
+  },
+  "socketOptions": {
+    "pingInterval": 60000,
+    "pingTimeout": 60000,
+    "transports": ["websocket"],
+    "allowUpgrades": false
+  },
+  "enabledLogs": true,
+  "database": {
+    "url": "mongodb://lmn_backend:%28zen8KKLcjA%24F%2Bgt%24PX835%3E2%25cWd%2BFgI@10.99.99.53:47101,10.99.99.54:47102/?replicaSet=L3_SabaMain",
+    "options": {
+      "user": "lmn_backend",
+      "pass": "(zen8KKLcjA$F+gt$PX835>2%cWd+FgI",
+      "dbName": "minigame",
+      "useNewUrlParser": true,
+      "useUnifiedTopology": true,
+      "auto_reconnect": true
+    }
+  },
+  "sentry": {
+    "sentryUrl": "http://b5372e645c48448196026a679c60a3b0@10.99.99.187:803/154",
+    "logIdentifier": "casino-holdem-poker-service",
+    "env": "PRO"
+  },
+  "authenticateSettings": {
+    "audiences": ["api", "admin-api"]
+  },
+  "adminSecretKey": "asWDEer4yGdgsdqR4uqmKQZgh",
+  "enableCorsWs": false,
+  "corsUrls": [
+    "http://www.sabaclub.net",
+    "https://www.sabaclub.net",
+    "http://ww2.sabaclub.net",
+    "https://ww2.sabaclub.net",
+    "https://ww3.sabaclub.net",
+    "http://ww3.sabaclub.net",
+    "https://adm1.sabaclub.net",
+    "http://adm1.sabaclub.net",
+    "https://adm.sabaclub.net",
+    "http://adm.sabaclub.net"
+  ],
+  "marketConfigCacheTimeout": 60000,
+  "userSiteUrl": "http://l3_user_site_prod:5000",
+  "enableCron": true,
+  "roundMaxDurationInMinutes": 1440
+}

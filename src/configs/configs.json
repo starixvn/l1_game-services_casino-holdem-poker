@@ -1,0 +1,64 @@
+{
+  "env": "DEV",
+  "hostingPort": 8083,
+  "apiSettings": {
+    "enabledApi": true,
+    "apiUrl": "http://l3-api-proxy.nexdev.net/local3/game-api",
+    "authUrl": "http://l3-auth-3.nexdev.net",
+    "client": {
+      "id": "game-server",
+      "secret": "gameserver@20luminet&"
+    },
+    "useAuthenticate": true,
+    "requestTimeout": 10000,
+    "placeBetTimeout": 4500,
+    "enableApiLogs": true
+  },
+  "mainServerApiSettings": {
+    "url": "http://localhost:8080/api",
+    "auth": {
+      "url": "http://l3-auth-3.nexdev.net",
+      "id": "game-services",
+      "secret": "gameservices@20luminet&"
+    },
+    "requestTimeout": 10000,
+    "useAuthenticate": true
+  },
+  "socketOptions": {
+    "pingInterval": 60000,
+    "pingTimeout": 60000,
+    "transports": ["websocket"],
+    "allowUpgrades": false,
+    "perMessageDeflate": false
+  },
+  "enabledLogs": true,
+  "database": {
+    "url": "mongodb://localhost:27017",
+    "options": {
+      "dbName": "minigame",
+      "useNewUrlParser": true,
+      "useUnifiedTopology": true,
+      "auto_reconnect": true
+    }
+  },
+  "sentry": {
+    "sentryUrl": "",
+    "logIdentifier": "casino-holdem-poker",
+    "env": "DEV"
+  },
+  "authenticateSettings": {
+    "audiences": ["api", "admin-api"]
+  },
+  "adminSecretKey": "asWDEerfOIdgsdqRTFabvmgh",
+  "enableCorsWs": false,
+  "corsUrls": [
+    "http://localhost:7456",
+    "http://localhost:7000",
+    "http://games.lumigame.com",
+    "http://admin.lumigame.com"
+  ],
+  "marketConfigCacheTimeout": 10000,
+  "userSiteUrl": "http://localhost:7780",
+  "enableCron": true,
+  "roundMaxDurationInMinutes": 1440
+}
