@@ -70,7 +70,7 @@ export default class GameCron extends BaseGameCron {
         const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
 
         // combination result here
-        let combination = {};
+        const combination = {};
 
         if (bet) {
           usedCards.push(...bet.cards);

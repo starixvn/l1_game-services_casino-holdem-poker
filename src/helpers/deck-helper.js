@@ -38,13 +38,9 @@ const generate = (exclusions) => {
 
 export const generateDecks = (presetCards) => {
   const deck = generate(presetCards);
-  const finalDeck = presetCards.concat(deck);
-
-  return finalDeck;
+  return presetCards.concat(deck);
 };
 
 export const reGenerateDecks = (usedCards) => {
-  const deck = generate(usedCards);
-
-  return deck;
+  return generate(usedCards);
 };

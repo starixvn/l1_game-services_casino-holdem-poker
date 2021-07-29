@@ -15,7 +15,7 @@ import { CasinoHoldemPokerBets, CasinoHoldemPokerRounds } from './models';
 
 const { asClass, asValue } = awilix;
 
-export default class ContainrRegistry extends Table.TableContainerRegistry {
+export default class ContainerRegistry extends Table.TableContainerRegistry {
   registerModels() {
     super.registerModels();
 
