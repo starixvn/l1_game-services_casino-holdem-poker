@@ -44,3 +44,12 @@ export const generateDecks = (presetCards) => {
 export const reGenerateDecks = (usedCards) => {
   return generate(usedCards);
 };
+
+export const deal = ({ dealer, player, deck, communityCards }) => {
+  for (let turn = 1; turn <= 2; turn++) {
+    player.push(deck.shift());
+    dealer.push(deck.shift());
+  }
+
+  communityCards.push(deck.shift(), deck.shift(), deck.shift());
+};

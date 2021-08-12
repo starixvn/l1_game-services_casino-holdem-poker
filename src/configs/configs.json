@@ -3,8 +3,8 @@
   "hostingPort": 8083,
   "apiSettings": {
     "enabledApi": true,
-    "apiUrl": "http://l3-api-proxy.nexdev.net/local3/game-api",
-    "authUrl": "http://l3-auth-3.nexdev.net",
+    "apiUrl": "http://l3-api-proxy.nexdev.net/local1/game-api",
+    "authUrl": "http://l3-auth-1.nexdev.net",
     "client": {
       "id": "game-server",
       "secret": "gameserver@20luminet&"
@@ -17,7 +17,7 @@
   "mainServerApiSettings": {
     "url": "http://localhost:8080/api",
     "auth": {
-      "url": "http://l3-auth-3.nexdev.net",
+      "url": "http://l3-auth-1.nexdev.net",
       "id": "game-services",
       "secret": "gameservices@20luminet&"
     },

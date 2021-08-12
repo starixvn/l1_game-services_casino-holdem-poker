@@ -55,8 +55,9 @@ export default class InGameConsumer extends BaseInGameConsumer {
         ? {
             roundId: betTracks.roundId,
             bets: betTracks.bets,
-            hand: betTracks.hand,
+            player: betTracks.player,
             communityCards: betTracks.communityCards,
+            combinationResult: betTracks.combinationResult,
             totalAmount,
           }
         : {};
@@ -66,8 +67,8 @@ export default class InGameConsumer extends BaseInGameConsumer {
 
     return {
       gameConfigs,
-      ownBets,
       user,
+      ownBets,
     };
   }
 }

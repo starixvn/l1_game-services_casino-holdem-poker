@@ -48,13 +48,13 @@ export default class GameCron extends BaseGameCron {
       },
     );
 
-    const lastestBet = await this.betsRepository
+    const lastRound = await this.roundsRepository
       .findOne({}, 'id', { sort: { id: -1 } })
       .lean()
       .exec();
 
-    if (lastestBet) {
-      this.gameData.betId = lastestBet.id + 1;
+    if (lastRound) {
+      this.gameData.roundId = lastRound.id;
     }
 
     await this.initBetTracks();
@@ -66,15 +66,11 @@ export default class GameCron extends BaseGameCron {
 
     await Promise.all(
       runningRounds.map(async (round) => {
-        const usedCards = [...round.result.communityCards];
+        const usedCards = [...round.result.communityCards, ...round.result.dealer];
         const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
-
-        // combination result here
-        const combination = {};
 
         if (bet) {
           usedCards.push(...bet.cards);
-          combination.hand = {};
         }
 
         const newPlayer = {
@@ -84,9 +80,11 @@ export default class GameCron extends BaseGameCron {
             roundStartTime: round.roundStartTime,
             uid: round.uid,
             deck: reGenerateDecks(usedCards),
-            combination,
-            hand: bet?.cards,
-            bets: bet?.choices,
+            combinationResult: { player: { ...bet?.result } },
+            player: bet?.cards,
+            bets: { aa: bet?.aa, ante: bet?.ante },
+            dealer: [...round.result.dealer],
+            communityCards: [...round.result.communityCards],
           },
           betQueue: [],
         };
@@ -101,9 +99,13 @@ export default class GameCron extends BaseGameCron {
 
     if (this.gameData.remainingTime === durations.wholeRound) {
       await this.checkGameStatus();
+      this.bot && (await this.bot.reset());
     }
 
     if (!this.gameData.disabled) {
+      if (this.gameData.remainingTime % durations.botFrequency === 0) {
+        this.bot && (await this.bot.run());
+      }
       this.gameData.remainingTime--;
     }
 

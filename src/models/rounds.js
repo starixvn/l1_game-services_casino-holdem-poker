@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import autoIncrement from 'mongoose-auto-increment-reworked';
 
 const modelName = 'CasinoHoldemPoker_phien';
 
 const Schema = new mongoose.Schema({
+  id: { type: Number, default: 0 },
   result: { type: Object },
   settlementResult: { type: Object },
   roundStartTime: { type: Date },
@@ -13,7 +13,5 @@ const Schema = new mongoose.Schema({
   name: { type: String, required: true },
   odds: { type: Object },
 });
-
-Schema.plugin(autoIncrement.MongooseAutoIncrementID.plugin, { modelName, field: 'id' });
 
 export default mongoose.model(modelName, Schema);

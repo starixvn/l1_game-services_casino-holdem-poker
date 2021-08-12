@@ -1445,14 +1445,14 @@
   resolved "http://npm.lumigame.com/@nex3%2fmemory-cache/-/memory-cache-1.0.2.tgz#556bd805fd9728cfc6da5da4529fd86905937ef5"
   integrity sha512-7PlBgeRX4sThgLlLBqXGGlBQruM9LyEmY5w/B0mFhNIoc8wymdhiyJ/pn9FTSmj/sw36N0wuKDYSsrnw/23PxQ==
 
-"@nex3/nex3-game-base@1.1.3-beta.17":
-  version "1.1.3-beta.17"
-  resolved "http://npm.lumigame.com/@nex3%2fnex3-game-base/-/nex3-game-base-1.1.3-beta.17.tgz#c7e47b752f63d54115ce176c432b99cff9f2020b"
-  integrity sha512-duzcts8C4N/KT2KKQgSkaVMH2IcWG7yQSEaGQRMRxmWGFw6Y0QtKiTudoAHp2RqhrsGXB3rVVuOxYOR72JctJg==
+"@nex3/nex3-game-base@1.1.3-beta.22":
+  version "1.1.3-beta.22"
+  resolved "http://npm.lumigame.com/@nex3%2fnex3-game-base/-/nex3-game-base-1.1.3-beta.22.tgz#0d2f6288b740879fba43825396e707156d90740b"
+  integrity sha512-bfjOOXRbEPEIJKfw/dRsaHDynD36wXriijo8ll7G3PmRlzOqbAyzD88j2DEjoZXaIuy11ltSdEULUVhEh1PePw==
   dependencies:
     "@nex3/market-management" "^1.6.0"
     "@nex3/translation" "^1.8.2"
-    "@nex3/user-client" "^1.5.0"
+    "@nex3/user-client" "1.8.2-dev.0"
     chance "^1.1.7"
     jest-auto-stub "^1.0.8"
     jest-when "^3.3.1"
@@ -1471,10 +1471,10 @@
     "@types/node-polyglot" "^2.4.1"
     node-polyglot "^2.4.0"
 
-"@nex3/user-client@^1.5.0":
-  version "1.8.2"
-  resolved "http://npm.lumigame.com/@nex3%2fuser-client/-/user-client-1.8.2.tgz#f5f1ffc9093845953d1a04702953b30fb199929c"
-  integrity sha512-pEMCWhdSmewBkE8x1ZlnwN3c8EJfIA/ie9s0n0z9DzAApt1+jOdBVNFBpSpskff9M/7bVh0O7gR57Al2OsSX9A==
+"@nex3/user-client@1.8.2-dev.0":
+  version "1.8.2-dev.0"
+  resolved "http://npm.lumigame.com/@nex3%2fuser-client/-/user-client-1.8.2-dev.0.tgz#ff65e9e8b8c9fed6433f65bb19db23d9f09bc06e"
+  integrity sha512-XoJOBsvpDJ3+nNlo1+Op21oH54ydhuwPk97eZD2RG2JRe8kYKvmPOZMoNOA6UQvu2BFZcopsk0LG0THq/pK76w==
   dependencies:
     axios "^0.21.0"
 
@@ -2169,13 +2169,6 @@
   dependencies:
     "@types/bson" "*"
     "@types/node" "*"
-
-"@types/mongoose@^4.0.0 || ^5.0.0":
-  version "5.11.97"
-  resolved "http://npm.lumigame.com/@types%2fmongoose/-/mongoose-5.11.97.tgz#80b0357f3de6807eb597262f52e49c3e13ee14d8"
-  integrity sha512-cqwOVYT3qXyLiGw7ueU2kX9noE8DPGRY6z8eUxudhXY8NZ7DMKYAxyZkLSevGfhCX3dO/AoX5/SO9lAzfjon0Q==
-  dependencies:
-    mongoose "*"
 
 "@types/node-polyglot@^2.4.1":
   version "2.4.2"
@@ -3702,7 +3695,7 @@ debug@4, debug@^4.0.0, debug@^4.1.0, debug@^4.1.1:
   dependencies:
     ms "2.1.2"
 
-debug@^3.0.0, debug@^3.2.6:
+debug@^3.2.6:
   version "3.2.7"
   resolved "http://npm.lumigame.com/debug/-/debug-3.2.7.tgz#72580b7e9145fb39b6676f9c5e5fb100b934179a"
   integrity sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==
@@ -7483,16 +7476,6 @@ mongodb@3.6.10:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongoose-auto-increment-reworked@^1.2.1:
-  version "1.2.1"
-  resolved "http://npm.lumigame.com/mongoose-auto-increment-reworked/-/mongoose-auto-increment-reworked-1.2.1.tgz#9cd92b2de87bd6209bdf582a814ea7dff849bfef"
-  integrity sha512-5ID9oUFsBc5dh+Lv0GSHtcHik9rM0Jw+kl9l0r1WqgFodaii90O9e89YfViwK8aAIZjF2mFQ5CxRshsijvdQYQ==
-  dependencies:
-    "@types/mongoose" "^4.0.0 || ^5.0.0"
-    debug "^3.0.0"
-    tslib "^1.0.0"
-    typescript-lazy-get-decorator "^1.0.0"
-
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "http://npm.lumigame.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
@@ -7503,7 +7486,7 @@ mongoose-long@^0.3.0:
   resolved "http://npm.lumigame.com/mongoose-long/-/mongoose-long-0.3.2.tgz#9e38773fc93c9c5ecfea200635878593ea577fb0"
   integrity sha512-5gTjPH6HUmtNhamv8MPwExWo01Z4d9CT5njZlupqqbmxzMXTbDOgCuP/jnK+9SV0Fs7nuyYlXv7pJ/nA2pAAuA==
 
-mongoose@*, mongoose@^5.10.11, mongoose@^5.9.25:
+mongoose@^5.10.11, mongoose@^5.9.25:
   version "5.13.3"
   resolved "http://npm.lumigame.com/mongoose/-/mongoose-5.13.3.tgz#42cb40207bbcaca9c6fa94b0a8c0a38181c1965e"
   integrity sha512-q+zX6kqHAvwxf5speMWhq6qF4vdj+x6/kfD5RSKdZKNm52yGmaUygN+zgrtQjBZPFEzG0B3vF6GP0PoAGadE+w==
@@ -10131,7 +10114,7 @@ ts-jest@^26.4.4:
     semver "7.x"
     yargs-parser "20.x"
 
-tslib@^1.0.0, tslib@^1.13.0, tslib@^1.8.1, tslib@^1.9.3:
+tslib@^1.13.0, tslib@^1.8.1, tslib@^1.9.3:
   version "1.14.1"
   resolved "http://npm.lumigame.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
@@ -10235,11 +10218,6 @@ typedarray-to-buffer@^3.1.5:
   integrity sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
   dependencies:
     is-typedarray "^1.0.0"
-
-typescript-lazy-get-decorator@^1.0.0:
-  version "1.2.2"
-  resolved "http://npm.lumigame.com/typescript-lazy-get-decorator/-/typescript-lazy-get-decorator-1.2.2.tgz#f7ffe9f9225b830f851f2701376409cfd640100e"
-  integrity sha512-XNqWMl2qI2AgQqVoUa7+TJa3J6XUKYOS9kK6HvptL6+uY3r2wjnpFjykA2Y7h5w9TkTV5DY4v5leTOavBEbKcQ==
 
 typescript@^4.1.2:
   version "4.3.5"
