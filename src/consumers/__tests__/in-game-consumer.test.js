@@ -98,6 +98,7 @@ describe('InGameConsumer test', () => {
         ingame: {
           [realPlayer.profile.name]: { betTracks },
         },
+        roundId: 0,
       };
       const consumer = new InGameConsumer(definition, data);
       consumer.getBalance = jest.fn();
@@ -118,6 +119,7 @@ describe('InGameConsumer test', () => {
           totalAmount: 20,
         },
         user: { uid: realPlayer.UID },
+        lastRoundId: data.roundId,
       };
 
       // Act
@@ -143,6 +145,7 @@ describe('InGameConsumer test', () => {
     const data = {
       ...gameData,
       ingame: {},
+      roundId: 10,
     };
     const consumer = new InGameConsumer(definition, data);
     consumer.getBalance = jest.fn();
@@ -156,6 +159,7 @@ describe('InGameConsumer test', () => {
       },
       ownBets: {},
       user: { uid: realPlayer.UID },
+      lastRoundId: data.roundId,
     };
 
     // Act

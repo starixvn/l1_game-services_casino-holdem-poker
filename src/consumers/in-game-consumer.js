@@ -69,6 +69,7 @@ export default class InGameConsumer extends BaseInGameConsumer {
       gameConfigs,
       user,
       ownBets,
+      lastRoundId: this.gameData.roundId,
     };
   }
 }
