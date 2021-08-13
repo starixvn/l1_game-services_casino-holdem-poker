@@ -2,15 +2,15 @@ import TableHttpRouter from 'sc-game-base/src/table/routers/table-http-router';
 import { logger } from 'sc-common';
 
 export default class HttpRouter extends TableHttpRouter {
-  init(app, appConfigs) {
-    super.init(app, appConfigs);
+  init(app) {
+    super.init(app);
 
-    app.post('/set-result', this.handleSetResult(appConfigs));
+    app.post('/set-result', this.handleSetResult());
   }
 
-  handleSetResult(appConfig) {
+  handleSetResult() {
     return (req, res) => {
-      if (appConfig.env === 'PRO' || appConfig.env === 'UAT') {
+      if (this.appConfigs.env === 'PRO' || this.appConfigs.env === 'UAT') {
         res.sendStatus(404);
         return;
       }

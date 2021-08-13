@@ -131,6 +131,7 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       result.netWin += winAmount - betAmount;
       result.settlementResult.call = winAmount;
     } else {
+      result.totalWin += bet.call;
       result.settlementResult.call = bet.call;
     }
     this.settleDetailBetResult(result, odds.AnteBet, bet, combinationPlayerResult, 'ante');
