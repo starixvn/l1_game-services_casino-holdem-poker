@@ -38,6 +38,12 @@ export default class SocketRouter extends TableSocketRouter {
     this.userFoldConsumer = userFoldConsumer;
   }
 
+  init(socketClient) {
+    super.init(socketClient);
+
+    this.socketClient.on('getTicketDetail', this.handleGetTicketDetail.bind(this));
+  }
+
   handlePlaceBet(payload) {
     try {
       if (!this.verify()) {
@@ -69,6 +75,23 @@ export default class SocketRouter extends TableSocketRouter {
         );
         return;
       }
+    } catch (error) {
+      this.logService.logError(error);
+    }
+  }
+
+  async handleGetTicketDetail(payload) {
+    try {
+      if (!this.verify()) {
+        return;
+      }
+
+      const ticketDetail = await this.historyQuery.queryTicketDetail(
+        this.gameData.realPlayers[this.socketClient.id],
+        payload.roundId,
+      );
+
+      this.socketClient.emit(this.definition.name, ticketDetail);
     } catch (error) {
       this.logService.logError(error);
     }

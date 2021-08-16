@@ -103,11 +103,9 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       } else {
         if (compare === 0) {
           // tie
-          result.totalWin += bet.call + bet.ante;
-          result.settlementResult.ante = bet.ante;
-          result.settlementResult.call = bet.call;
+          this.settleHandPlayerTie(playerName, odds, bet, result);
         } else {
-          this.settleHandPlayerLose(playerName, odds, bet, result)
+          this.settleHandPlayerLose(playerName, odds, bet, result);
         }
       }
 
@@ -137,7 +135,23 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
     this.settleDetailBetResult(result, odds.AnteBet, bet, combinationPlayerResult, 'ante');
   }
 
-  settleHandPlayerLose(playerName, odds, bet, result){
+  settleHandPlayerTie(playerName, odds, bet, result) {
+    const { betTracks } = this.gameData.ingame[playerName];
+    const combinationPlayerResult = betTracks.combinationResult.player;
+    const qualified = betTracks.combinationResult.isQualified;
+
+    if (qualified) {
+      result.totalWin += bet.call + bet.ante;
+      result.settlementResult.ante = bet.ante;
+      result.settlementResult.call = bet.call;
+    } else {
+      result.totalWin += bet.call;
+      result.settlementResult.call = bet.call;
+      this.settleDetailBetResult(result, odds.AnteBet, bet, combinationPlayerResult, 'ante');
+    }
+  }
+
+  settleHandPlayerLose(playerName, odds, bet, result) {
     const { betTracks } = this.gameData.ingame[playerName];
     const combinationPlayerResult = betTracks.combinationResult.player;
     const qualified = betTracks.combinationResult.isQualified;
