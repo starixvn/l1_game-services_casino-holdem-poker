@@ -22,8 +22,8 @@ export default class HistoryQuery {
     };
     const dealer = {
       cards: round.result.dealer,
-      combination: bet.settlementResult.cards,
-      handId: bet.settlementResult.id,
+      combination: round.settlementResult.cards,
+      handId: round.settlementResult.id,
       isQualified: round.settlementResult?.isQualified,
     };
     const bets = {

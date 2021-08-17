@@ -16,7 +16,7 @@ export default class HttpRouter extends TableHttpRouter {
       }
 
       this.gameData.resultFromAdmin = req.body;
-      logger.logError(`Set result from api: ${JSON.stringify(this.gameData.resultFromAdmin)}`);
+      logger.logWarning(`Set result from api: ${JSON.stringify(this.gameData.resultFromAdmin)}`);
 
       res.send({ success: true });
     };

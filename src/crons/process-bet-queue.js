@@ -133,6 +133,7 @@ export default class ProcessBetQueue extends BaseProcessBetQueue {
         communityCards: betTracks.communityCards,
         combinationResult: betTracks.combinationResult,
         totalAmount: Object.values(betTracks.bets).reduce((total, item) => total + item),
+        choices: betTracks.bets,
       },
       endBet: betTracks.bets.ante + betTracks.bets.aa,
       user: balance,
