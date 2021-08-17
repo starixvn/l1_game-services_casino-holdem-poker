@@ -44,7 +44,7 @@
     }
   },
   "sentry": {
-    "sentryUrl": "https://93d12d1a333c41c18d5573d73f42425f@sentryuat.sabagame.com/266",
+    "sentryUrl": "https://93d12d1a333c41c18d5573d73f42425f@scsentry.sgamesuat.com/266",
     "logIdentifier": "casino-holdem-poker",
     "env": "LOCAL3"
   },
