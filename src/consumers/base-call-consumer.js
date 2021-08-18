@@ -15,6 +15,8 @@ export default class BaseCallConsumer extends BasePlaceBetConsumer {
     const resource = await loadLanguage(player?.session?.language);
     const translation = Translation.getInstance(player?.session?.language, resource);
     const formatNumberWithComma = helpers.numberHelper.formatNumberWithComma;
+    const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
+    const { aa, ante } = betTracks.bets || { aa: 0, ante: 0 };
 
     return [
       {
@@ -24,7 +26,7 @@ export default class BaseCallConsumer extends BasePlaceBetConsumer {
         }),
       },
       {
-        failure: amount > configs.maxBet,
+        failure: amount + aa + ante > configs.maxBet,
         notice: translation.t(translation.keys.maxBet, {
           max: formatNumberWithComma(configs.maxBet),
         }),

@@ -39,7 +39,7 @@ export default class UserDealConsumer extends BasePlaceBetConsumer {
         }),
       },
       {
-        failure: amountAnte > configs.maxBet || amountAa > configs.maxBet,
+        failure: amountAnte + amountAa > configs.maxBet,
         notice: translation.t(translation.keys.maxBet, {
           max: formatNumberWithComma(configs.maxBet),
         }),
