@@ -202,11 +202,7 @@ export default class ProcessBetQueue extends BaseProcessBetQueue {
       gameRoundId: betTracks.roundId,
       choiceId: this.definition.choicesMapper[gameSettings.actions.call],
     };
-    const apiResult = await this.placeBet(
-      { id: player.UID, session: player.session },
-      betInfo,
-      this.gameData,
-    );
+    const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
     const { response } = apiResult;
     if (apiResult.isOk) {
       await this.handleSuccessCall(player, betInfo.amount, response);
@@ -244,7 +240,6 @@ export default class ProcessBetQueue extends BaseProcessBetQueue {
       betTracks.deck,
     );
 
-    betTracks.communityCards.push(betTracks.deck.shift(), betTracks.deck.shift());
     betTracks.bets.call = amount;
     betTracks.dealer = result.dealer;
     betTracks.communityCards = result.communityCards;

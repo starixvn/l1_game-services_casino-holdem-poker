@@ -10,7 +10,7 @@ export default class HistoryQuery {
       playerHandId: bet.result.id,
       isFold: bet.isFold,
       stake: bet.bet,
-      betWin: bet.betWin,
+      betWin: bet.betwin,
     };
   }
 
