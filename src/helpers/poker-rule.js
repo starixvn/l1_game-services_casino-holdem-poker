@@ -64,22 +64,11 @@ export default class PokerRule {
 
   groupCard(selector) {
     return this.cards.reduce((result, card) => {
-      const labels = selector(card, result);
-
-      if (Array.isArray(labels)) {
-        labels.forEach((label) => {
-          if (result[label]) {
-            result[label].push(card);
-          } else {
-            result[label] = [card];
-          }
-        });
+      const labels = selector(card);
+      if (result[labels]) {
+        result[labels].push(card);
       } else {
-        if (result[labels]) {
-          result[labels].push(card);
-        } else {
-          result[labels] = [card];
-        }
+        result[labels] = [card];
       }
 
       return result;
@@ -96,7 +85,7 @@ export default class PokerRule {
 
     const cards = this.cards.sort((cardA, cardB) => (cardB.rank || 13) - (cardA.rank || 13));
 
-    if (sequence && margin.min.rank === 1 && margin.min.rank === 0) {
+    if (sequence && margin.min.rank === 1 && margin.max.rank === 0) {
       cards.push(cards.shift());
     }
 

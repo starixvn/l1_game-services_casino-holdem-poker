@@ -33,7 +33,7 @@ const generate = (exclusions) => {
   }
 
   const times = chance.integer({ min: 3, max: 10 });
-  return chance.shuffle(baseDeck, times);
+  return shuffle(baseDeck, times);
 };
 
 export const generateDecks = (presetCards) => {
