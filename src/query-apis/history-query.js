@@ -20,12 +20,14 @@ export default class HistoryQuery {
       combination: bet.result.cards,
       handId: bet.result.id,
     };
-    const dealer = {
-      cards: round.result.dealer,
-      combination: round.settlementResult.cards,
-      handId: round.settlementResult.id,
-      isQualified: round.settlementResult?.isQualified,
-    };
+    const dealer = bet.isFold
+      ? {}
+      : {
+          cards: round.result.dealer,
+          combination: round.settlementResult?.cards,
+          handId: round.settlementResult?.id,
+          isQualified: round.settlementResult?.isQualified,
+        };
     const bets = {
       ante: bet.ante,
       aa: bet.aa,
@@ -90,7 +92,7 @@ export default class HistoryQuery {
     }
 
     const bet = await this.betsRepository
-      .findOne({ phien: player.UID, thanhtoan: true, phien: roundId })
+      .findOne({ uid: player.UID, thanhtoan: true, phien: roundId })
       .lean()
       .exec();
     if (bet) {

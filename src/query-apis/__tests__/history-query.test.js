@@ -30,18 +30,18 @@ describe('History query test', () => {
   });
 
   describe('convertTicketDetail', () => {
-    it('should return expected', () => {
+    it('should return expected when isFold false', () => {
       // Arrange
       const bet = {
-        isFold: true,
-        bet: 100,
+        isFold: false,
+        bet: 30,
         betWin: 0,
         result: { id: 2, cards: [{ rank: 1 }, { rank: 1 }] },
         settlementResult: { ante: 0, aa: 0, call: 0 },
         cards: [{ rank: 1 }],
         ante: 10,
         aa: 10,
-        call: 0,
+        call: 10,
         other: 'a',
       };
       const round = {
@@ -70,6 +70,51 @@ describe('History query test', () => {
       const expected = {
         player,
         dealer,
+        communityCards: round.result.communityCards,
+        bets,
+        isFold: bet.isFold,
+      };
+
+      // Act
+      const actual = query.convertTicketDetail(bet, round);
+
+      // Assert
+      expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return expected when isFold true', () => {
+      // Arrange
+      const bet = {
+        isFold: true,
+        bet: 100,
+        betWin: 0,
+        result: { id: 2, cards: [{ rank: 1 }, { rank: 1 }] },
+        settlementResult: { ante: 0, aa: 0, call: 0 },
+        cards: [{ rank: 1 }],
+        ante: 10,
+        aa: 10,
+        call: 0,
+        other: 'a',
+      };
+      const round = {
+        result: { dealer: [{ rank: 2 }], communityCards: [{ rank: 1 }] },
+        other: 'b',
+      };
+      const player = {
+        cards: bet.cards,
+        combination: bet.result.cards,
+        handId: bet.result.id,
+      };
+      const bets = {
+        ante: bet.ante,
+        aa: bet.aa,
+        call: bet.call,
+        bet: bet.bet,
+        result: bet.settlementResult,
+      };
+      const expected = {
+        player,
+        dealer: {},
         communityCards: round.result.communityCards,
         bets,
         isFold: bet.isFold,
