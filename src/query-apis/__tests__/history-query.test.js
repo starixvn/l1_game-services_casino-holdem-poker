@@ -159,7 +159,7 @@ describe('History query test', () => {
 
     it('should return expected when bets length greater than 0', async () => {
       const bet = { phien: 1, bet: 10 };
-      const round = { id: 1, settlementResult: { id: 2 } };
+      const round = { id: 1, settlementResult: { id: 2, isQualified: true } };
       query.betsRepository = {
         countDocuments: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(1) }),
         find: jest.fn().mockReturnValue({
@@ -170,7 +170,14 @@ describe('History query test', () => {
       query.convertBet = jest.fn().mockReturnValue({ stake: bet.bet });
       const expected = {
         history: {
-          betLogs: [{ stake: bet.bet, roundId: round.id, dealerHandId: round.settlementResult.id }],
+          betLogs: [
+            {
+              stake: bet.bet,
+              roundId: round.id,
+              dealerHandId: round.settlementResult.id,
+              isQualified: round.settlementResult.isQualified,
+            },
+          ],
           page,
           pageSize,
           total: 1,

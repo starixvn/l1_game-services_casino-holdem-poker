@@ -79,6 +79,7 @@ export default class HistoryQuery {
             ...this.convertBet(bet),
             roundId: round.id,
             dealerHandId: round.settlementResult?.id,
+            isQualified: round.settlementResult?.isQualified,
           };
         }),
       );
