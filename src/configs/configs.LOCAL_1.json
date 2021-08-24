@@ -62,5 +62,5 @@
   "marketConfigCacheTimeout": 60000,
   "userSiteUrl": "http://l3-user-1.nexdev.net",
   "enableCron": true,
-  "roundMaxDurationInMinutes": 1440
+  "roundMaxDurationInMinutes": 3
 }
