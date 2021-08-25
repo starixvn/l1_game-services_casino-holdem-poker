@@ -55,7 +55,7 @@ export const isQualified = (result) => {
     return true;
   } else {
     return result.id === ranks.onePair
-      ? result.cards[0].rank >= 4 || result.cards[0].rank === 0
+      ? result.cards[0].rank >= 3 || result.cards[0].rank === 0
       : false;
   }
 };

@@ -168,7 +168,7 @@ describe('result-helper test', () => {
 
     it('should return true when result is one pair 4', () => {
       // Arrange
-      const result = { id: ranks.onePair, cards: [{ rank: 4 }, { rank: 4 }] };
+      const result = { id: ranks.onePair, cards: [{ rank: 3 }, { rank: 3 }] };
 
       // Act
       const actual = isQualified(result);
