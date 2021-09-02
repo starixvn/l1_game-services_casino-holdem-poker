@@ -12,7 +12,7 @@
     "useAuthenticate": true,
     "requestTimeout": 10000,
     "placeBetTimeout": 4500,
-    "enableApiLogs": true
+    "enabledApiLogs": true
   },
   "mainServerApiSettings": {
     "url": "http://l3_game_server_uat:5000/api",
