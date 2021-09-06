@@ -1,3 +1,5 @@
+import { compareCombination } from '../helpers/result-helper';
+
 export default class HistoryQuery {
   constructor(roundQuery, betsRepository) {
     this.roundQuery = roundQuery;
@@ -41,6 +43,9 @@ export default class HistoryQuery {
       communityCards: round.result.communityCards,
       bets,
       isFold: bet.isFold,
+      isPlayerWin: round.settlementResult
+        ? compareCombination(round.settlementResult, bet.result)
+        : -1,
     };
   }
 
@@ -80,6 +85,9 @@ export default class HistoryQuery {
             roundId: round.id,
             dealerHandId: round.settlementResult?.id,
             isQualified: round.settlementResult?.isQualified,
+            isPlayerWin: round.settlementResult
+              ? compareCombination(round.settlementResult, bet.result)
+              : -1,
           };
         }),
       );
