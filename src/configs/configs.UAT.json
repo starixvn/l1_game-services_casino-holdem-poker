@@ -44,7 +44,7 @@
     }
   },
   "sentry": {
-    "sentryUrl": "http://ba598f70e7c74f49b478bc7131608abc@10.99.99.187:800/257",
+    "sentryUrl": "http://ba598f70e7c74f49b478bc7131608abc@10.2.189.51:9009/257",
     "logIdentifier": "casino-holdem-poker-uat",
     "env": "UAT"
   },
@@ -60,6 +60,6 @@
   ],
   "marketConfigCacheTimeout": 60000,
   "userSiteUrl": "http://l3_user_site_uat:5000",
-  "enableCron": true,
+  "enableCron": false,
   "roundMaxDurationInMinutes": 1440
 }

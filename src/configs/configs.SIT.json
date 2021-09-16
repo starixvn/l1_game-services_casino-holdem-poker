@@ -44,7 +44,7 @@
     }
   },
   "sentry": {
-    "sentryUrl": "http://cadcf65562024906a6dddd6a03caefdf@10.99.99.187:800/256",
+    "sentryUrl": "http://cadcf65562024906a6dddd6a03caefdf@10.2.189.51:9009/256",
     "logIdentifier": "casino-holdem-poker-sit",
     "env": "SIT"
   },
@@ -63,6 +63,6 @@
   ],
   "marketConfigCacheTimeout": 60000,
   "userSiteUrl": "http://l3_user_site_sit:5000",
-  "enableCron": true,
+  "enableCron": false,
   "roundMaxDurationInMinutes": 1440
 }
