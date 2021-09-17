@@ -44,7 +44,7 @@
     }
   },
   "sentry": {
-    "sentryUrl": "http://cadcf65562024906a6dddd6a03caefdf@10.2.189.51:9009/256",
+    "sentryUrl": "http://f33f8f43c4834c0bb14f6573e160e59d@10.2.189.51:9009/88",
     "logIdentifier": "casino-holdem-poker-sit",
     "env": "SIT"
   },
