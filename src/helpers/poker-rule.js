@@ -21,7 +21,7 @@ export default class PokerRule {
   }
 
   rank(number) {
-    const selector = (card) => card.rank;
+    const selector = (card) => card.rank || 13;
 
     return this.getGroupWithCounter(number, selector);
   }
