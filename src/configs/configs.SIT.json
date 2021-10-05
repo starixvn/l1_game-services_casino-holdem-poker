@@ -64,5 +64,5 @@
   "marketConfigCacheTimeout": 60000,
   "userSiteUrl": "http://l3_user_site_sit:5000",
   "enableCron": true,
-  "roundMaxDurationInMinutes": 3
+  "roundMaxDurationInMinutes": 120
 }
