@@ -12,7 +12,7 @@
     "useAuthenticate": true,
     "requestTimeout": 10000,
     "placeBetTimeout": 4500,
-    "enableApiLogs": true
+    "enabledApiLogs": true
   },
   "mainServerApiSettings": {
     "url": "http://l3_game_api_prod:5000/api",
@@ -44,7 +44,7 @@
     }
   },
   "sentry": {
-    "sentryUrl": "http://b5372e645c48448196026a679c60a3b0@10.99.99.187:803/154",
+    "sentryUrl": "http://b5372e645c48448196026a679c60a3b0@10.2.189.50:9009/154",
     "logIdentifier": "casino-holdem-poker-service",
     "env": "PRO"
   },

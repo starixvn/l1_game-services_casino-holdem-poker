@@ -12,7 +12,7 @@
     "useAuthenticate": true,
     "requestTimeout": 10000,
     "placeBetTimeout": 4500,
-    "enableApiLogs": true
+    "enabledApiLogs": true
   },
   "mainServerApiSettings": {
     "url": "http://l3_game_server_sit:5000/api",
@@ -44,7 +44,7 @@
     }
   },
   "sentry": {
-    "sentryUrl": "http://cadcf65562024906a6dddd6a03caefdf@10.99.99.187:800/256",
+    "sentryUrl": "http://f33f8f43c4834c0bb14f6573e160e59d@10.2.190.51:9009/87",
     "logIdentifier": "casino-holdem-poker-sit",
     "env": "SIT"
   },
@@ -64,5 +64,5 @@
   "marketConfigCacheTimeout": 60000,
   "userSiteUrl": "http://l3_user_site_sit:5000",
   "enableCron": true,
-  "roundMaxDurationInMinutes": 1440
+  "roundMaxDurationInMinutes": 120
 }

@@ -2,20 +2,28 @@ import awilix from 'awilix';
 import { Table } from 'sc-game-base';
 
 import { placeBet } from './apis/place-bet';
-import { PlaceBetPublisher } from 'sc-game-base/src/core/event-publishers';
 import {
   GetGameConfigsConsumer,
   ChangeLanguageConsumer,
   TableUserSignInConsumer,
 } from '@nex3/nex3-game-base/consumers';
-import { InGameConsumer } from './consumers';
-import { GameCron } from './crons';
-import { AdminSocketRouter, TableSocketRouter } from '@nex3/nex3-game-base/routes';
+import {
+  InGameConsumer,
+  UserDealConsumer,
+  UserCallConsumer,
+  UserDoubleCallConsumer,
+  UserFoldConsumer,
+  SettleGameConsumer,
+  UserDisconnectConsumer,
+} from './consumers';
+import { GameCron, ProcessBetQueue, Bot } from './crons';
+import { SocketRouter, HttpRouter } from './routes';
+import HistoryQuery from './query-apis/history-query';
 import { CasinoHoldemPokerBets, CasinoHoldemPokerRounds } from './models';
 
 const { asClass, asValue } = awilix;
 
-export default class ContainrRegistry extends Table.TableContainerRegistry {
+export default class ContainerRegistry extends Table.TableContainerRegistry {
   registerModels() {
     super.registerModels();
 
@@ -29,7 +37,9 @@ export default class ContainrRegistry extends Table.TableContainerRegistry {
     super.registerCrons();
 
     this.container.register({
+      bot: asClass(Bot).singleton(),
       gameCron: asClass(GameCron).singleton().proxy(),
+      processBetQueue: asClass(ProcessBetQueue).singleton().proxy(),
     });
   }
 
@@ -38,17 +48,15 @@ export default class ContainrRegistry extends Table.TableContainerRegistry {
 
     this.container.register({
       inGameConsumer: asClass(InGameConsumer).singleton(),
+      settleGameRoundConsumer: asClass(SettleGameConsumer).singleton().proxy(),
       userSignInConsumer: asClass(TableUserSignInConsumer).singleton(),
       changeLanguageConsumer: asClass(ChangeLanguageConsumer).singleton(),
       getGameConfigsConsumer: asClass(GetGameConfigsConsumer).singleton().proxy(),
-    });
-  }
-
-  registerPublishers() {
-    super.registerPublishers();
-
-    this.container.register({
-      placeBetPublisher: asClass(PlaceBetPublisher).singleton(),
+      userDealConsumer: asClass(UserDealConsumer).singleton(),
+      userCallConsumer: asClass(UserCallConsumer).singleton(),
+      userDoubleCallConsumer: asClass(UserDoubleCallConsumer).singleton(),
+      userFoldConsumer: asClass(UserFoldConsumer).singleton(),
+      userDisconnectConsumer: asClass(UserDisconnectConsumer).singleton(),
     });
   }
 
@@ -57,6 +65,7 @@ export default class ContainrRegistry extends Table.TableContainerRegistry {
 
     this.container.register({
       placeBet: asValue(placeBet),
+      historyQuery: asClass(HistoryQuery).singleton(),
     });
   }
 
@@ -64,8 +73,8 @@ export default class ContainrRegistry extends Table.TableContainerRegistry {
     super.registerRouters();
 
     this.container.register({
-      adminSocketRouter: asClass(AdminSocketRouter).proxy(),
-      socketRouter: asClass(TableSocketRouter).proxy(),
+      socketRouter: asClass(SocketRouter).proxy(),
+      httpRouter: asClass(HttpRouter),
     });
   }
 }

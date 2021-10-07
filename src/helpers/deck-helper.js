@@ -33,18 +33,23 @@ const generate = (exclusions) => {
   }
 
   const times = chance.integer({ min: 3, max: 10 });
-  return chance.shuffle(baseDeck, times);
+  return shuffle(baseDeck, times);
 };
 
 export const generateDecks = (presetCards) => {
   const deck = generate(presetCards);
-  const finalDeck = presetCards.concat(deck);
-
-  return finalDeck;
+  return presetCards.concat(deck);
 };
 
 export const reGenerateDecks = (usedCards) => {
-  const deck = generate(usedCards);
+  return generate(usedCards);
+};
 
-  return deck;
+export const deal = ({ dealer, player, deck, communityCards }) => {
+  for (let turn = 1; turn <= 2; turn++) {
+    player.push(deck.shift());
+    dealer.push(deck.shift());
+  }
+
+  communityCards.push(deck.shift(), deck.shift(), deck.shift());
 };
