@@ -1,4 +1,3 @@
-import BaseGameStartup from '@nex3/nex3-game-base/core/base-game-startup';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -6,10 +5,31 @@ import morgan from 'morgan';
 import { init as initApis } from 'sc-base-apis';
 import { init as initBaseDatabase } from 'sc-base-database';
 import { logger } from 'sc-common';
-
+import { Core } from "sc-game-base";
 import { authenticationHelpers } from 'sc-game-base/src/core/helpers';
 
-export default class GameStartup extends BaseGameStartup {
+export default class GameStartup extends Core.BaseStartup {
+  constructor(container) {
+    super(container);
+    this.logger = logger;
+  }
+
+  async start() {
+    try {
+      const gameConfigsRepository = this.container.resolve(this.dependencies.gameConfigsRepository);
+
+      this.gameData.gameConfigs = await gameConfigsRepository.findOne({ name: this.definition.configName }).lean().exec();
+
+      if (this.appConfigs.enableCron) {
+        await this.gameCron.start();
+      }
+
+      this.processBetQueue.start();
+    } catch (error) {
+      this.logger.logError(error);
+    }
+  }
+
   async configureServices(app) {
     const corsOptions = {
       origin: (origin, callback) => {

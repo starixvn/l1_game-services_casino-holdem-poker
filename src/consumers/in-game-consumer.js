@@ -1,7 +1,6 @@
-import { InGameConsumer as BaseInGameConsumer } from '@nex3/nex3-game-base/consumers';
-import MarketManagement from '@nex3/market-management';
+import { Core } from "sc-game-base";
 
-export default class InGameConsumer extends BaseInGameConsumer {
+export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsumer {
   async consume(realPlayer) {
     const { remainingTime, gameConfigs, umMessages } = this.gameData;
     const disabled = !gameConfigs || !gameConfigs.enabled;
@@ -30,19 +29,7 @@ export default class InGameConsumer extends BaseInGameConsumer {
   }
 
   async buildPayload(realPlayer) {
-    const marketManagement = MarketManagement.getInstance();
-    const marketConfig = await marketManagement.getGameMarketConfig(
-      this.definition.id,
-      realPlayer?.session?.currency,
-      realPlayer?.session?.language,
-    );
-
-    const gameConfigs = {
-      minBet: marketConfig.minBet,
-      maxBet: marketConfig.maxBet,
-      maxBetChoices: marketConfig.maxBetChoices,
-      odds: marketConfig.odds,
-    };
+    const gameConfigs = this.gameData.gameConfigs;
 
     const { betTracks } = this.gameData.ingame[realPlayer.profile.name] || { betTracks: {} };
     const totalAmount =

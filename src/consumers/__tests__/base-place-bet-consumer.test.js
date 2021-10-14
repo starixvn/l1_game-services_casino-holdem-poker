@@ -1,11 +1,6 @@
 import { Core, Table } from 'sc-game-base';
 import BasePlaceBetConsumer from '../base-place-bet-consumer';
-import Translation from '@nex3/translation';
-import MarketManagement from '@nex3/market-management';
 import gameSettings from '../../game-settings';
-
-jest.mock('@nex3/translation');
-jest.mock('@nex3/market-management');
 
 describe('BasePlaceBetConsumer test', () => {
   const definition = new Core.GameDefinition({ id: 1, name: 'casino-holdem-poker' });
@@ -75,9 +70,7 @@ describe('BasePlaceBetConsumer test', () => {
       const data = { gameConfigs };
       const consumer = new BasePlaceBetConsumer(definition, data, publisher, logService);
       const gameMarketConfigs = { enabled: true, disabledMessage: 'disabled market' };
-      MarketManagement.getInstance = jest.fn().mockReturnValue({
-        getGameMarketConfig: jest.fn().mockReturnValue(gameMarketConfigs),
-      });
+
       const expected = [
         {
           failure: !gameConfigs.enabled,
@@ -154,12 +147,6 @@ describe('BasePlaceBetConsumer test', () => {
   describe('consume', () => {
     const keys = { cannotBetAtTheMoment: 'cannotBetAtTheMoment' };
     const player = { UID: 1, profile: { name: 'a' }, session: { language: 'en' } };
-    beforeAll(() => {
-      Translation.getInstance = jest.fn().mockReturnValue({
-        t: jest.fn((key) => key),
-        keys,
-      });
-    });
 
     it('should return when validBetRequest return false', async () => {
       // Arrange

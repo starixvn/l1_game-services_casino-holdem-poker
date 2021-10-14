@@ -1,6 +1,6 @@
-import { TableSocketRouter } from '@nex3/nex3-game-base/routes';
+import { BaseSocketRouter } from "sc-game-base/src/core/routers";
 
-export default class SocketRouter extends TableSocketRouter {
+export default class SocketRouter extends BaseSocketRouter {
   constructor({
     definition,
     gameData,
@@ -11,8 +11,6 @@ export default class SocketRouter extends TableSocketRouter {
     userSignInPublisher,
     historyQuery,
     logService,
-    changeLanguageConsumer,
-    getGameConfigsConsumer,
     userDealConsumer = null,
     userCallConsumer = null,
     userDoubleCallConsumer = null,
@@ -28,8 +26,6 @@ export default class SocketRouter extends TableSocketRouter {
       userSignInPublisher,
       historyQuery,
       logService,
-      changeLanguageConsumer,
-      getGameConfigsConsumer,
     });
 
     this.userDealConsumer = userDealConsumer;

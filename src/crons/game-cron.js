@@ -2,10 +2,10 @@ import cron from 'cron';
 import moment from 'moment';
 import { logger } from 'sc-common';
 import appConfigs from '../configs';
-import { GameCron as BaseGameCron } from '@nex3/nex3-game-base/crons';
 import { reGenerateDecks } from '../helpers/deck-helper';
+import { Core } from "sc-game-base";
 
-export default class GameCron extends BaseGameCron {
+export default class GameCron extends Core.Crons.BaseGameCron {
   constructor({
     definition,
     gameData,

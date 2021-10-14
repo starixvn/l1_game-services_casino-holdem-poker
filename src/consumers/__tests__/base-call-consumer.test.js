@@ -1,22 +1,12 @@
 import { Core, Table } from 'sc-game-base';
 import BasePlaceBetConsumer from '../base-place-bet-consumer';
 import BaseCallConsumer from '../base-call-consumer';
-import gameSettings from '../../game-settings';
-import Translation from '@nex3/translation';
-import MarketManagement from '@nex3/market-management';
 
 jest.mock('sc-common', () => {
   return {
     helpers: { numberHelper: { formatNumberWithComma: jest.fn((number) => number) } },
   };
 });
-jest.mock('../../resources/translation/languages', () => {
-  return {
-    loadLanguage: jest.fn().mockReturnValue({}),
-  };
-});
-jest.mock('@nex3/translation');
-jest.mock('@nex3/market-management');
 
 describe('BaseCallConsumer test', () => {
   const definition = new Core.GameDefinition({ id: 1, name: 'casino-holdem-poker' });
@@ -28,13 +18,6 @@ describe('BaseCallConsumer test', () => {
     maxBet: 'maxBet',
     cannotProcessBet: 'cannotProcessBet',
   };
-
-  beforeAll(() => {
-    Translation.getInstance = jest.fn().mockReturnValue({
-      t: jest.fn((key, b) => key),
-      keys,
-    });
-  });
 
   it('inherit BasePlaceBetConsumer', () => {
     // Act
@@ -50,11 +33,7 @@ describe('BaseCallConsumer test', () => {
       maxBet: 1000,
     };
     const player = { profile: { name: 'a' }, session: { currency: 'IN', language: 'en' } };
-    beforeAll(() => {
-      MarketManagement.getInstance = jest.fn().mockReturnValue({
-        getGameMarketConfig: jest.fn().mockReturnValue(configs),
-      });
-    });
+
     it('should return expected when amount 500', async () => {
       // Arrange
       const data = { ingame: {} };

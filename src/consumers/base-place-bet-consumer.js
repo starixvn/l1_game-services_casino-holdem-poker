@@ -1,5 +1,3 @@
-import Translation from '@nex3/translation';
-import MarketManagement from '@nex3/market-management';
 import gameSettings from '../game-settings';
 
 export default class BasePlaceBetConsumer {
@@ -25,22 +23,12 @@ export default class BasePlaceBetConsumer {
 
   async composeBettingTimeValidationCriteria(player) {
     const configs = this.gameData.gameConfigs;
-    const marketManagement = MarketManagement.getInstance();
-    const gameMarketConfigs = await marketManagement.getGameMarketConfig(
-      this.definition.id,
-      player.session.currency,
-      player?.session?.language,
-    );
 
     return [
       {
         failure: !configs.enabled,
         notice: configs.disabled_message,
-      },
-      {
-        failure: !gameMarketConfigs?.enabled,
-        notice: gameMarketConfigs?.disabledMessage,
-      },
+      }
     ];
   }
 
@@ -58,7 +46,6 @@ export default class BasePlaceBetConsumer {
 
   async consume(player, payload, queuePayload) {
     const name = player.profile.name;
-    const translation = Translation.getInstance(player?.session?.language);
 
     try {
       if (!(await this.validateBetRequest(player, payload))) {
@@ -68,7 +55,7 @@ export default class BasePlaceBetConsumer {
       this.logService.logError(e);
       this.publisher.publishToUser(player.UID, {
         endBet: -1,
-        notice: translation.t(translation.keys.cannotBetAtTheMoment),
+        notice: "cannotBetAtTheMoment",
       });
       return;
     }
@@ -76,7 +63,7 @@ export default class BasePlaceBetConsumer {
     if (this.gameData.ingame[name]?.betQueue.length > 0) {
       this.publisher.publishToUser(player.UID, {
         endBet: -1,
-        notice: translation.t(translation.keys.cannotBetAtTheMoment),
+        notice: "cannotBetAtTheMoment",
       });
 
       return;

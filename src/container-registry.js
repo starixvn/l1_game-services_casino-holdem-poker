@@ -3,11 +3,6 @@ import { Table } from 'sc-game-base';
 
 import { placeBet } from './apis/place-bet';
 import {
-  GetGameConfigsConsumer,
-  ChangeLanguageConsumer,
-  TableUserSignInConsumer,
-} from '@nex3/nex3-game-base/consumers';
-import {
   InGameConsumer,
   UserDealConsumer,
   UserCallConsumer,
@@ -49,9 +44,6 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
     this.container.register({
       inGameConsumer: asClass(InGameConsumer).singleton(),
       settleGameRoundConsumer: asClass(SettleGameConsumer).singleton().proxy(),
-      userSignInConsumer: asClass(TableUserSignInConsumer).singleton(),
-      changeLanguageConsumer: asClass(ChangeLanguageConsumer).singleton(),
-      getGameConfigsConsumer: asClass(GetGameConfigsConsumer).singleton().proxy(),
       userDealConsumer: asClass(UserDealConsumer).singleton(),
       userCallConsumer: asClass(UserCallConsumer).singleton(),
       userDoubleCallConsumer: asClass(UserDoubleCallConsumer).singleton(),

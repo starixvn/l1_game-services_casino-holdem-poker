@@ -3,9 +3,6 @@ import BasePlaceBetConsumer from '../base-place-bet-consumer';
 import BaseCallConsumer from '../base-call-consumer';
 import UserFoldConsumer from '../user-fold-consumer';
 import gameSettings from '../../game-settings';
-import Translation from '@nex3/translation';
-
-jest.mock('@nex3/translation');
 
 describe('UserFoldConsumer test', () => {
   const definition = new Core.GameDefinition({ id: 1, name: 'casino-holdem-poker' });
@@ -19,13 +16,6 @@ describe('UserFoldConsumer test', () => {
     invalidDealDueToRunningRound: 'invalidDealDueToRunningRound',
     placeBetIsProcessingMessage: 'placeBetIsProcessingMessage',
   };
-
-  beforeAll(() => {
-    Translation.getInstance = jest.fn().mockReturnValue({
-      t: jest.fn((key, b) => key),
-      keys,
-    });
-  });
 
   it('inherit BaseCallConsumer', () => {
     // Act

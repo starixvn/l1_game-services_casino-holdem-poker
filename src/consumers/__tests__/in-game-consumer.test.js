@@ -1,7 +1,6 @@
 import { Core, Table } from 'sc-game-base';
 import { InGameConsumer as BaseInGameConsumer } from '@nex3/nex3-game-base/consumers';
 import InGameConsumer from '../in-game-consumer';
-import MarketManagement from '@nex3/market-management';
 
 jest.mock('sc-base-database');
 jest.mock('@nex3/market-management');
@@ -83,9 +82,7 @@ describe('InGameConsumer test', () => {
         profile: { name: 'a' },
       };
       const marketConfig = { minBet: 1, maxBet: 100, maxBetChoices: { ante: 100 }, odds: {} };
-      MarketManagement.getInstance = jest.fn().mockReturnValue({
-        getGameMarketConfig: jest.fn().mockReturnValue(marketConfig),
-      });
+
       const betTracks = {
         roundId: 1,
         bets: { ante: 10, aa: 10 },
@@ -139,9 +136,7 @@ describe('InGameConsumer test', () => {
       profile: { name: 'a' },
     };
     const marketConfig = { minBet: 1, maxBet: 100, maxBetChoices: { ante: 100 }, odds: {} };
-    MarketManagement.getInstance = jest.fn().mockReturnValue({
-      getGameMarketConfig: jest.fn().mockReturnValue(marketConfig),
-    });
+
     const data = {
       ...gameData,
       ingame: {},

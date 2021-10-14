@@ -3,25 +3,17 @@ import appConfigs from './configs';
 import gameSettings from './game-settings';
 import { generateResult, getSettleResult } from './helpers/result-helper';
 import ContainerRegistry from './container-registry';
-import GameStartup from './game-startup';
-import AuthenticationManager from '@nex3/nex3-game-base/helpers/authentication-helpers';
-import UserClient from '@nex3/nex3-game-base/helpers/user-client-communicator';
-import MarketManagement from '@nex3/market-management';
 
 const run = async () => {
   const definition = new Core.GameDefinition(gameSettings, generateResult, getSettleResult);
   const gameData = new Table.TableGameData(gameSettings.durations.wholeRound);
   const container = new ContainerRegistry().register(appConfigs, definition, gameData);
-  const startup = new GameStartup(container);
-  const app = new Core.BaseGameApp(container, startup);
+  
+  const app = new Core.BaseGameApp("Casino Holdem Poker", appConfigs);
 
   await app.run();
 
-  await AuthenticationManager.init(appConfigs.mainServerApiSettings.auth);
-  const userSiteId = appConfigs.mainServerApiSettings.auth.id;
-  UserClient.initializeUserClientCommunicator(appConfigs.userSiteUrl, userSiteId);
-
-  MarketManagement.init(appConfigs.marketConfigCacheTimeout);
+  app.startGame(container);
 };
 
 run();
