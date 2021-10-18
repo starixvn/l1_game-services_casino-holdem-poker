@@ -1,23 +1,19 @@
 import { Core, Table } from 'sc-game-base';
 import BasePlaceBetConsumer from '../base-place-bet-consumer';
 import BaseCallConsumer from '../base-call-consumer';
-
-jest.mock('sc-common', () => {
-  return {
-    helpers: { numberHelper: { formatNumberWithComma: jest.fn((number) => number) } },
-  };
-});
+import { helpers } from "sc-common";
 
 describe('BaseCallConsumer test', () => {
   const definition = new Core.GameDefinition({ id: 1, name: 'casino-holdem-poker' });
   const gameData = new Table.TableGameData();
   const publisher = {};
   const logService = { logWarning: jest.fn() };
-  const keys = {
-    maxBetChoice: 'maxBetChoice',
-    maxBet: 'maxBet',
-    cannotProcessBet: 'cannotProcessBet',
+  gameData.gameConfigs = {
+    maxbet: 1000,
+    minbet: 10,
+    choices_maxbet: { callBet: 100, anteBet: 100, aaBet: 100 }
   };
+  const player = { profile: { name: 'a' }, session: { currency: 'US', language: 'en' } };
 
   it('inherit BasePlaceBetConsumer', () => {
     // Act
@@ -28,24 +24,18 @@ describe('BaseCallConsumer test', () => {
   });
 
   describe('composeActionValidationCriteria', () => {
-    const configs = {
-      maxBetChoices: { callBet: 100 },
-      maxBet: 1000,
-    };
-    const player = { profile: { name: 'a' }, session: { currency: 'IN', language: 'en' } };
-
     it('should return expected when amount 500', async () => {
       // Arrange
       const data = { ingame: {} };
-      const consumer = new BaseCallConsumer(definition, data, publisher, logService);
+      const consumer = new BaseCallConsumer(definition, {...gameData, ...data}, publisher, logService);
       const expected = [
         {
           failure: true,
-          notice: keys.maxBetChoice,
+          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: 100 },
         },
         {
           failure: false,
-          notice: keys.maxBet,
+          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: 1000 },
         },
       ];
 
@@ -59,15 +49,15 @@ describe('BaseCallConsumer test', () => {
     it('should return expected when amount 0', async () => {
       // Arrange
       const data = { ingame: {} };
-      const consumer = new BaseCallConsumer(definition, data, publisher, logService);
+      const consumer = new BaseCallConsumer(definition,  {...gameData, ...data}, publisher, logService);
       const expected = [
         {
           failure: false,
-          notice: keys.maxBetChoice,
+          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: 100 },
         },
         {
           failure: false,
-          notice: keys.maxBet,
+          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: 1000 },
         },
       ];
 
@@ -83,16 +73,16 @@ describe('BaseCallConsumer test', () => {
       const data = {
         ingame: { [player.profile.name]: { betTracks: { bets: { ante: 100, aa: 1000 } } } },
       };
-      const consumer = new BaseCallConsumer(definition, data, publisher, logService);
+      const consumer = new BaseCallConsumer(definition,  {...gameData, ...data}, publisher, logService);
       const expected = [
         {
           failure: false,
-          notice: keys.maxBetChoice,
+          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: 100 },
         },
         {
-          failure: true,
-          notice: keys.maxBet,
-        },
+          failure: false,
+          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: 1000 },
+        }
       ];
 
       // Act
@@ -104,7 +94,6 @@ describe('BaseCallConsumer test', () => {
   });
 
   describe('composeBettingTimeValidationCriteria', () => {
-    const player = { profile: { name: 'a' }, session: { currency: 'IN', language: 'en' } };
     beforeEach(() => {
       BasePlaceBetConsumer.prototype.composeBettingTimeValidationCriteria = jest
         .fn()
@@ -116,7 +105,7 @@ describe('BaseCallConsumer test', () => {
       const expected = [
         {
           failure: true,
-          notice: keys.cannotProcessBet,
+          notice: { errorCode: helpers.noticeHelper.invalidBet },
         },
       ];
 
@@ -133,11 +122,11 @@ describe('BaseCallConsumer test', () => {
     it('should return expected when have ingame', async () => {
       // Arrange
       const data = { ingame: { [player.profile.name]: { betTracks: { roundId: 1 } } } };
-      const consumer = new BaseCallConsumer(definition, data, publisher, logService);
+      const consumer = new BaseCallConsumer(definition, {...gameData, ...data}, publisher, logService);
       const expected = [
         {
           failure: false,
-          notice: keys.cannotProcessBet,
+          notice: { errorCode: helpers.noticeHelper.invalidBet },
         },
       ];
 

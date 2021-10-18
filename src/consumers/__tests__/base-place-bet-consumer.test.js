@@ -69,22 +69,17 @@ describe('BasePlaceBetConsumer test', () => {
       const gameConfigs = { enabled: true, disabled_message: 'disabled' };
       const data = { gameConfigs };
       const consumer = new BasePlaceBetConsumer(definition, data, publisher, logService);
-      const gameMarketConfigs = { enabled: true, disabledMessage: 'disabled market' };
 
       const expected = [
         {
           failure: !gameConfigs.enabled,
           notice: gameConfigs.disabled_message,
-        },
-        {
-          failure: !gameMarketConfigs.enabled,
-          notice: gameMarketConfigs.disabledMessage,
-        },
+        }
       ];
 
       // Act
       const actual = await consumer.composeBettingTimeValidationCriteria({
-        session: { currency: 'IN', language: 'en' },
+        session: { currency: 'US', language: 'en' },
       });
 
       // Assert
@@ -177,7 +172,7 @@ describe('BasePlaceBetConsumer test', () => {
       expect(consumer.logService.logError).toHaveBeenCalledWith(error);
       expect(consumer.publisher.publishToUser).toHaveBeenCalledWith(player.UID, {
         endBet: -1,
-        notice: keys.cannotBetAtTheMoment,
+        notice: {"errorCode": "SB1935"},
       });
       expect(consumer.gameData.ingame).toStrictEqual({});
     });
@@ -194,7 +189,7 @@ describe('BasePlaceBetConsumer test', () => {
       // Assert
       expect(consumer.publisher.publishToUser).toHaveBeenCalledWith(player.UID, {
         endBet: -1,
-        notice: keys.cannotBetAtTheMoment,
+        notice: {"errorCode": "SB1935"},
       });
     });
 

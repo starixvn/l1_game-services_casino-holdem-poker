@@ -2,21 +2,22 @@ import cron from 'cron';
 import moment from 'moment';
 import { logger } from 'sc-common';
 import appConfigs from '../../configs';
-import { GameCron as BaseGameCron } from '@nex3/nex3-game-base/crons';
+import { Table } from "sc-game-base";
+
 import { reGenerateDecks } from '../../helpers/deck-helper';
 import GameCron from '../game-cron';
-
+ 
 jest.mock('cron');
 jest.mock('sc-common');
 jest.mock('../../helpers/deck-helper');
 
 describe('Game Cron test', () => {
-  it('inherit BaseGameCron', () => {
+  it('inherit Table.Crons.TableGameCron', () => {
     // Act
     const game = new GameCron({});
 
     // Assert
-    expect(game instanceof BaseGameCron);
+    expect(game instanceof Table.Crons.TableGameCron);
   });
 
   describe('start', () => {

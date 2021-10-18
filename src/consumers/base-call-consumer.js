@@ -1,4 +1,5 @@
 import BasePlaceBetConsumer from './base-place-bet-consumer';
+import { helpers } from "sc-common";
 
 export default class BaseCallConsumer extends BasePlaceBetConsumer {
   async composeActionValidationCriteria(player, amount) {
@@ -8,29 +9,14 @@ export default class BaseCallConsumer extends BasePlaceBetConsumer {
 
     return [
       {
-        failure: amount > configs.maxBetChoices.callBet,
-        notice: "maxBetChoice",
+        failure: amount > configs.choices_maxbet.callBet,
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: configs.choices_maxbet.callBet })
       },
       {
         failure: amount + aa + ante > configs.maxBet,
-        notice: "maxBet",
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet: configs.maxbet })
       },
     ];
-
-    // return [
-    //   {
-    //     failure: amount > configs.maxBetChoices.callBet,
-    //     notice: translation.t(translation.keys.maxBetChoice, {
-    //       max: formatNumberWithComma(configs.maxBetChoices.callBet),
-    //     }),
-    //   },
-    //   {
-    //     failure: amount + aa + ante > configs.maxBet,
-    //     notice: translation.t(translation.keys.maxBet, {
-    //       max: formatNumberWithComma(configs.maxBet),
-    //     }),
-    //   },
-    // ];
   }
 
   async composeBettingTimeValidationCriteria(player) {
@@ -41,13 +27,13 @@ export default class BaseCallConsumer extends BasePlaceBetConsumer {
 
       result.push({
         failure: true,
-        notice: "cannotProcessBet",
+        notice: this.getNoticeObj(helpers.noticeHelper.invalidBet)
       });
     } else {
       const { betTracks } = playerData;
       result.push({
         failure: !betTracks.roundId,
-        notice: "cannotProcessBet",
+        notice: this.getNoticeObj(helpers.noticeHelper.invalidBet)
       });
     }
 

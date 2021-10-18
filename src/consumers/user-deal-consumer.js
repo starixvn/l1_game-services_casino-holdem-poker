@@ -5,55 +5,27 @@ import gameSettings from '../game-settings';
 export default class UserDealConsumer extends BasePlaceBetConsumer {
   async composeActionValidationCriteria(player, payload) {
     const configs = this.gameData.gameConfigs;
-    const formatNumberWithComma = helpers.numberHelper.formatNumberWithComma;
     const amountAnte = payload.ante;
     const amountAa = payload.aa;
 
     return [
       {
         failure: amountAnte > configs.choices_maxbet.anteBet,
-        notice:"maxBetChoice",
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: configs.choices_maxbet.anteBet })
       },
       {
         failure: amountAa > configs.choices_maxbet.aaBet,
-        notice: "maxBetChoice",
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: configs.choices_maxbet.aaBet })
       },
       {
         failure: amountAnte < configs.minbet || (amountAa !== 0 && amountAa < configs.minbet),
-        notice:"minBet",
+        notice: this.getNoticeObj(helpers.noticeHelper.minBet, { minBet: configs.minbet})
       },
       {
         failure: amountAnte + amountAa > configs.maxbet,
-        notice: "maxBet",
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet: configs.maxbet })
       },
     ];
-
-    // return [
-    //   {
-    //     failure: amountAnte > configs.maxBetChoices.anteBet,
-    //     notice: translation.t(translation.keys.maxBetChoice, {
-    //       max: formatNumberWithComma(configs.maxBetChoices.anteBet),
-    //     }),
-    //   },
-    //   {
-    //     failure: amountAa > configs.maxBetChoices.aaBet,
-    //     notice: translation.t(translation.keys.maxBetChoice, {
-    //       max: formatNumberWithComma(configs.maxBetChoices.aaBet),
-    //     }),
-    //   },
-    //   {
-    //     failure: amountAnte < configs.minBet || (amountAa !== 0 && amountAa < configs.minBet),
-    //     notice: translation.t(translation.keys.minBet, {
-    //       min: formatNumberWithComma(configs.minBet),
-    //     }),
-    //   },
-    //   {
-    //     failure: amountAnte + amountAa > configs.maxBet,
-    //     notice: translation.t(translation.keys.maxBet, {
-    //       max: formatNumberWithComma(configs.maxBet),
-    //     }),
-    //   },
-    // ];
   }
 
   async composeBettingTimeValidationCriteria(player) {
@@ -61,11 +33,11 @@ export default class UserDealConsumer extends BasePlaceBetConsumer {
     const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
     result.push({
       failure: !!betTracks.roundId,
-      notice: "invalidDealDueToRunningRound",
+      notice: this.getNoticeObj(helpers.noticeHelper.invalidBet)
     });
     result.push({
       failure: !!betTracks?.isDealing,
-      notice: "placeBetIsProcessingMessage",
+      notice: this.getNoticeObj(helpers.noticeHelper.invalidBet)
     });
 
     return result;

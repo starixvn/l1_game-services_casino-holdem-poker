@@ -2,25 +2,13 @@ import { Core, Table } from 'sc-game-base';
 import BasePlaceBetConsumer from '../base-place-bet-consumer';
 import UserDealConsumer from '../user-deal-consumer';
 import gameSettings from '../../game-settings';
-
-jest.mock('sc-common', () => {
-  return {
-    helpers: { numberHelper: { formatNumberWithComma: jest.fn((number) => number) } },
-  };
-});
+import { helpers } from "sc-common";
 
 describe('UserDealConsumer test', () => {
   const definition = new Core.GameDefinition({ id: 1, name: 'casino-holdem-poker' });
   const gameData = new Table.TableGameData();
   const publisher = {};
   const logService = {};
-  const keys = {
-    maxBetChoice: 'maxBetChoice',
-    maxBet: 'maxBet',
-    minBet: 'minBet',
-    invalidDealDueToRunningRound: 'invalidDealDueToRunningRound',
-    placeBetIsProcessingMessage: 'placeBetIsProcessingMessage',
-  };
 
   it('inherit BasePlaceBetConsumer', () => {
     // Act
@@ -31,28 +19,29 @@ describe('UserDealConsumer test', () => {
   });
 
   describe('composeActionValidationCriteria', () => {
-    const configs = {
-      maxBetChoices: { anteBet: 100, aaBet: 100 },
-      maxBet: 1000,
-      minBet: 100,
+    gameData.gameConfigs = {
+      maxbet: 1000,
+      minbet: 10,
+      choices_maxbet: { anteBet: 100, aaBet: 100 }
     };
-    const player = { profile: { name: 'a' }, session: { currency: 'IN', language: 'en' } };
+
+    const player = { profile: { name: 'a' }, session: { currency: 'US', language: 'en' } };
     const expected = [
       {
         failure: false,
-        notice: keys.maxBetChoice,
+        notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: 100 },
       },
       {
         failure: false,
-        notice: keys.maxBetChoice,
-      },
-      {
-        failure: true,
-        notice: keys.minBet,
+        notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: 100 },
       },
       {
         failure: false,
-        notice: keys.maxBet,
+        notice: { errorCode: helpers.noticeHelper.minBet, minBet: 10 },
+      },
+      {
+        failure: false,
+        notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: 1000 },
       },
     ];
 
@@ -93,9 +82,9 @@ describe('UserDealConsumer test', () => {
       const expected = [
         {
           failure: false,
-          notice: keys.invalidDealDueToRunningRound,
+          notice: { errorCode: helpers.noticeHelper.invalidBet },
         },
-        { failure: false, notice: keys.placeBetIsProcessingMessage },
+        { failure: false, notice: { errorCode: helpers.noticeHelper.invalidBet } },
       ];
 
       // Act
@@ -112,9 +101,9 @@ describe('UserDealConsumer test', () => {
       const expected = [
         {
           failure: true,
-          notice: keys.invalidDealDueToRunningRound,
+          notice: { errorCode: helpers.noticeHelper.invalidBet },
         },
-        { failure: false, notice: keys.placeBetIsProcessingMessage },
+        { failure: false, notice: { errorCode: helpers.noticeHelper.invalidBet } },
       ];
 
       // Act

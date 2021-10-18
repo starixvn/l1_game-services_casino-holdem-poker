@@ -1,4 +1,5 @@
 import gameSettings from '../game-settings';
+import { helpers } from "sc-common";
 
 export default class BasePlaceBetConsumer {
   constructor(definition, gameData, publisher, logService) {
@@ -55,7 +56,7 @@ export default class BasePlaceBetConsumer {
       this.logService.logError(e);
       this.publisher.publishToUser(player.UID, {
         endBet: -1,
-        notice: "cannotBetAtTheMoment",
+        notice: this.getNoticeObj(helpers.noticeHelper.invalidBet),
       });
       return;
     }
@@ -63,7 +64,7 @@ export default class BasePlaceBetConsumer {
     if (this.gameData.ingame[name]?.betQueue.length > 0) {
       this.publisher.publishToUser(player.UID, {
         endBet: -1,
-        notice: "cannotBetAtTheMoment",
+        notice: this.getNoticeObj(helpers.noticeHelper.invalidBet),
       });
 
       return;
@@ -80,5 +81,12 @@ export default class BasePlaceBetConsumer {
     }
 
     this.gameData.ingame[name].betQueue.push({ player, payload: queuePayload });
+  }
+
+  getNoticeObj(errorCode, extraData) {
+    return {
+      errorCode,
+      ...extraData,
+    };
   }
 }

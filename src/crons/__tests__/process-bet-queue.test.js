@@ -1,15 +1,12 @@
-import { ProcessBetQueue as BaseProcessBetQueue } from '@nex3/nex3-game-base/crons';
+import { Core } from "sc-game-base";
 import ProcessBetQueue from '../process-bet-queue';
 import gameSettings from '../../game-settings';
 import { deal, generateDecks, reGenerateDecks } from '../../helpers/deck-helper';
 import { isQualified } from '../../helpers/result-helper';
-import Translation from '@nex3/translation';
-import { helpers } from 'sc-common';
 
 jest.mock('sc-common');
 jest.mock('../../helpers/result-helper');
 jest.mock('../../helpers/deck-helper');
-jest.mock('@nex3/translation');
 
 describe('Process bet queue test', () => {
   const mockDate = new Date(123456);
@@ -24,12 +21,12 @@ describe('Process bet queue test', () => {
     jest.clearAllMocks();
     spy.mockRestore();
   });
-  it('inherit BaseProcessBetQueue', () => {
+  it('inherit Core.Crons.ProcessBetQueue', () => {
     // Act
     const process = new ProcessBetQueue({});
 
     // Assert
-    expect(process instanceof BaseProcessBetQueue);
+    expect(process instanceof Core.Crons.ProcessBetQueue);
   });
 
   describe('proceedBet', () => {
@@ -607,11 +604,8 @@ describe('Process bet queue test', () => {
 
   describe('handleFailPlaceBetResponse', () => {
     const player = { session: { language: '' } };
-    const keys = { notEnoughMoney: 'notEnoughMoney', cannotProcessBet: 'cannotProcessBet' };
-    Translation.getInstance = jest.fn().mockReturnValue({
-      t: jest.fn((key) => key),
-      keys,
-    });
+    const keys = { notEnoughMoney: 'notEnoughMoney', cannotProcessBet: 'cannotProcessBetNotice' };
+
     it('should run correctly', () => {
       // Arrange
       const response = { cannotProcessBet: {} };

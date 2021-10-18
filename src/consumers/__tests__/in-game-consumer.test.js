@@ -1,9 +1,7 @@
 import { Core, Table } from 'sc-game-base';
-import { InGameConsumer as BaseInGameConsumer } from '@nex3/nex3-game-base/consumers';
 import InGameConsumer from '../in-game-consumer';
 
 jest.mock('sc-base-database');
-jest.mock('@nex3/market-management');
 
 describe('InGameConsumer test', () => {
   // Arrange
@@ -14,7 +12,7 @@ describe('InGameConsumer test', () => {
     const consumer = new InGameConsumer(definition, gameData);
 
     // Assert
-    expect(consumer instanceof BaseInGameConsumer);
+    expect(consumer instanceof Core.BaseEventConsumers.InGameConsumer );
   });
 
   describe('consume', () => {
@@ -81,7 +79,6 @@ describe('InGameConsumer test', () => {
         session: { currency: 'IN', language: 'en' },
         profile: { name: 'a' },
       };
-      const marketConfig = { minBet: 1, maxBet: 100, maxBetChoices: { ante: 100 }, odds: {} };
 
       const betTracks = {
         roundId: 1,
@@ -101,12 +98,7 @@ describe('InGameConsumer test', () => {
       consumer.getBalance = jest.fn();
       consumer.getUserInfo = jest.fn().mockReturnValue({ uid: realPlayer.UID });
       const expected = {
-        gameConfigs: {
-          minBet: marketConfig.minBet,
-          maxBet: marketConfig.maxBet,
-          maxBetChoices: marketConfig.maxBetChoices,
-          odds: marketConfig.odds,
-        },
+        gameConfigs: {},
         ownBets: {
           roundId: betTracks.roundId,
           bets: betTracks.bets,
@@ -132,10 +124,9 @@ describe('InGameConsumer test', () => {
     // Arrange
     const realPlayer = {
       UID: 1,
-      session: { currency: 'IN', language: 'en' },
+      session: { currency: 'US', language: 'en' },
       profile: { name: 'a' },
     };
-    const marketConfig = { minBet: 1, maxBet: 100, maxBetChoices: { ante: 100 }, odds: {} };
 
     const data = {
       ...gameData,
@@ -146,12 +137,7 @@ describe('InGameConsumer test', () => {
     consumer.getBalance = jest.fn();
     consumer.getUserInfo = jest.fn().mockReturnValue({ uid: realPlayer.UID });
     const expected = {
-      gameConfigs: {
-        minBet: marketConfig.minBet,
-        maxBet: marketConfig.maxBet,
-        maxBetChoices: marketConfig.maxBetChoices,
-        odds: marketConfig.odds,
-      },
+      gameConfigs: {},
       ownBets: {},
       user: { uid: realPlayer.UID },
       lastRoundId: data.roundId,
