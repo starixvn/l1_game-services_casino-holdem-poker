@@ -1,6 +1,7 @@
 variables:
   PROJECT_NAME: l1-casino-holdem-poker-service
   
+
 include:
   - project: "ci/repos-ci/pentagon_l1_casino_holdem_poker_service"
     ref: master

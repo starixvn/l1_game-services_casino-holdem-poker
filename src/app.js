@@ -1,5 +1,5 @@
 import { Core, Table } from 'sc-game-base';
-import appConfigs from './configs';
+import appConfigs from "./app-configs";
 import gameSettings from './game-settings';
 import { generateResult, getSettleResult } from './helpers/result-helper';
 import ContainerRegistry from './container-registry';
