@@ -1,7 +1,7 @@
 import cron from 'cron';
 import moment from 'moment';
 import { logger } from 'sc-common';
-import appConfigs from '../../configs';
+import appConfigs from '../../app-configs';
 import { Table } from "sc-game-base";
 
 import { reGenerateDecks } from '../../helpers/deck-helper';

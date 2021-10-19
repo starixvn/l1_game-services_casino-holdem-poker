@@ -1,6 +1,6 @@
 import http from "http";
 
-import appConfigs from './configs';
+import appConfigs from './app-configs';
 
 const options = {
     timeout: 2000,
