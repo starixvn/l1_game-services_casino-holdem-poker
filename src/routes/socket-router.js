@@ -12,7 +12,6 @@ export default class SocketRouter extends BaseSocketRouter {
     historyQuery,
     logService,
     userDealConsumer = null,
-    userCallConsumer = null,
     userDoubleCallConsumer = null,
     userFoldConsumer = null,
   }) {
@@ -29,7 +28,6 @@ export default class SocketRouter extends BaseSocketRouter {
     });
 
     this.userDealConsumer = userDealConsumer;
-    this.userCallConsumer = userCallConsumer;
     this.userDoubleCallConsumer = userDoubleCallConsumer;
     this.userFoldConsumer = userFoldConsumer;
   }
@@ -40,14 +38,14 @@ export default class SocketRouter extends BaseSocketRouter {
     this.socketClient.on('getTicketDetail', this.handleGetTicketDetail.bind(this));
   }
 
-  handlePlaceBet(payload) {
+  async handlePlaceBet(payload) {
     try {
       if (!this.verify()) {
         return;
       }
 
       if (payload.deal) {
-        this.userDealConsumer.consume(
+        await this.userDealConsumer.consume(
           this.gameData.realPlayers[this.socketClient.id],
           payload.deal,
         );
@@ -55,17 +53,12 @@ export default class SocketRouter extends BaseSocketRouter {
       }
 
       if (payload.fold) {
-        this.userFoldConsumer.consume(this.gameData.realPlayers[this.socketClient.id], payload);
-        return;
-      }
-
-      if (payload.call) {
-        this.userCallConsumer.consume(this.gameData.realPlayers[this.socketClient.id], payload);
+        await this.userFoldConsumer.consume(this.gameData.realPlayers[this.socketClient.id], payload);
         return;
       }
 
       if (payload.doubleCall) {
-        this.userDoubleCallConsumer.consume(
+        await this.userDoubleCallConsumer.consume(
           this.gameData.realPlayers[this.socketClient.id],
           payload,
         );

@@ -211,26 +211,5 @@ describe('BasePlaceBetConsumer test', () => {
         payload: queuePayload,
       });
     });
-
-    it('should push betQueue when action call', async () => {
-      // Arrange
-      const data = {
-        ingame: {
-          [player.profile.name]: { name: player.profile.name, betQueue: [] },
-        },
-      };
-      const consumer = new BasePlaceBetConsumer(definition, data, publisher, logService);
-      const queuePayload = { action: gameSettings.actions.call, payload: {} };
-      consumer.validateBetRequest = jest.fn().mockReturnValue(true);
-
-      // Act
-      await consumer.consume(player, {}, queuePayload);
-
-      // Assert
-      expect(consumer.gameData.ingame[player.profile.name].betQueue[0]).toStrictEqual({
-        player,
-        payload: queuePayload,
-      });
-    });
   });
 });

@@ -5,7 +5,6 @@ import { placeBet } from './apis/place-bet';
 import {
   InGameConsumer,
   UserDealConsumer,
-  UserCallConsumer,
   UserDoubleCallConsumer,
   UserFoldConsumer,
   SettleGameConsumer,
@@ -45,7 +44,6 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
       inGameConsumer: asClass(InGameConsumer).singleton(),
       settleGameRoundConsumer: asClass(SettleGameConsumer).singleton().proxy(),
       userDealConsumer: asClass(UserDealConsumer).singleton(),
-      userCallConsumer: asClass(UserCallConsumer).singleton(),
       userDoubleCallConsumer: asClass(UserDoubleCallConsumer).singleton(),
       userFoldConsumer: asClass(UserFoldConsumer).singleton(),
       userDisconnectConsumer: asClass(UserDisconnectConsumer).singleton(),

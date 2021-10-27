@@ -31,10 +31,16 @@ export default class BaseCallConsumer extends BasePlaceBetConsumer {
       });
     } else {
       const { betTracks } = playerData;
-      result.push({
-        failure: !betTracks.roundId,
-        notice: this.getNoticeObj(helpers.noticeHelper.invalidBet)
-      });
+      result.push(
+        {
+          failure: !betTracks.roundId,
+          notice:this.getNoticeObj(helpers.noticeHelper.invalidBet)
+        },
+        {
+          failure: !!betTracks?.isDealing,
+          notice: this.getNoticeObj(helpers.noticeHelper.invalidBet)
+        },
+      );
     }
 
     return result;

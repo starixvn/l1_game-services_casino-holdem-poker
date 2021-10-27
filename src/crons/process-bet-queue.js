@@ -40,9 +40,6 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
         case gameSettings.actions.deal:
           await this.processDeal(player, betTrack.payload);
           break;
-        case gameSettings.actions.call:
-          await this.processCall(player);
-          break;
         case gameSettings.actions.doubleCall:
           await this.processDoubleCall(player);
           break;
@@ -174,32 +171,15 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     });
   }
 
-  async processCall(player) {
-    const { betTracks } = this.gameData.ingame[player.profile.name];
-
-    const betInfo = {
-      amount: betTracks.bets.ante,
-      gameId: this.definition.id,
-      gameRoundId: betTracks.roundId,
-      choiceId: this.definition.choicesMapper[gameSettings.actions.call],
-    };
-    const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
-    const { response } = apiResult;
-    if (apiResult.isOk) {
-      await this.handleSuccessCall(player, betInfo.amount, response);
-    } else {
-      this.handleFailPlaceBetResponse(player, response, gameSettings.actions.call);
-    }
-  }
-
   async processDoubleCall(player) {
     const { betTracks } = this.gameData.ingame[player.profile.name];
+    betTracks.isDealing = true;
 
     const betInfo = {
       amount: betTracks.bets.ante * 2,
       gameId: this.definition.id,
       gameRoundId: betTracks.roundId,
-      choiceId: this.definition.choicesMapper[gameSettings.actions.call],
+      choiceId: this.definition.choicesMapper[gameSettings.actions.doubleCall],
     };
     const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
     const { response } = apiResult;
@@ -208,6 +188,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     } else {
       this.handleFailPlaceBetResponse(player, response, gameSettings.actions.doubleCall);
     }
+    betTracks.isDealing = false;
   }
 
   async handleSuccessCall(player, amount, balance) {
@@ -224,6 +205,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       combinationResult: betTracks.combinationResult,
       dealer: betTracks.dealer,
       totalAmount: Object.values(betTracks.bets).reduce((total, item) => total + item),
+      choices: betTracks.bets
     };
 
     this.publisher.publishToUser(player.UID, { endBet: amount, user: balance, call });
@@ -257,8 +239,8 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
   handleFailPlaceBetResponse(player, response, action) {
     const noticeMapping = {
-      inSufficientBalance: "insufficientNotice",
-      cannotProcessBet: "cannotProcessBetNotice",
+      inSufficientBalance: helpers.noticeHelper.notEnoughMoney,
+      cannotProcessBet: helpers.noticeHelper.placeBetNextRound,
       inSufficientScoin: helpers.noticeHelper.notEnoughScoin,
     };
 

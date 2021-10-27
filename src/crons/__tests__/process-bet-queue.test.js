@@ -60,19 +60,6 @@ describe('Process bet queue test', () => {
       expect(process.processDeal).toHaveBeenCalledWith({}, betTrack.payload);
     });
 
-    it('should call processCall when action call', async () => {
-      // Arrange
-      const process = new ProcessBetQueue({});
-      const betTrack = { action: gameSettings.actions.call };
-      process.processCall = jest.fn();
-
-      // Act
-      await process.proceedBet({}, betTrack);
-
-      // Assert
-      expect(process.processCall).toHaveBeenCalledWith({});
-    });
-
     it('should call processDoubleCall when action doubleCall', async () => {
       // Arrange
       const process = new ProcessBetQueue({});
@@ -378,75 +365,6 @@ describe('Process bet queue test', () => {
     });
   });
 
-  describe('processCall', () => {
-    const player = { UID: 1, profile: { name: 'profile' }, session: {} };
-    const definition = { id: 39, choicesMapper: { deal: 1 } };
-
-    it('should call handleSuccessCall when placeBet successfully', async () => {
-      const betTracks = {
-        roundId: 1,
-        bets: { aa: 10, ante: 100 },
-      };
-      const gameData = {
-        ingame: { [player.profile.name]: { betTracks } },
-      };
-      const process = new ProcessBetQueue({ definition, gameData });
-      const betInfo = {
-        amount: betTracks.bets.ante,
-        gameId: definition.id,
-        gameRoundId: betTracks.roundId,
-        choiceId: definition.choicesMapper[gameSettings.actions.call],
-      };
-      const apiResult = { isOk: true, response: { red: 1000 } };
-      process.placeBet = jest
-        .fn({ id: player.UID, session: player.session }, betInfo)
-        .mockReturnValue(apiResult);
-      process.handleSuccessCall = jest.fn();
-
-      // Act
-      await process.processCall(player);
-
-      // Assert
-      expect(process.handleSuccessCall).toHaveBeenCalledWith(
-        player,
-        betInfo.amount,
-        apiResult.response,
-      );
-    });
-
-    it('should call handleSuccessCall when placeBet unsuccessfully', async () => {
-      const betTracks = {
-        roundId: 1,
-        bets: { aa: 10, ante: 100 },
-      };
-      const gameData = {
-        ingame: { [player.profile.name]: { betTracks } },
-      };
-      const process = new ProcessBetQueue({ definition, gameData });
-      const betInfo = {
-        amount: betTracks.bets.ante,
-        gameId: definition.id,
-        gameRoundId: betTracks.roundId,
-        choiceId: definition.choicesMapper[gameSettings.actions.call],
-      };
-      const apiResult = { isOk: false, response: { red: 1000 } };
-      process.placeBet = jest
-        .fn({ id: player.UID, session: player.session }, betInfo)
-        .mockReturnValue(apiResult);
-      process.handleFailPlaceBetResponse = jest.fn();
-
-      // Act
-      await process.processCall(player);
-
-      // Assert
-      expect(process.handleFailPlaceBetResponse).toHaveBeenCalledWith(
-        player,
-        apiResult.response,
-        gameSettings.actions.call,
-      );
-    });
-  });
-
   describe('processDoubleCall', () => {
     const player = { UID: 1, profile: { name: 'profile' }, session: {} };
     const definition = { id: 39, choicesMapper: { deal: 1 } };
@@ -464,7 +382,7 @@ describe('Process bet queue test', () => {
         amount: betTracks.bets.ante * 2,
         gameId: definition.id,
         gameRoundId: betTracks.roundId,
-        choiceId: definition.choicesMapper[gameSettings.actions.call],
+        choiceId: definition.choicesMapper[gameSettings.actions.doubleCall],
       };
       const apiResult = { isOk: true, response: { red: 1000 } };
       process.placeBet = jest
@@ -496,7 +414,7 @@ describe('Process bet queue test', () => {
         amount: betTracks.bets.ante * 2,
         gameId: definition.id,
         gameRoundId: betTracks.roundId,
-        choiceId: definition.choicesMapper[gameSettings.actions.call],
+        choiceId: definition.choicesMapper[gameSettings.actions.doubleCall],
       };
       const apiResult = { isOk: false, response: { red: 1000 } };
       process.placeBet = jest
@@ -545,6 +463,7 @@ describe('Process bet queue test', () => {
         combinationResult: betTracks.combinationResult,
         dealer: betTracks.dealer,
         totalAmount: 200,
+        choices: betTracks.bets,
       };
 
       // Act
@@ -604,7 +523,7 @@ describe('Process bet queue test', () => {
 
   describe('handleFailPlaceBetResponse', () => {
     const player = { session: { language: '' } };
-    const keys = { notEnoughMoney: 'notEnoughMoney', cannotProcessBet: 'cannotProcessBetNotice' };
+    const keys = { notEnoughMoney: 'notEnoughMoney', cannotProcessBet: 'cannotProcessBet' };
 
     it('should run correctly', () => {
       // Arrange
@@ -616,7 +535,10 @@ describe('Process bet queue test', () => {
       process.handleFailPlaceBetResponse(player, response, gameSettings.actions.deal);
 
       // Assert
-      expect(process.handleFailedBet).toHaveBeenCalledWith(player, keys.cannotProcessBet, {
+      expect(process.handleFailedBet).toHaveBeenCalledWith(
+        {session: {language: ""}}, 
+        "SB1905", 
+        {
         betChoice: gameSettings.actions.deal,
       });
     });

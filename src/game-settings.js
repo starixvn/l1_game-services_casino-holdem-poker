@@ -10,10 +10,9 @@ export default {
     call: 'call',
     aa: 'aa',
   },
-  choicesMapper: { deal: 1, call: 2 },
+  choicesMapper: { deal: 1, doubleCall: 2 },
   actions: {
     deal: 'deal',
-    call: 'call',
     doubleCall: 'doubleCall',
     fold: 'fold',
   },

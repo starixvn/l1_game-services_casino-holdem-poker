@@ -128,6 +128,10 @@ describe('BaseCallConsumer test', () => {
           failure: false,
           notice: { errorCode: helpers.noticeHelper.invalidBet },
         },
+        {
+          failure: false,
+          notice: { errorCode: helpers.noticeHelper.invalidBet },
+        },
       ];
 
       // Act
