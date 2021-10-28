@@ -57,6 +57,7 @@ export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsum
       user,
       ownBets,
       lastRoundId: this.gameData.roundId,
+      md5: this.gameData.currentMD5
     };
   }
 }

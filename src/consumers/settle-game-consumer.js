@@ -2,6 +2,7 @@ import { Core } from 'sc-game-base';
 import { gameNotifications } from 'sc-base-database';
 import { ranks } from '../helpers/constants';
 import { compareCombination, isWinAA } from '../helpers/result-helper';
+import { createHashMD5, randomString } from "../helpers/crypto-helper";
 
 export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
   constructor({
@@ -36,10 +37,16 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       settlementResult.isQualified = betTracks.combinationResult.isQualified;
     }
 
+    // TODO
+    const resultKey = `[${playerName};${JSON.stringify(settlementResult)}]${randomString()}`;
+    const md5 = createHashMD5(resultKey);
+    this.gameData.currentMD5 = md5;
+    this.gameData.resultKey = resultKey;
+
     const round = await this.roundsRepository
       .findOneAndUpdate(
         { id: betTracks.roundId },
-        { result, settlementResult, time: new Date(), ended: true },
+        { result, settlementResult, time: new Date(), ended: true, md5, resultKey },
       )
       .lean()
       .exec();
@@ -49,6 +56,7 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       time: new Date(),
     };
 
+    this.roundResultPublisher.publishMD5(md5);
     await this.settleBets({ ...finish, playerName, playerUID: betTracks.uid }, isFold);
     await gameNotifications.deleteOne({ uid: betTracks.uid, gameId: this.definition.id });
   }
@@ -72,6 +80,7 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       delete this.gameData.ingame[playerName];
 
       this.publisher.publishToUser(playerUID, {
+        resultKey: this.gameData.resultKey,
         finish: {
           settlementResult: betResult.settlementResult,
         },

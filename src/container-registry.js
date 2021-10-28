@@ -14,6 +14,7 @@ import { GameCron, ProcessBetQueue, Bot } from './crons';
 import { SocketRouter, HttpRouter } from './routes';
 import HistoryQuery from './query-apis/history-query';
 import { CasinoHoldemPokerBets, CasinoHoldemPokerRounds } from './models';
+import { RoundResultPublisher } from "./publishers";
 
 const { asClass, asValue } = awilix;
 
@@ -47,6 +48,14 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
       userDoubleCallConsumer: asClass(UserDoubleCallConsumer).singleton(),
       userFoldConsumer: asClass(UserFoldConsumer).singleton(),
       userDisconnectConsumer: asClass(UserDisconnectConsumer).singleton(),
+    });
+  }
+
+  registerPublishers() {
+    super.registerPublishers();
+
+    this.container.register({
+      roundResultPublisher: asClass(RoundResultPublisher).singleton(),
     });
   }
 

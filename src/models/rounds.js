@@ -12,6 +12,8 @@ const Schema = new mongoose.Schema({
   uid: { type: String, required: true },
   name: { type: String, required: true },
   odds: { type: Object },
+  md5: { type: String, require: true },
+  resultKey: { type: String, require: true },
 });
 
 export default mongoose.model(modelName, Schema);
