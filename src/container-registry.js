@@ -9,6 +9,8 @@ import {
   UserFoldConsumer,
   SettleGameConsumer,
   UserDisconnectConsumer,
+  RoundResultConsumer,
+  GetGameConfigsConsumer
 } from './consumers';
 import { GameCron, ProcessBetQueue, Bot } from './crons';
 import { SocketRouter, HttpRouter } from './routes';
@@ -48,6 +50,8 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
       userDoubleCallConsumer: asClass(UserDoubleCallConsumer).singleton(),
       userFoldConsumer: asClass(UserFoldConsumer).singleton(),
       userDisconnectConsumer: asClass(UserDisconnectConsumer).singleton(),
+      roundResultConsumer: asClass(RoundResultConsumer).singleton(),
+      getGameConfigsConsumer: asClass(GetGameConfigsConsumer).singleton().proxy(),
     });
   }
 

@@ -10,9 +10,7 @@ const run = async () => {
   const container = new ContainerRegistry().register(appConfigs, definition, gameData);
   
   const app = new Core.BaseGameApp("Casino Holdem Poker", appConfigs);
-
   await app.run();
-
   app.startGame(container);
 };
 

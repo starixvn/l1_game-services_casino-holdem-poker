@@ -37,16 +37,10 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       settlementResult.isQualified = betTracks.combinationResult.isQualified;
     }
 
-    // TODO
-    const resultKey = `[${playerName};${JSON.stringify(settlementResult)}]${randomString()}`;
-    const md5 = createHashMD5(resultKey);
-    this.gameData.currentMD5 = md5;
-    this.gameData.resultKey = resultKey;
-
     const round = await this.roundsRepository
       .findOneAndUpdate(
         { id: betTracks.roundId },
-        { result, settlementResult, time: new Date(), ended: true, md5, resultKey },
+        { result, settlementResult, time: new Date(), ended: true },
       )
       .lean()
       .exec();
@@ -56,7 +50,6 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       time: new Date(),
     };
 
-    this.roundResultPublisher.publishMD5(md5);
     await this.settleBets({ ...finish, playerName, playerUID: betTracks.uid }, isFold);
     await gameNotifications.deleteOne({ uid: betTracks.uid, gameId: this.definition.id });
   }

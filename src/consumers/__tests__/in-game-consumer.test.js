@@ -109,6 +109,7 @@ describe('InGameConsumer test', () => {
         },
         user: { uid: realPlayer.UID },
         lastRoundId: data.roundId,
+        md5: undefined
       };
 
       // Act
@@ -141,6 +142,7 @@ describe('InGameConsumer test', () => {
       ownBets: {},
       user: { uid: realPlayer.UID },
       lastRoundId: data.roundId,
+      md5: undefined
     };
 
     // Act

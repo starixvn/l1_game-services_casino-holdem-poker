@@ -11,6 +11,7 @@ export default class SocketRouter extends BaseSocketRouter {
     userSignInPublisher,
     historyQuery,
     logService,
+    getGameConfigsConsumer,
     userDealConsumer = null,
     userDoubleCallConsumer = null,
     userFoldConsumer = null,
@@ -27,6 +28,7 @@ export default class SocketRouter extends BaseSocketRouter {
       logService,
     });
 
+    this.getGameConfigsConsumer = getGameConfigsConsumer;
     this.userDealConsumer = userDealConsumer;
     this.userDoubleCallConsumer = userDoubleCallConsumer;
     this.userFoldConsumer = userFoldConsumer;
@@ -36,6 +38,7 @@ export default class SocketRouter extends BaseSocketRouter {
     super.init(socketClient);
 
     this.socketClient.on('getTicketDetail', this.handleGetTicketDetail.bind(this));
+    this.socketClient.on("getGameConfigs", this.handleGetGameConfigs.bind(this));
   }
 
   async handlePlaceBet(payload) {
@@ -81,6 +84,14 @@ export default class SocketRouter extends BaseSocketRouter {
       );
 
       this.socketClient.emit(this.definition.name, ticketDetail);
+    } catch (error) {
+      this.logService.logError(error);
+    }
+  }
+
+  async handleGetGameConfigs() {
+    try {
+      await this.getGameConfigsConsumer.consume(this.gameData.realPlayers[this.socketClient.id]);
     } catch (error) {
       this.logService.logError(error);
     }
