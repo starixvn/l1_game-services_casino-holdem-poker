@@ -14,6 +14,7 @@ const Schema = new mongoose.Schema({
   odds: { type: Object },
   md5: { type: String, require: true },
   resultKey: { type: String, require: true },
+  resultGenerated: { type: Object },
 });
 
 export default mongoose.model(modelName, Schema);

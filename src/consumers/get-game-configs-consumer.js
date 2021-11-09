@@ -1,12 +1,11 @@
 export default class GetGameConfigsConsumer {
-  constructor({ definition, gameData, roundResultConsumer }) {
+  constructor({ definition, gameData }) {
     this.definition = definition;
     this.gameData = gameData;
-    this.roundResultConsumer = roundResultConsumer;
   }
 
   async consume(player) {
-    player.socketClient.emit(this.definition.name, { gameConfigs: this.gameData.gameConfigs });
-    // this.roundResultConsumer.generateResult(player.profile.name);
+    const { gameConfigs, md5 } = this.gameData
+    player.socketClient.emit(this.definition.name, { gameConfigs, md5 });
   }
 }

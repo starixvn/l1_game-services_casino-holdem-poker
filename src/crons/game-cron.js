@@ -19,7 +19,6 @@ export default class GameCron extends Core.Crons.BaseGameCron {
     archiveStatusesRepository,
     notificationRepository,
     betsRepository,
-    roundResultConsumer
   }) {
     super({
       definition,
@@ -35,7 +34,6 @@ export default class GameCron extends Core.Crons.BaseGameCron {
       notificationRepository,
     });
     this.betsRepository = betsRepository;
-    this.roundResultConsumer = roundResultConsumer;
   }
 
   async start() {
@@ -102,9 +100,6 @@ export default class GameCron extends Core.Crons.BaseGameCron {
     if (this.gameData.remainingTime === durations.wholeRound) {
       await this.checkGameStatus();
       this.bot && (await this.bot.reset());
-     
-
-      // this.roundResultConsumer.generateResult();
     }
 
     if (!this.gameData.disabled) {

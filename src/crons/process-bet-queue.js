@@ -134,35 +134,35 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       },
       endBet: betTracks.bets.ante + betTracks.bets.aa,
       user: balance,
+      md5: this.gameData.md5
     });
   }
 
   async createRound(player, roundId) {
     const { betTracks } = this.gameData.ingame[player.profile.name];
     const { odds } = this.gameData.gameConfigs;
-      const result = this.definition.generateResult(
+
+    const resultGenerated = this.definition.generateResult(
       betTracks.communityCards,
       betTracks.dealer,
       betTracks.deck,
     );
 
-    // betTracks.dealer = result.dealer;
-    // betTracks.communityCards = result.communityCards;
-
-    const resultKey = `${JSON.stringify(result)}${randomString()}`;
+    const resultKey = `${JSON.stringify(resultGenerated.communityCards)}${randomString()}`;
     const md5 = createHashMD5(resultKey);
-    this.gameData.currentMD5 = md5;
+    this.gameData.md5 = md5;
     this.gameData.resultKey = resultKey;
-    
+
     return this.roundsRepository.create({
       id: roundId,
-      result,
+      result: { dealer: betTracks.dealer, communityCards: betTracks.communityCards },
       roundStartTime: new Date(),
       uid: player.UID,
       name: player.profile.name,
       odds,
+      resultGenerated,
       md5,
-      resultKey
+      resultKey,
     });
   }
 
@@ -230,17 +230,13 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     await this.settleGameRoundConsumer.settleRound(player.profile.name);
   }
 
-  updateBetTracksAfterCall(player, amount) {
+  async updateBetTracksAfterCall(player, amount) {
     const { betTracks } = this.gameData.ingame[player.profile.name];
-    // const result = this.definition.generateResult(
-    //   betTracks.communityCards,
-    //   betTracks.dealer,
-    //   betTracks.deck,
-    // );
+    const { resultGenerated } = await this.roundsRepository.findOne({ id: betTracks.roundId }, { _id: false }).lean().exec();
 
     betTracks.bets.call = amount;
-    // betTracks.dealer = result.dealer;
-    // betTracks.communityCards = result.communityCards;
+    betTracks.dealer = resultGenerated.dealer;
+    betTracks.communityCards = resultGenerated.communityCards;
     const combinationPlayerResult = this.definition.settle(
       betTracks.player.concat(betTracks.communityCards),
     );
