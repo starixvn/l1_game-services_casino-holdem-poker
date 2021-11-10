@@ -209,7 +209,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   }
 
   async handleSuccessCall(player, amount, balance) {
-    this.updateBetTracksAfterCall(player, amount);
+    await this.updateBetTracksAfterCall(player, amount);
     const { betTracks } = this.gameData.ingame[player.profile.name];
 
     await this.betsRepository.update(
