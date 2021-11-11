@@ -2,7 +2,6 @@ import { Core } from 'sc-game-base';
 import { gameNotifications } from 'sc-base-database';
 import { ranks } from '../helpers/constants';
 import { compareCombination, isWinAA } from '../helpers/result-helper';
-import { createHashMD5, randomString } from "../helpers/crypto-helper";
 
 export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGameRoundConsumer {
   constructor({
@@ -73,10 +72,10 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       delete this.gameData.ingame[playerName];
 
       this.publisher.publishToUser(playerUID, {
-        resultKey: this.gameData.resultKey,
         finish: {
           settlementResult: betResult.settlementResult,
         },
+        resultKey: this.gameData.resultKey,
       });
     }
   }

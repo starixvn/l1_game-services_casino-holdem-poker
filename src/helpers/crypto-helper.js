@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-export const randomString = (length = 26) => {
+export const randomString = (length = 23) => {
     return crypto
         .randomBytes(length)
         .toString("hex")

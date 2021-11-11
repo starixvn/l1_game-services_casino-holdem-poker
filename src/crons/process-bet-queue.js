@@ -148,7 +148,8 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       betTracks.deck,
     );
 
-    const resultKey = `${JSON.stringify(resultGenerated.communityCards)}${randomString()}`;
+    const cardsKey = JSON.stringify(betTracks.player.concat(betTracks.dealer).concat(resultGenerated.communityCards));
+    const resultKey = `${cardsKey}${randomString()}`;
     const md5 = createHashMD5(resultKey);
     this.gameData.md5 = md5;
     this.gameData.resultKey = resultKey;
