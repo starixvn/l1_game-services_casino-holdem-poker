@@ -297,7 +297,7 @@ describe('Process bet queue test', () => {
   describe('createRound', () => {
     it('should return expected', async () => {
       const player = { UID: 1, profile: { name: 'profile' } };
-      const betTracks = { dealer: [{ rank: 1 }], communityCards: [{ rank: 2 }] };
+      const betTracks = {  player: [{ rank: 2 }],dealer: [{ rank: 1 }], communityCards: [{ rank: 2 }] };
       const result = { dealer: betTracks.dealer, communityCards: betTracks.communityCards };
       const gameData = {
         gameConfigs: { odds: { callBet: 2 } },
