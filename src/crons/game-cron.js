@@ -19,11 +19,11 @@ export default class GameCron extends Core.Crons.BaseGameCron {
     archiveStatusesRepository,
     notificationRepository,
     exchangeRatesRepository,
-        currencyGroupGamesRepository,
-        partnerConfigRepository,
-        currencyGroupRepository,
-        currencyRepository,
-        betsRepository,
+    currencyGroupGamesRepository,
+    partnerConfigRepository,
+    currencyGroupRepository,
+    currencyRepository,
+    betsRepository,
   }) {
     super({
       definition,
@@ -38,10 +38,10 @@ export default class GameCron extends Core.Crons.BaseGameCron {
       archiveStatusesRepository,
       notificationRepository,
       exchangeRatesRepository,
-        currencyGroupGamesRepository,
-        partnerConfigRepository,
-        currencyGroupRepository,
-        currencyRepository,
+      currencyGroupGamesRepository,
+      partnerConfigRepository,
+      currencyGroupRepository,
+      currencyRepository,
     });
     this.betsRepository = betsRepository;
   }
@@ -67,9 +67,9 @@ export default class GameCron extends Core.Crons.BaseGameCron {
       this.gameData.roundId = lastRound.id;
     }
 
-    await this.initBetTracks();
     await this.getSettingForNewRound();
     await this.updateExchangeRates();
+    await this.initBetTracks();
 
     job.start();
   }
@@ -124,7 +124,7 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     if (this.gameData.remainingTime < 0) {
       this.gameData.remainingTime = durations.wholeRound;
-     
+
       const expiredTime = moment.utc().subtract(appConfigs.roundMaxDurationInMinutes, 'minutes');
       await Promise.all(
         Object.values(this.gameData.ingame)

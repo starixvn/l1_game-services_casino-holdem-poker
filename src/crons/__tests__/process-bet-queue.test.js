@@ -297,10 +297,10 @@ describe('Process bet queue test', () => {
   describe('createRound', () => {
     it('should return expected', async () => {
       const player = { UID: 1, profile: { name: 'profile' } };
-      const betTracks = {  player: [{ rank: 2 }],dealer: [{ rank: 1 }], communityCards: [{ rank: 2 }] };
+      const betTracks = { player: [{ rank: 2 }], dealer: [{ rank: 1 }], communityCards: [{ rank: 2 }] };
       const result = { dealer: betTracks.dealer, communityCards: betTracks.communityCards };
       const gameData = {
-        exchangeRates: {exId: 1}, 
+        exchangeRates: { exId: 1 },
         gameConfigs: { odds: { callBet: 2 } },
         ingame: { [player.profile.name]: { betTracks } },
       };
@@ -445,7 +445,7 @@ describe('Process bet queue test', () => {
   describe('handleSuccessCall', () => {
     it('should run correctly', async () => {
       // Arrange
-      const player = { profile: { name: 'a' } };
+      const player = { profile: { name: 'a' }, session: { partnerId: "1W" } };
       const betTracks = {
         roundId: 1,
         combinationResult: { player: { id: 3 } },
@@ -495,7 +495,7 @@ describe('Process bet queue test', () => {
   describe('updateBetTracksAfterCall', () => {
     it('should run correctly', async () => {
       // Arrange
-      const player = { profile: { name: 'a' } };
+      const player = { profile: { name: 'a' }, session: { partnerId: "1W" } };
       const result = { dealer: [{ rank: 1 }], communityCards: [{ rank: 2 }] };
       const combinationResult = { id: 1 };
       const definition = {

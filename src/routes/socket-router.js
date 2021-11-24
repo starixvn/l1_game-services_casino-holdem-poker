@@ -11,6 +11,7 @@ export default class SocketRouter extends BaseSocketRouter {
     userSignInPublisher,
     historyQuery,
     logService,
+    playGamePermissionValidator,
     getGameConfigsConsumer,
     userDealConsumer = null,
     userDoubleCallConsumer = null,
@@ -26,6 +27,7 @@ export default class SocketRouter extends BaseSocketRouter {
       userSignInPublisher,
       historyQuery,
       logService,
+      playGamePermissionValidator
     });
 
     this.getGameConfigsConsumer = getGameConfigsConsumer;

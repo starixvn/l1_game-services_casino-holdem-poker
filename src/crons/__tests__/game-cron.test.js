@@ -25,6 +25,8 @@ describe('Game Cron test', () => {
       // Arrange
       const lastRound = { id: 10 };
       const game = new GameCron({});
+      game.getSettingForNewRound = jest.fn();
+      game.updateExchangeRates = jest.fn();
       game.proceed = jest.fn();
       game.initBetTracks = jest.fn();
       game.roundsRepository = {
@@ -45,6 +47,8 @@ describe('Game Cron test', () => {
     it('should run correctly when last round null', async () => {
       // Arrange
       const game = new GameCron({});
+      game.getSettingForNewRound = jest.fn();
+      game.updateExchangeRates = jest.fn();
       game.proceed = jest.fn();
       game.initBetTracks = jest.fn();
       game.roundsRepository = {

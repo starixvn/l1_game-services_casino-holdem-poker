@@ -52,8 +52,9 @@ describe('place-bet test', () => {
         amount: 10,
         freeBet: true,
         roundEndTime: '',
+        freeSpin: true
       };
-      const session = { siteId: 123, currency: 'IN', memberId: 1, ip: '', language: 'en' };
+      const session = { siteId: 123, currency: 'IN', memberId: 1, ip: '', language: 'en', partnerId: 1 };
       const placeBetParams = {
         SiteId: session.siteId,
         GameRoundId: bet.gameRoundId,
@@ -66,7 +67,12 @@ describe('place-bet test', () => {
         Language: session.language,
         RoundEndTime: bet.roundEndTime,
         FreeBet: bet.freeBet,
+        FreeSpin: bet.freeSpin,
+        ContributionRate: 0,
+        ContributionAmount: 0,
+        PartnerId: session.partnerId,
       };
+
       const balance = { isOk: true, response: { red: 1000 } };
       getCoinBalance.mockReturnValue(balance);
       logger.composeBeforeCallMessage.mockReturnValue({});
@@ -88,6 +94,55 @@ describe('place-bet test', () => {
         { $set: { red: 100 }, $inc: { scoins: -10 } },
       );
       expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return expected placeBetParams when place bet successfully', async () => {
+      // Arrange
+      const bet = {
+        gameRoundId: 1,
+        gameId: 1,
+        choiceId: 1,
+        amount: 10,
+        freeBet: true,
+        roundEndTime: '',
+        freeSpin: false,
+        contributionRate: 5,
+        contributionAmount: 6
+      };
+      const session = { siteId: 123, currency: 'IN', memberId: 1, ip: '', language: 'en', partnerId: 1 };
+      const placeBetParams = {
+        SiteId: session.siteId,
+        GameRoundId: bet.gameRoundId,
+        GameTypeId: bet.gameId,
+        ChoiceId: bet.choiceId,
+        Amount: 0,
+        Currency: session.currency,
+        ObCustId: session.memberId,
+        Ip: session.ip,
+        Language: session.language,
+        RoundEndTime: bet.roundEndTime,
+        FreeBet: bet.freeBet,
+        FreeSpin: bet.freeSpin,
+        ContributionRate: 5,
+        ContributionAmount: 6,
+        PartnerId: session.partnerId,
+      };
+
+      const balance = { isOk: true, response: { red: 1000 } };
+      getCoinBalance.mockReturnValue(balance);
+      logger.composeBeforeCallMessage.mockReturnValue({});
+      APIClient.placeBet.mockReturnValue({ balance: 100 });
+      isErrorResult.mockReturnValue(false);
+      const expected = apiResult({
+        isOk: true,
+        response: { red: 100, scoins: balance.response.red },
+      });
+
+      // Act
+      const actual = await placeBet({ id: 1, session }, bet);
+
+      // Assert
+      expect(logger.composeBeforeCallMessage).toHaveBeenCalledWith(session, placeBetParams);
     });
   });
 
