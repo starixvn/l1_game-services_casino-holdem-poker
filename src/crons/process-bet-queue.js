@@ -164,6 +164,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       resultGenerated,
       md5,
       resultKey,
+      exchangeRateId: this.gameData.exchangeRates.exId,
     });
   }
 

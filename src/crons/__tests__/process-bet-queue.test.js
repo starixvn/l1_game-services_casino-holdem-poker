@@ -300,6 +300,7 @@ describe('Process bet queue test', () => {
       const betTracks = {  player: [{ rank: 2 }],dealer: [{ rank: 1 }], communityCards: [{ rank: 2 }] };
       const result = { dealer: betTracks.dealer, communityCards: betTracks.communityCards };
       const gameData = {
+        exchangeRates: {exId: 1}, 
         gameConfigs: { odds: { callBet: 2 } },
         ingame: { [player.profile.name]: { betTracks } },
       };
