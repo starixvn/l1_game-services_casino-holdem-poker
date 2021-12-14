@@ -5,7 +5,11 @@ export default class GetGameConfigsConsumer {
   }
 
   async consume(player) {
-    const { gameConfigs, md5 } = this.gameData
-    player.socketClient.emit(this.definition.name, { gameConfigs, md5 });
+    const { md5, currencyGroupGames, gameConfigs } = this.gameData;
+    const { odds, enableFreeBet } = gameConfigs;
+    const { session } = player;
+    const settings = currencyGroupGames.find((x) => x.groupId.toString() === session.currencyGroupId);
+
+    player.socketClient.emit(this.definition.name, { gameConfigs: { ...settings, odds, enableFreeBet }, md5 });
   }
 }

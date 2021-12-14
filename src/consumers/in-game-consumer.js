@@ -1,35 +1,8 @@
 import { Core } from "sc-game-base";
 
 export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsumer {
-  async consume(realPlayer) {
-    const { remainingTime, gameConfigs, umMessages } = this.gameData;
-    const disabled = !gameConfigs || !gameConfigs.enabled;
-    if (disabled) {
-      realPlayer.socketClient.emit(this.definition.name, {
-        remainingTime,
-        um: disabled,
-        um_message: umMessages,
-      });
-    }
-
-    const payload = await this.buildPayload(realPlayer);
-    const player = {
-      id: realPlayer.UID,
-      name: realPlayer.profile.name,
-      red: payload.user.red,
-      avatarId: payload.user.avatarId,
-      type: payload.user.type,
-    };
-
-    if (!this.gameData.players[realPlayer.UID]) {
-      this.gameData.players[realPlayer.UID] = player;
-    }
-
-    realPlayer.socketClient.emit(this.definition.name, payload);
-  }
-
   async buildPayload(realPlayer) {
-    const gameConfigs = this.gameData.gameConfigs;
+    const basePayload = await super.buildPayload(realPlayer);
 
     const { betTracks } = this.gameData.ingame[realPlayer.profile.name] || { betTracks: {} };
     const totalAmount =
@@ -52,7 +25,7 @@ export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsum
 
     const user = await this.getUserInfo(realPlayer.UID);
     return {
-      gameConfigs,
+      ...basePayload,
       user,
       ownBets,
       lastRoundId: this.gameData.roundId,
