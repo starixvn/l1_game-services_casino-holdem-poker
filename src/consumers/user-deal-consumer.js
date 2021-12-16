@@ -4,26 +4,28 @@ import gameSettings from '../game-settings';
 
 export default class UserDealConsumer extends BasePlaceBetConsumer {
   async composeActionValidationCriteria(player, payload) {
-    const configs = this.gameData.gameConfigs;
+    const settings = this.gameData.currencyGroupGames.find((x) => x.groupId.toString() === player.session.currencyGroupId);
     const amountAnte = payload.ante;
     const amountAa = payload.aa;
+    const minBet = Math.max(player.profile.minBet, settings.minBet);
+    const maxBet = Math.min(player.profile.maxBet, settings.maxBet);
 
     return [
       {
-        failure: amountAnte > configs.choices_maxbet.anteBet,
-        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: configs.choices_maxbet.anteBet })
+        failure: amountAnte > settings.maxBetPerChoices.anteBet,
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: settings.maxBetPerChoices.anteBet })
       },
       {
-        failure: amountAa > configs.choices_maxbet.aaBet,
-        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: configs.choices_maxbet.aaBet })
+        failure: amountAa > settings.maxBetPerChoices.aaBet,
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: settings.maxBetPerChoices.aaBet })
       },
       {
-        failure: amountAnte < configs.minbet || (amountAa !== 0 && amountAa < configs.minbet),
-        notice: this.getNoticeObj(helpers.noticeHelper.minBet, { minBet: configs.minbet})
+        failure: amountAnte < minBet || (amountAa !== 0 && amountAa < minBet),
+        notice: this.getNoticeObj(helpers.noticeHelper.minBet, { minBet: minBet})
       },
       {
-        failure: amountAnte + amountAa > configs.maxbet,
-        notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet: configs.maxbet })
+        failure: amountAnte + amountAa > maxBet,
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet: maxBet })
       },
     ];
   }

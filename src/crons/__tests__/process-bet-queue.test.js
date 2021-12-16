@@ -541,7 +541,6 @@ describe('Process bet queue test', () => {
 
   describe('handleFailPlaceBetResponse', () => {
     const player = { session: { language: '' } };
-    const keys = { notEnoughMoney: 'notEnoughMoney', cannotProcessBet: 'cannotProcessBet' };
 
     it('should run correctly', () => {
       // Arrange

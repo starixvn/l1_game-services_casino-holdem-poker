@@ -8,12 +8,32 @@ describe('BaseCallConsumer test', () => {
   const gameData = new Table.TableGameData();
   const publisher = {};
   const logService = { logWarning: jest.fn() };
-  gameData.gameConfigs = {
-    maxbet: 1000,
-    minbet: 10,
-    choices_maxbet: { callBet: 100, anteBet: 100, aaBet: 100 }
+  const playerName = "nhanvat01";
+  const player = {
+    UID: "123",
+    profile: {
+      name: playerName,
+      minBet: 1,
+      maxBet: 2000,
+    },
+    session: {
+      currencyGroupId: "1",
+      currency: "US",
+    },
   };
-  const player = { profile: { name: 'a' }, session: { currency: 'US', language: 'en' } };
+
+  gameData.remainingTime = 20;
+  gameData.gameConfigs = {
+    enabled: true
+  };
+  gameData.currencyGroupGames = [
+    {
+      groupId: 1,
+      minBet: 10,
+      maxBet: 1000,
+      maxBetPerChoices: { callBet: 100, anteBet: 100, aaBet: 100 }
+    },
+  ];
 
   it('inherit BasePlaceBetConsumer', () => {
     // Act
@@ -27,15 +47,15 @@ describe('BaseCallConsumer test', () => {
     it('should return expected when amount 500', async () => {
       // Arrange
       const data = { ingame: {} };
-      const consumer = new BaseCallConsumer(definition, {...gameData, ...data}, publisher, logService);
+      const consumer = new BaseCallConsumer(definition, { ...gameData, ...data }, publisher, logService);
       const expected = [
         {
           failure: true,
-          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: 100 },
+          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: "100" },
         },
         {
           failure: false,
-          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: 1000 },
+          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: "1,000" },
         },
       ];
 
@@ -49,15 +69,15 @@ describe('BaseCallConsumer test', () => {
     it('should return expected when amount 0', async () => {
       // Arrange
       const data = { ingame: {} };
-      const consumer = new BaseCallConsumer(definition,  {...gameData, ...data}, publisher, logService);
+      const consumer = new BaseCallConsumer(definition, { ...gameData, ...data }, publisher, logService);
       const expected = [
         {
           failure: false,
-          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: 100 },
+          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: "100" },
         },
         {
           failure: false,
-          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: 1000 },
+          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: "1,000" },
         },
       ];
 
@@ -73,15 +93,15 @@ describe('BaseCallConsumer test', () => {
       const data = {
         ingame: { [player.profile.name]: { betTracks: { bets: { ante: 100, aa: 1000 } } } },
       };
-      const consumer = new BaseCallConsumer(definition,  {...gameData, ...data}, publisher, logService);
+      const consumer = new BaseCallConsumer(definition, { ...gameData, ...data }, publisher, logService);
       const expected = [
         {
           failure: false,
-          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: 100 },
+          notice: { errorCode: helpers.noticeHelper.maxBetForChoice, maxBet: "100" },
         },
         {
-          failure: false,
-          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: 1000 },
+          failure: true,
+          notice: { errorCode: helpers.noticeHelper.maxBet, maxBet: "1,000" },
         }
       ];
 
@@ -102,6 +122,7 @@ describe('BaseCallConsumer test', () => {
     it('should return expected when empty ingame', async () => {
       // Arrange
       const consumer = new BaseCallConsumer(definition, gameData, publisher, logService);
+      gameData.ingame = {};
       const expected = [
         {
           failure: true,
@@ -122,7 +143,7 @@ describe('BaseCallConsumer test', () => {
     it('should return expected when have ingame', async () => {
       // Arrange
       const data = { ingame: { [player.profile.name]: { betTracks: { roundId: 1 } } } };
-      const consumer = new BaseCallConsumer(definition, {...gameData, ...data}, publisher, logService);
+      const consumer = new BaseCallConsumer(definition, { ...gameData, ...data }, publisher, logService);
       const expected = [
         {
           failure: false,

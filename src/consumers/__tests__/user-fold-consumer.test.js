@@ -9,13 +9,6 @@ describe('UserFoldConsumer test', () => {
   const gameData = new Table.TableGameData();
   const publisher = {};
   const logService = { logWarning: jest.fn() };
-  const keys = {
-    maxBetChoice: 'maxBetChoice',
-    maxBet: 'maxBet',
-    minBet: 'minBet',
-    invalidDealDueToRunningRound: 'invalidDealDueToRunningRound',
-    placeBetIsProcessingMessage: 'placeBetIsProcessingMessage',
-  };
 
   it('inherit BaseCallConsumer', () => {
     // Act

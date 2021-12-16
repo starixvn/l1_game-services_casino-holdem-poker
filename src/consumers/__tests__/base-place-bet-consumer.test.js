@@ -140,7 +140,6 @@ describe('BasePlaceBetConsumer test', () => {
   });
 
   describe('consume', () => {
-    const keys = { cannotBetAtTheMoment: 'cannotBetAtTheMoment' };
     const player = { UID: 1, profile: { name: 'a' }, session: { language: 'en' } };
 
     it('should return when validBetRequest return false', async () => {

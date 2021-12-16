@@ -19,13 +19,33 @@ describe('UserDealConsumer test', () => {
   });
 
   describe('composeActionValidationCriteria', () => {
-    gameData.gameConfigs = {
-      maxbet: 1000,
-      minbet: 10,
-      choices_maxbet: { anteBet: 100, aaBet: 100 }
-    };
+    const playerName = "nhanvat01";
+  const player = {
+    UID: "123",
+    profile: {
+      name: playerName,
+      minBet: 1,
+      maxBet: 2000,
+    },
+    session: {
+      currencyGroupId: "1",
+      currency: "US",
+    },
+  };
 
-    const player = { profile: { name: 'a' }, session: { currency: 'US', language: 'en' } };
+  gameData.remainingTime = 20;
+  gameData.gameConfigs = {
+    enabled: true
+  };
+  gameData.currencyGroupGames = [
+    {
+      groupId: 1,
+      minBet: 10,
+      maxBet: 1000,
+      maxBetPerChoices: { callBet: 100, anteBet: 100, aaBet: 100 }
+    },
+  ];
+
     const expected = [
       {
         failure: false,

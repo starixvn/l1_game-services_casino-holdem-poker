@@ -3,18 +3,20 @@ import { helpers } from "sc-common";
 
 export default class BaseCallConsumer extends BasePlaceBetConsumer {
   async composeActionValidationCriteria(player, amount) {
-    const configs = this.gameData.gameConfigs;
+    const settings = this.gameData.currencyGroupGames.find((x) => x.groupId.toString() === player.session.currencyGroupId);
     const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
     const { aa, ante } = betTracks.bets || { aa: 0, ante: 0 };
+    const maxBet = Math.min(player.profile.maxBet, settings.maxBet);
+    const formatNumberWithComma = helpers.numberHelper.formatNumberWithComma;
 
     return [
       {
-        failure: amount > configs.choices_maxbet.callBet,
-        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: configs.choices_maxbet.callBet })
+        failure: amount >  settings.maxBetPerChoices.callBet,
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: formatNumberWithComma(settings.maxBetPerChoices.callBet) })
       },
       {
-        failure: amount + aa + ante > configs.maxBet,
-        notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet: configs.maxbet })
+        failure: amount + aa + ante > maxBet,
+        notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet: formatNumberWithComma(maxBet) })
       },
     ];
   }
