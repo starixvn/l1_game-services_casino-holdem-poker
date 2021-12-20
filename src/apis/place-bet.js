@@ -33,9 +33,6 @@ export const placeBet = async (user, betInfo) => {
     System: session.system,
     RoundEndTime: betInfo.roundEndTime,
     FreeBet: betInfo.freeBet,
-    FreeSpin: betInfo.freeSpin,
-    ContributionRate: betInfo.freeSpin ? 0 : betInfo.contributionRate,
-    ContributionAmount: betInfo.freeSpin ? 0 : betInfo.contributionAmount,
     PartnerId: session.partnerId,
   };
 

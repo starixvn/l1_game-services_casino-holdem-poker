@@ -65,6 +65,9 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       bet.result = betResult.result;
       bet.settlementResult = betResult.settlementResult;
       bet.endTime = time;
+      bet.aaOdds = betResult.aaOdds;
+      bet.anteOdds = betResult.anteOdds;
+      bet.callOdds = betResult.callOdds;
 
       await bet.save();
       await this.callEndGame(bet, roundId, time, betResult);
@@ -126,6 +129,7 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       const originalOdds = odds.CallBet || 1;
       const winAmount = betAmount * originalOdds;
 
+      result.callOdds = originalOdds;
       result.totalWin += winAmount;
       result.netWin += winAmount - betAmount;
       result.settlementResult.call = winAmount;
@@ -187,6 +191,12 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
     const originalOdds = odds[combinationResult.id] || 1;
     const winAmount = betAmount * originalOdds;
 
+    if (type === "aa") {
+      result.aaOdds = originalOdds;
+    }
+    else {
+      result.anteOdds = originalOdds;
+    }
     result.totalWin += winAmount;
     result.netWin += winAmount - betAmount;
     result.settlementResult[type] = winAmount;

@@ -67,9 +67,6 @@ describe('place-bet test', () => {
         Language: session.language,
         RoundEndTime: bet.roundEndTime,
         FreeBet: bet.freeBet,
-        FreeSpin: bet.freeSpin,
-        ContributionRate: 0,
-        ContributionAmount: 0,
         PartnerId: session.partnerId,
       };
 
@@ -105,9 +102,6 @@ describe('place-bet test', () => {
         amount: 10,
         freeBet: true,
         roundEndTime: '',
-        freeSpin: false,
-        contributionRate: 5,
-        contributionAmount: 6
       };
       const session = { siteId: 123, currency: 'IN', memberId: 1, ip: '', language: 'en', partnerId: 1 };
       const placeBetParams = {
@@ -122,9 +116,6 @@ describe('place-bet test', () => {
         Language: session.language,
         RoundEndTime: bet.roundEndTime,
         FreeBet: bet.freeBet,
-        FreeSpin: bet.freeSpin,
-        ContributionRate: 5,
-        ContributionAmount: 6,
         PartnerId: session.partnerId,
       };
 

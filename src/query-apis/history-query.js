@@ -30,19 +30,33 @@ export default class HistoryQuery {
           handId: round.settlementResult?.id,
           isQualified: round.settlementResult?.isQualified,
         };
-    const bets = {
-      ante: bet.ante,
-      aa: bet.aa,
-      call: bet.call,
-      bet: bet.bet,
-      result: bet.settlementResult,
-    };
+    const bets = [{
+      betChoice: "ante",
+      time: bet.time,
+      odds: bet.anteOdds,
+      stake: bet.ante,
+      win: bet.settlementResult.ante
+    },{
+      betChoice: "aa",
+      time: bet.time,
+      odds: bet.aaOdds,
+      stake: bet.aa,
+      win: bet.settlementResult.aa
+    },{
+      betChoice: "call",
+      time: bet.callTime,
+      odds: bet.callOdds,
+      stake: bet.call,
+      win: bet.settlementResult.call
+    }];
+
     return {
       player,
       dealer,
       communityCards: round.result.communityCards,
       bets,
       isFold: bet.isFold,
+      roundId: bet.phien,
       isPlayerWin: round.settlementResult
         ? compareCombination(round.settlementResult, bet.result)
         : -1,

@@ -100,6 +100,8 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       gameId: this.definition.id,
       gameRoundId: roundId,
       choiceId: this.definition.choicesMapper[gameSettings.actions.deal],
+      freeBet: payload.freeBet,
+      clientSentTime: payload.time ?? new Date(),
     };
 
     const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
@@ -218,7 +220,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
     await this.betsRepository.update(
       { phien: betTracks.roundId },
-      { $inc: { call: amount, bet: amount }, result: betTracks.combinationResult.player },
+      { $inc: { call: amount, bet: amount }, result: betTracks.combinationResult.player, callTime: new Date(),  },
     );
 
     const call = {

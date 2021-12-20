@@ -8,8 +8,12 @@ const schema = new mongoose.Schema({
   phien: { type: Number, default: 0 },
 
   aa: { type: Number, default: 0 },
+  aaOdds: { type: Number, default: 0 },
   ante: { type: Number, default: 0 },
+  anteOdds: { type: Number, default: 0 },
   call: { type: Number, default: 0 },
+  callOdds: { type: Number, default: 0 },
+  callTime: { type: Date },
   isFold: { type: Boolean, default: false },
   cards: { type: Array, default: [] },
 

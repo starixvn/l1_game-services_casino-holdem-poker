@@ -7,6 +7,9 @@ describe('InGameConsumer test', () => {
   // Arrange
   const definition = new Core.GameDefinition({ id: 1, name: 'casinoholdempoker' });
   const gameData = new Table.TableGameData();
+  const md5 = "aabbcc";
+  gameData.md5 = md5;
+
   it('inherit BaseInGameConsumer', () => {
     // Act
     const consumer = new InGameConsumer(definition, gameData);
@@ -56,7 +59,7 @@ describe('InGameConsumer test', () => {
         },
         user: { uid: realPlayer.UID },
         lastRoundId: data.roundId,
-        md5: undefined
+        md5
       };
 
       // Act
@@ -87,7 +90,7 @@ describe('InGameConsumer test', () => {
         ownBets: {},
         user: { uid: realPlayer.UID },
         lastRoundId: data.roundId,
-        md5: undefined
+        md5
       };
   
       // Act
