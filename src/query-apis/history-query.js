@@ -42,13 +42,18 @@ export default class HistoryQuery {
       odds: bet.aaOdds,
       stake: bet.aa,
       win: bet.settlementResult.aa
-    },{
-      betChoice: "call",
-      time: bet.callTime,
-      odds: bet.callOdds,
-      stake: bet.call,
-      win: bet.settlementResult.call
     }];
+
+    if(!bet.isFold)
+    {
+      bets.push({
+        betChoice: "call",
+        time: bet.callTime,
+        odds: bet.callOdds,
+        stake: bet.call,
+        win: bet.settlementResult.call
+      });
+    }
 
     return {
       player,

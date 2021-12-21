@@ -143,12 +143,6 @@ describe('History query test', () => {
         odds: bet.aaOdds,
         stake: bet.aa,
         win: bet.settlementResult.aa
-      },{
-        betChoice: "call",
-        time: bet.callTime,
-        odds: bet.callOdds,
-        stake: bet.call,
-        win: bet.settlementResult.call
       }];
       const expected = {
         player,
