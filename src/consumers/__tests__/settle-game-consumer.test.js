@@ -1,7 +1,6 @@
 import SettleGameConsumer from '../settle-game-consumer';
 import { SettleGameRoundConsumer } from 'sc-game-base/src/core/event-consumers';
 import { gameNotifications } from 'sc-base-database';
-import { ranks } from '../../helpers/constants';
 import { compareCombination, isWinAA } from '../../helpers/result-helper';
 
 jest.mock('sc-base-database');
@@ -10,6 +9,8 @@ jest.mock('../../helpers/result-helper');
 describe('Settle game test', () => {
   const mockDate = new Date(123456);
   let spy;
+  const resultKey = { rawValue: "456", formatValue: { cards: [], suffix: "aaa" } };
+  const md5 = "123";
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -123,7 +124,7 @@ describe('Settle game test', () => {
 
     it('should run correctly when bet has value and has odds', async () => {
       // Arrange
-      const gameData = { ingame: { a: {} }, gameConfigs: {} };
+      const gameData = { ingame: { a: {} }, gameConfigs: {}, resultKey, md5 };
       const bet = { save: jest.fn() };
       const betsRepository = {
         findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),
@@ -138,7 +139,7 @@ describe('Settle game test', () => {
         odds: {},
         time: new Date(123456),
         playerName: 'a',
-        playerUID: 123,
+        playerUID: 123
       };
 
       // Act
@@ -161,12 +162,13 @@ describe('Settle game test', () => {
       expect(consumer.gameData.ingame).toStrictEqual({});
       expect(publisher.publishToUser).toHaveBeenCalledWith(finish.playerUID, {
         finish: { settlementResult: betResult.settlementResult },
+        md5: { key: { rawValue: "456", formatValue: { cards: [], suffix: "aaa" } } }
       });
     });
 
     it('should run correctly when bet has value and not odd', async () => {
       // Arrange
-      const gameData = { ingame: { a: {} }, gameConfigs: { odds: {} } };
+      const gameData = { ingame: { a: {} }, gameConfigs: { odds: {} }, resultKey, md5 };
       const bet = { save: jest.fn() };
       const betsRepository = {
         findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),
@@ -180,7 +182,7 @@ describe('Settle game test', () => {
         roundId: 1,
         time: new Date(123456),
         playerName: 'a',
-        playerUID: 123,
+        playerUID: 123
       };
 
       // Act
@@ -203,7 +205,36 @@ describe('Settle game test', () => {
       expect(consumer.gameData.ingame).toStrictEqual({});
       expect(publisher.publishToUser).toHaveBeenCalledWith(finish.playerUID, {
         finish: { settlementResult: betResult.settlementResult },
+        md5: { key: { rawValue: "456", formatValue: { cards: [], suffix: "aaa" } } }
       });
+    });
+
+    it('should reset md5', async () => {
+      // Arrange
+      const gameData = { ingame: { a: {} }, gameConfigs: {}, resultKey, md5 };
+      const bet = { save: jest.fn() };
+      const betsRepository = {
+        findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),
+      };
+      const publisher = { publishToUser: jest.fn() };
+      const consumer = new SettleGameConsumer({ gameData, betsRepository, publisher });
+      const betResult = { totalWin: 10, result: { id: 1 }, settlementResult: { ante: 10 } };
+      consumer.calculateBetResult = jest.fn().mockReturnValue(betResult);
+      consumer.callEndGame = jest.fn();
+      const finish = {
+        roundId: 1,
+        odds: {},
+        time: new Date(123456),
+        playerName: 'a',
+        playerUID: 123
+      };
+
+      // Act
+      await consumer.settleBets(finish);
+
+      // Assert
+      expect(gameData.md5).toEqual("");
+      expect(gameData.resultKey).toEqual({ rawValue: "", formatValue: { cards: [], suffix: "" }} );
     });
   });
 

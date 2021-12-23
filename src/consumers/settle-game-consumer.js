@@ -78,8 +78,11 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
         finish: {
           settlementResult: betResult.settlementResult,
         },
-        resultKey: this.gameData.resultKey,
+        md5: { key: this.gameData.resultKey },
       });
+
+      this.gameData.md5 = "";
+      this.gameData.resultKey =  { rawValue: "", formatValue: { cards: [], suffix: "" } };
     }
   }
 

@@ -11,7 +11,8 @@ jest.mock('../../helpers/deck-helper');
 describe('Process bet queue test', () => {
   const mockDate = new Date(123456);
   let spy;
-
+  const resultKey = { rawValue: "456", formatValue: { cards: [], suffix: "aaa" } };
+  const md5 = "123";
   beforeAll(() => {
     jest.useFakeTimers();
     spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
@@ -259,7 +260,7 @@ describe('Process bet queue test', () => {
         communityCards: [],
         combinationResult: {},
       };
-      const gameData = { ingame: { [player.profile.name]: { betTracks } } };
+      const gameData = { resultKey, md5, ingame: { [player.profile.name]: { betTracks } } };
       const publisher = { publishToUser: jest.fn() };
       const process = new ProcessBetQueue({ gameData, publisher });
       process.getPresetCards = jest.fn().mockReturnValue([]);
@@ -279,6 +280,7 @@ describe('Process bet queue test', () => {
         },
         endBet: betTracks.bets.ante + betTracks.bets.aa,
         user: {},
+        md5: { key: "123" }
       };
 
       // Act
@@ -481,7 +483,7 @@ describe('Process bet queue test', () => {
       expect(process.updateBetTracksAfterCall).toHaveBeenCalledWith(player, 100);
       expect(betsRepository.update).toHaveBeenCalledWith(
         { phien: betTracks.roundId },
-        { $inc: { call: 100, bet: 100 }, result: betTracks.combinationResult.player, callTime: new Date(123456)},
+        { $inc: { call: 100, bet: 100 }, result: betTracks.combinationResult.player, callTime: new Date(123456) },
       );
       expect(publisher.publishToUser).toHaveBeenCalledWith(player.UID, {
         endBet: 100,

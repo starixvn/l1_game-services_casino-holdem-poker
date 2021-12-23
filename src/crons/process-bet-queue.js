@@ -136,7 +136,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       },
       endBet: betTracks.bets.ante + betTracks.bets.aa,
       user: balance,
-      md5: this.gameData.md5
+      md5: { key: this.gameData.md5 }
     });
   }
 
@@ -150,11 +150,14 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       betTracks.deck,
     );
 
-    const cardsKey = JSON.stringify(betTracks.player.concat(betTracks.dealer).concat(resultGenerated.communityCards));
-    const resultKey = `${cardsKey}${randomString()}`;
-    const md5 = createHashMD5(resultKey);
+    const resultKeySuffix = randomString();
+    const cards = betTracks.player.concat(betTracks.dealer).concat(resultGenerated.communityCards);
+
+    const resultKeyRaw = `[${cards.map(card => card.rank).join(', ')}]${resultKeySuffix}`;
+    const md5 = createHashMD5(resultKeyRaw);
+    
     this.gameData.md5 = md5;
-    this.gameData.resultKey = resultKey;
+    this.gameData.resultKey = { rawValue: resultKeyRaw, formatValue: {cards, suffix: resultKeySuffix} };
 
     return this.roundsRepository.create({
       id: roundId,
@@ -165,7 +168,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       odds,
       resultGenerated,
       md5,
-      resultKey,
+      resultKey: resultKeyRaw,
       exchangeRateId: this.gameData.exchangeRates.exId,
     });
   }
@@ -220,7 +223,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
     await this.betsRepository.update(
       { phien: betTracks.roundId },
-      { $inc: { call: amount, bet: amount }, result: betTracks.combinationResult.player, callTime: new Date(),  },
+      { $inc: { call: amount, bet: amount }, result: betTracks.combinationResult.player, callTime: new Date(), },
     );
 
     const call = {
