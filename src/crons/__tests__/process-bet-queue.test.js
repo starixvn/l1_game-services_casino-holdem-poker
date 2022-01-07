@@ -187,7 +187,7 @@ describe('Process bet queue test', () => {
       const betTracks = {};
       const gameData = { roundId: 1, ingame: { [player.profile.name]: { betTracks } } };
       const process = new ProcessBetQueue({ definition, gameData });
-      const payload = { aa: 10, ante: 50 };
+      const payload = { aa: 10, ante: 50, freeBet: false };
       const betInfo = {
         amount: payload.aa + payload.ante,
         gameId: definition.id,
@@ -407,7 +407,7 @@ describe('Process bet queue test', () => {
       expect(process.handleSuccessCall).toHaveBeenCalledWith(
         player,
         betInfo.amount,
-        apiResult.response,
+        apiResult.response
       );
     });
 

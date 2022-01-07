@@ -83,35 +83,40 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   }
 
   async processDeal(player, payload) {
-    const { betTracks } = this.gameData.ingame[player.profile.name];
-    betTracks.player = [];
-    betTracks.dealer = [];
-    betTracks.communityCards = [];
-    betTracks.uid = player.UID;
-    betTracks.combinationResult = {};
-    betTracks.bets = { ...payload };
-    betTracks.isDealing = true;
+    try {
+      const { betTracks } = this.gameData.ingame[player.profile.name];
+      betTracks.player = [];
+      betTracks.dealer = [];
+      betTracks.communityCards = [];
+      betTracks.uid = player.UID;
+      betTracks.combinationResult = {};
+      betTracks.bets = { ...payload };
+      betTracks.isDealing = true;
 
-    this.gameData.roundId++;
-    const roundId = this.gameData.roundId;
+      this.gameData.roundId++;
+      const roundId = this.gameData.roundId;
 
-    const betInfo = {
-      amount: payload.aa + payload.ante,
-      gameId: this.definition.id,
-      gameRoundId: roundId,
-      choiceId: this.definition.choicesMapper[gameSettings.actions.deal],
-      freeBet: payload.freeBet,
-      clientSentTime: payload.time ?? new Date(),
-    };
+      const betInfo = {
+        amount: payload.aa + payload.ante,
+        gameId: this.definition.id,
+        gameRoundId: roundId,
+        choiceId: this.definition.choicesMapper[gameSettings.actions.deal],
+        freeBet: payload.freeBet,
+        clientSentTime: payload.time ?? new Date(),
+      };
 
-    const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
-    const { response } = apiResult;
-    if (apiResult.isOk) {
-      await this.handleSuccessDeal(player, response, roundId);
-    } else {
-      this.handleFailPlaceBetResponse(player, response, gameSettings.actions.deal);
+      const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
+      const { response } = apiResult;
+      if (apiResult.isOk) {
+        await this.handleSuccessDeal(player, response, roundId);
+      } else {
+        this.handleFailPlaceBetResponse(player, response, gameSettings.actions.deal);
+      }
+      betTracks.isDealing = false;
+    } catch (error) {
+      console.log(error);
     }
-    betTracks.isDealing = false;
+
   }
 
   async handleSuccessDeal(player, balance, roundId) {
@@ -124,6 +129,10 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     betTracks.roundId = newRound.id;
     betTracks.roundStartTime = new Date();
     await this.createBet(player);
+
+    if (player.profile.minBet !== balance.minBet || player.profile.maxBet !== balance.maxBet) {
+      await this.updateUserStakeLevel(player, balance.minBet, balance.maxBet);
+    }
 
     this.publisher.publishToUser(player.UID, {
       deal: {
@@ -155,9 +164,9 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
     const resultKeyRaw = `[${cards.map(card => card.rank).join(', ')}]${resultKeySuffix}`;
     const md5 = createHashMD5(resultKeyRaw);
-    
+
     this.gameData.md5 = md5;
-    this.gameData.resultKey = { rawValue: resultKeyRaw, formatValue: {cards, suffix: resultKeySuffix} };
+    this.gameData.resultKey = { rawValue: resultKeyRaw, formatValue: { cards, suffix: resultKeySuffix } };
 
     return this.roundsRepository.create({
       id: roundId,
@@ -198,29 +207,37 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   }
 
   async processDoubleCall(player) {
-    const { betTracks } = this.gameData.ingame[player.profile.name];
-    betTracks.isDealing = true;
+    try {
+      const { betTracks } = this.gameData.ingame[player.profile.name];
+      betTracks.isDealing = true;
 
-    const betInfo = {
-      amount: betTracks.bets.ante * 2,
-      gameId: this.definition.id,
-      gameRoundId: betTracks.roundId,
-      choiceId: this.definition.choicesMapper[gameSettings.actions.doubleCall],
-    };
-    const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
-    const { response } = apiResult;
-    if (apiResult.isOk) {
-      await this.handleSuccessCall(player, betInfo.amount, response);
-    } else {
-      this.handleFailPlaceBetResponse(player, response, gameSettings.actions.doubleCall);
+      const betInfo = {
+        amount: betTracks.bets.ante * 2,
+        gameId: this.definition.id,
+        gameRoundId: betTracks.roundId,
+        choiceId: this.definition.choicesMapper[gameSettings.actions.doubleCall],
+      };
+      const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
+      const { response } = apiResult;
+      if (apiResult.isOk) {
+        await this.handleSuccessCall(player, betInfo.amount, response);
+      } else {
+        this.handleFailPlaceBetResponse(player, response, gameSettings.actions.doubleCall);
+      }
+      betTracks.isDealing = false;
+    } catch (error) {
+      console.log(error);
     }
-    betTracks.isDealing = false;
   }
 
   async handleSuccessCall(player, amount, balance) {
     await this.updateBetTracksAfterCall(player, amount);
-    const { betTracks } = this.gameData.ingame[player.profile.name];
 
+    if (player.profile.minBet !== balance.minBet || player.profile.maxBet !== balance.maxBet) {
+      await this.updateUserStakeLevel(player, balance.minBet, balance.maxBet);
+    }
+
+    const { betTracks } = this.gameData.ingame[player.profile.name];
     await this.betsRepository.update(
       { phien: betTracks.roundId },
       { $inc: { call: amount, bet: amount }, result: betTracks.combinationResult.player, callTime: new Date(), },

@@ -1,7 +1,6 @@
 import awilix from 'awilix';
 import { Table } from 'sc-game-base';
 
-import { placeBet } from './apis/place-bet';
 import {
   InGameConsumer,
   UserDealConsumer,
@@ -56,7 +55,6 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
     super.registerApis();
 
     this.container.register({
-      placeBet: asValue(placeBet),
       historyQuery: asClass(HistoryQuery).singleton(),
     });
   }
