@@ -1,9 +1,14 @@
 import { Core } from "sc-game-base";
 
 export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsumer {
+  constructor(definition, gameData, roundsRepository, roundQuery, publisher, getBalance, userInfosRepository, ) {
+    super(definition, gameData, roundQuery, publisher, getBalance, userInfosRepository);
+    this.roundsRepository = roundsRepository;
+}
+
   async buildPayload(realPlayer) {
     const { odds, enableFreeBet } = this.gameData.gameConfigs;
-    const { totalBets, exchangeRates, md5, roundId } = this.gameData;
+    const { totalBets, exchangeRates, roundId } = this.gameData;
     const { session } = realPlayer;
     const rate = exchangeRates.code[session.currencyCode] * session.multiplier;
     const settings = this.gameData.currencyGroupGames.find((x) => x.groupId.toString() === session.currencyGroupId);
@@ -18,17 +23,20 @@ export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsum
         ? Object.values(betTracks.bets).reduce((total, item) => total + item, 0)
         : 0;
 
-    const ownBets =
-      betTracks.roundId > 0
-        ? {
-          roundId: betTracks.roundId,
-          bets: betTracks.bets,
-          player: betTracks.player,
-          communityCards: betTracks.communityCards,
-          combinationResult: betTracks.combinationResult,
-          totalAmount,
-        }
-        : {};
+    let ownBets = {}, md5 = {};
+    if (betTracks.roundId > 0) {
+      ownBets = {
+        roundId: betTracks.roundId,
+        bets: betTracks.bets,
+        player: betTracks.player,
+        communityCards: betTracks.communityCards,
+        combinationResult: betTracks.combinationResult,
+        totalAmount,
+      };
+
+      const round = await this.roundsRepository.findOne({ id: betTracks.roundId }).exec();
+      md5 = { key: round.md5 };
+    }
 
     return {
       gameConfigs,
@@ -36,7 +44,7 @@ export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsum
       totalBets,
       user: { ...user, rate },
       lastRoundId: roundId,
-      md5: { key: md5 }
+      md5
     };
   }
 }
