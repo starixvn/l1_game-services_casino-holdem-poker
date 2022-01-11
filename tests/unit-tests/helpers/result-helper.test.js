@@ -1,30 +1,26 @@
-import { combination } from '../combination-helper';
-import { ranks } from '../constants';
-import CardCombination from '../card-combination';
+import { combination } from '../../../src/helpers/combination-helper';
+import { ranks } from '../../../src/helpers/constants';
+import CardCombination from '../../../src/helpers/card-combination';
 import {
   compareCombination,
   isWinAA,
   generateResult,
   getSettleResult,
   isQualified,
-} from '../result-helper';
+} from '../../../src/helpers/result-helper';
 
-jest.mock('../poker-rule.js');
-jest.mock('../combination-helper');
+jest.mock('../../../src/helpers/poker-rule.js');
+jest.mock('../../../src/helpers/combination-helper');
 describe('result-helper test', () => {
   describe('generateResult', () => {
     it('should return expected', () => {
       // Arrange
       const communityCards = [{ rank: 1 }, { rank: 2 }, { rank: 3 }];
-      const dealer = [{ rank: 0 }, { rank: 0 }];
       const deck = [{ rank: 4 }, { rank: 5 }, { rank: 5 }, { rank: 7 }, { rank: 10 }, { rank: 10 }];
-      const expected = {
-        communityCards: [...communityCards, deck[0], deck[1]],
-        dealer: [...dealer],
-      };
+      const expected = [...communityCards, deck[0], deck[1]];
 
       // Act
-      const actual = generateResult(communityCards, dealer, deck);
+      const actual = generateResult(communityCards, deck);
 
       // Assert
       expect(deck.length).toBe(4);

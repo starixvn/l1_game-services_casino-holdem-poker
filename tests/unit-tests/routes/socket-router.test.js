@@ -1,5 +1,5 @@
 import { BaseSocketRouter } from "sc-game-base/src/core/routers";
-import SocketRouter from '../socket-router';
+import SocketRouter from '../../../src/routes/socket-router';
 
 describe('Socket router test', () => {
   it('inherit BaseSocketRouter', () => {

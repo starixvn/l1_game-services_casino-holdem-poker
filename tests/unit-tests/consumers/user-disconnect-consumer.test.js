@@ -1,6 +1,5 @@
-import { Core, Table } from 'sc-game-base';
 import { gameNotifications } from 'sc-base-database';
-import UserDisconnectConsumer from '../user-disconnect-consumer';
+import UserDisconnectConsumer from '../../../src/consumers/user-disconnect-consumer';
 import BaseUserDisconnectConsumer from 'sc-game-base/src/core/event-consumers/user-disconnect-consumer';
 
 jest.mock('sc-base-database', () => {

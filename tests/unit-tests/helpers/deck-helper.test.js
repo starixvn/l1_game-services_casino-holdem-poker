@@ -1,4 +1,4 @@
-import { reGenerateDecks, deal, generateDecks } from '../deck-helper';
+import { reGenerateDecks, deal, generateDecks } from '../../../src/helpers/deck-helper';
 
 describe('deck-helper test', () => {
   describe('generateDecks', () => {

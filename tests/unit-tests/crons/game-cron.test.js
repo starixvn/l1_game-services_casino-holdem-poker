@@ -1,15 +1,12 @@
-import cron from 'cron';
 import moment from 'moment';
-import { logger } from 'sc-common';
-import appConfigs from '../../app-configs';
 import { Table } from "sc-game-base";
 
-import { reGenerateDecks } from '../../helpers/deck-helper';
-import GameCron from '../game-cron';
+import { reGenerateDecks } from '../../../src/helpers/deck-helper';
+import GameCron from '../../../src/crons/game-cron';
  
 jest.mock('cron');
 jest.mock('sc-common');
-jest.mock('../../helpers/deck-helper');
+jest.mock('../../../src/helpers/deck-helper');
 
 describe('Game Cron test', () => {
   it('inherit Table.Crons.TableGameCron', () => {

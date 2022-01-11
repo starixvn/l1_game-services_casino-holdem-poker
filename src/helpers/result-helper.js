@@ -2,17 +2,15 @@ import { combination } from './combination-helper';
 import { ranks } from './constants';
 import CardCombination from './card-combination';
 
-export const generateResult = (communityCards, dealer, deck) => {
-  const result = {
-    communityCards: [...communityCards],
-    dealer: [...dealer],
-  };
-  while (result.communityCards.length < 5) {
-    result.communityCards.push(deck.shift());
+export const generateResult = (communityCards, deck) => {
+  const communityCardsGenerated =  [...communityCards]
+  while (communityCardsGenerated.length < 5) {
+    communityCardsGenerated.push(deck.shift());
   }
 
-  return result;
+  return communityCardsGenerated;
 };
+
 
 export const getSettleResult = (cards) => {
   if (cards) {

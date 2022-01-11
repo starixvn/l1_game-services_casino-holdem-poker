@@ -1,6 +1,6 @@
 import TableHttpRouter from 'sc-game-base/src/table/routers/table-http-router';
 import { logger } from 'sc-common';
-import HttpRouter from '../http-router';
+import HttpRouter from '../../../src/routes/http-router';
 
 jest.mock('sc-common');
 describe('Http Router test', () => {

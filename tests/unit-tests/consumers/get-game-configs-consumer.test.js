@@ -1,5 +1,5 @@
 import { Table } from "sc-game-base";
-import GetGameConfigsConsumer from "../get-game-configs-consumer";
+import GetGameConfigsConsumer from "../../../src/consumers/get-game-configs-consumer";
 
 describe("#get-game-configs-consumer", () => {
   // arrange

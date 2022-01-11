@@ -1,7 +1,7 @@
-import HistoryQuery from '../history-query';
-import { compareCombination } from '../../helpers/result-helper';
+import HistoryQuery from '../../../src/query-apis/history-query';
+import { compareCombination } from '../../../src/helpers/result-helper';
 
-jest.mock('../../helpers/result-helper');
+jest.mock('../../../src/helpers/result-helper');
 describe('History query test', () => {
   const query = new HistoryQuery();
   describe('convertBet', () => {

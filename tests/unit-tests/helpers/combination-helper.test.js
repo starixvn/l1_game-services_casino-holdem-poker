@@ -1,4 +1,4 @@
-import { combination } from '../combination-helper';
+import { combination } from '../../../src/helpers/combination-helper';
 
 describe('combination test', () => {
   it('should return expected', () => {

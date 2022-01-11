@@ -11,11 +11,11 @@ const Schema = new mongoose.Schema({
   ended: { type: Boolean, default: false },
   uid: { type: String, required: true },
   name: { type: String, required: true },
+  exchangeRateId: { type: Number, require: true },
   odds: { type: Object },
   md5: { type: String, require: true },
-  resultKey: { type: String, require: true },
-  resultGenerated: { type: Object },
-  exchangeRateId: { type: Number, require: true },
+  resultKeyRaw: { type: String, require: true },
+  communityCardsGenerated: { type: Array },
 });
 
 export default mongoose.model(modelName, Schema);

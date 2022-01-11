@@ -1,4 +1,4 @@
-import PokerRule from '../poker-rule';
+import PokerRule from '../../../src/helpers/poker-rule';
 
 describe('PokerRule test', () => {
   describe('card', () => {

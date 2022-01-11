@@ -1,6 +1,6 @@
 import { Core, Table } from 'sc-game-base';
-import BasePlaceBetConsumer from '../base-place-bet-consumer';
-import gameSettings from '../../game-settings';
+import BasePlaceBetConsumer from '../../../src/consumers/base-place-bet-consumer';
+import gameSettings from '../../../src/game-settings';
 
 describe('BasePlaceBetConsumer test', () => {
   const definition = new Core.GameDefinition({ id: 1, name: 'casino-holdem-poker' });

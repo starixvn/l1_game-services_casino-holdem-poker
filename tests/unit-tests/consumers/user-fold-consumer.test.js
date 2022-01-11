@@ -1,8 +1,8 @@
 import { Core, Table } from 'sc-game-base';
-import BasePlaceBetConsumer from '../base-place-bet-consumer';
-import BaseCallConsumer from '../base-call-consumer';
-import UserFoldConsumer from '../user-fold-consumer';
-import gameSettings from '../../game-settings';
+import BasePlaceBetConsumer from '../../../src/consumers/base-place-bet-consumer';
+import BaseCallConsumer from '../../../src/consumers/base-call-consumer';
+import UserFoldConsumer from '../../../src/consumers/user-fold-consumer';
+import gameSettings from '../../../src/game-settings';
 
 describe('UserFoldConsumer test', () => {
   const definition = new Core.GameDefinition({ id: 1, name: 'casino-holdem-poker' });

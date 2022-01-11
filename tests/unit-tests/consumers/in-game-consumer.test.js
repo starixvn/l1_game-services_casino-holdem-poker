@@ -1,5 +1,5 @@
 import { Core, Table } from 'sc-game-base';
-import InGameConsumer from '../in-game-consumer';
+import InGameConsumer from '../../../src/consumers/in-game-consumer';
 
 jest.mock('sc-base-database');
 

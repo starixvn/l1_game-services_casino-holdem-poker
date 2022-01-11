@@ -1,6 +1,6 @@
 import { BaseBot } from 'sc-game-base/src/core/crons';
 import { helpers } from 'sc-common';
-import Bot from '../bot';
+import Bot from '../../../src/crons/bot';
 
 jest.mock('sc-common');
 

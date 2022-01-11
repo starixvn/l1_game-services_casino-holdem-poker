@@ -1,6 +1,6 @@
 import { Core, Table } from 'sc-game-base';
-import BasePlaceBetConsumer from '../base-place-bet-consumer';
-import BaseCallConsumer from '../base-call-consumer';
+import BasePlaceBetConsumer from '../../../src/consumers/base-place-bet-consumer';
+import BaseCallConsumer from '../../../src/consumers/base-call-consumer';
 import { helpers } from "sc-common";
 
 describe('BaseCallConsumer test', () => {

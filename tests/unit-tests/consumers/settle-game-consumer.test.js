@@ -1,10 +1,10 @@
-import SettleGameConsumer from '../settle-game-consumer';
+import SettleGameConsumer from '../../../src/consumers/settle-game-consumer';
 import { SettleGameRoundConsumer } from 'sc-game-base/src/core/event-consumers';
 import { gameNotifications } from 'sc-base-database';
-import { compareCombination, isWinAA } from '../../helpers/result-helper';
+import { compareCombination, isWinAA } from '../../../src/helpers/result-helper';
 
 jest.mock('sc-base-database');
-jest.mock('../../helpers/result-helper');
+jest.mock('../../../src/helpers/result-helper');
 
 describe('Settle game test', () => {
   const mockDate = new Date(123456);
@@ -124,7 +124,8 @@ describe('Settle game test', () => {
 
     it('should run correctly when bet has value and has odds', async () => {
       // Arrange
-      const gameData = { ingame: { a: {} }, gameConfigs: {}, resultKey, md5 };
+      const betTracks = { bets: { ante: 10, aa: 10 }, combinationResult: { player: { id: 1 } }, md5, resultKey };
+      const gameData = { ingame: { a: { betTracks } }, gameConfigs: {}, resultKey, md5 };
       const bet = { save: jest.fn() };
       const betsRepository = {
         findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),
@@ -168,11 +169,24 @@ describe('Settle game test', () => {
 
     it('should run correctly when bet has value and not odd', async () => {
       // Arrange
-      const gameData = { ingame: { a: {} }, gameConfigs: { odds: {} }, resultKey, md5 };
+      const betTracks = { bets: { ante: 10, aa: 10 }, combinationResult: { player: { id: 1 } }, md5, resultKey };
+      const gameData = { ingame: { a: { betTracks } }, gameConfigs: { odds: {} } };
       const bet = { save: jest.fn() };
       const betsRepository = {
         findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),
       };
+
+      const roundRepo = { md5: "123", };
+      process.roundsRepository = {
+        findOne: jest.fn().mockReturnValue({
+          lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(roundRepo) }),
+        }),
+      };
+
+      const roundRepository = {
+        findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),
+      };
+
       const publisher = { publishToUser: jest.fn() };
       const consumer = new SettleGameConsumer({ gameData, betsRepository, publisher });
       const betResult = { totalWin: 10, result: { id: 1 }, settlementResult: { ante: 10 } };
@@ -209,15 +223,23 @@ describe('Settle game test', () => {
       });
     });
 
-    it('should reset md5', async () => {
+    it('should get md5 from db when bettrack.resultKey does not exist.', async () => {
       // Arrange
-      const gameData = { ingame: { a: {} }, gameConfigs: {}, resultKey, md5 };
-      const bet = { save: jest.fn() };
+      const betTracks = { bets: { ante: 10, aa: 10 }, combinationResult: { player: { id: 1 } } };
+      const gameData = { ingame: { a: { betTracks } }, gameConfigs: {}, resultKey, md5 };
+      const bet = { save: jest.fn(), cards: [{ rank: 2 }] };
       const betsRepository = {
         findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),
       };
+
+      const resultKeyRaw = "[7,8,9]aaa";
+      const roundRepo = { result: { dealer: [{ rank: 1 }] }, communityCardsGenerated: [{ rank: 2 }], md5, resultKeyRaw };
+      const roundsRepository = {
+        findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(roundRepo) }),
+      };
+
       const publisher = { publishToUser: jest.fn() };
-      const consumer = new SettleGameConsumer({ gameData, betsRepository, publisher });
+      const consumer = new SettleGameConsumer({ gameData, betsRepository, roundsRepository, publisher });
       const betResult = { totalWin: 10, result: { id: 1 }, settlementResult: { ante: 10 } };
       consumer.calculateBetResult = jest.fn().mockReturnValue(betResult);
       consumer.callEndGame = jest.fn();
@@ -233,9 +255,26 @@ describe('Settle game test', () => {
       await consumer.settleBets(finish);
 
       // Assert
-      expect(gameData.md5).toEqual("");
-      expect(gameData.resultKey).toEqual({ rawValue: "", formatValue: { cards: [], suffix: "" }} );
+      expect(bet.isFold).toBeFalse();
+      expect(bet.betwin).toBe(betResult.totalWin);
+      expect(bet.thanhtoan).toBeTrue();
+      expect(bet.result).toStrictEqual(betResult.result);
+      expect(bet.settlementResult).toStrictEqual(betResult.settlementResult);
+      expect(bet.endTime).toEqual(finish.time);
+      expect(bet.save).toHaveBeenCalled();
+      expect(consumer.callEndGame).toHaveBeenCalledWith(
+        bet,
+        finish.roundId,
+        finish.time,
+        betResult,
+      );
+      expect(consumer.gameData.ingame).toStrictEqual({});
+      expect(publisher.publishToUser).toHaveBeenCalledWith(finish.playerUID, {
+        finish: { settlementResult: betResult.settlementResult },
+        md5: { key: { rawValue: resultKeyRaw, formatValue: { cards: [{ rank: 2 }, { rank: 1 }, { rank: 2 }], suffix: "aaa" } } }
+      });
     });
+
   });
 
   describe('calculateBetResult', () => {

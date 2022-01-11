@@ -1,7 +1,7 @@
 import { Core, Table } from 'sc-game-base';
-import BasePlaceBetConsumer from '../base-place-bet-consumer';
-import UserDealConsumer from '../user-deal-consumer';
-import gameSettings from '../../game-settings';
+import BasePlaceBetConsumer from '../../../src/consumers/base-place-bet-consumer';
+import UserDealConsumer from '../../../src/consumers/user-deal-consumer';
+import gameSettings from '../../../src/game-settings';
 import { helpers } from "sc-common";
 
 describe('UserDealConsumer test', () => {

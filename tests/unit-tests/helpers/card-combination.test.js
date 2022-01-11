@@ -1,6 +1,6 @@
-import PokerRule from '../poker-rule';
-import { ranks } from '../constants';
-import CardCombination from '../card-combination';
+import PokerRule from '../../../src/helpers/poker-rule';
+import { ranks } from '../../../src/helpers/constants';
+import CardCombination from '../../../src/helpers/card-combination';
 
 describe('CardCombination test', () => {
   describe('getResult', () => {
