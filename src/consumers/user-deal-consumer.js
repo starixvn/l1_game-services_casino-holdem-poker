@@ -1,5 +1,5 @@
 import BasePlaceBetConsumer from './base-place-bet-consumer';
-import { helpers } from 'sc-common';
+import noticeHelper from "../helpers/notice-helper";
 import gameSettings from '../game-settings';
 
 export default class UserDealConsumer extends BasePlaceBetConsumer {
@@ -13,19 +13,19 @@ export default class UserDealConsumer extends BasePlaceBetConsumer {
     return [
       {
         failure: amountAnte > settings.maxBetPerChoices.anteBet,
-        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: settings.maxBetPerChoices.anteBet })
+        notice: this.getNoticeObj(noticeHelper.maxBetForChoice, { maxBet: settings.maxBetPerChoices.anteBet })
       },
       {
         failure: amountAa > settings.maxBetPerChoices.aaBet,
-        notice: this.getNoticeObj(helpers.noticeHelper.maxBetForChoice, { maxBet: settings.maxBetPerChoices.aaBet })
+        notice: this.getNoticeObj(noticeHelper.maxBetForChoice, { maxBet: settings.maxBetPerChoices.aaBet })
       },
       {
         failure: amountAnte < minBet || (amountAa !== 0 && amountAa < minBet),
-        notice: this.getNoticeObj(helpers.noticeHelper.minBet, { minBet: minBet})
+        notice: this.getNoticeObj(noticeHelper.minBet, { minBet: minBet})
       },
       {
         failure: amountAnte + amountAa > maxBet,
-        notice: this.getNoticeObj(helpers.noticeHelper.maxBet, { maxBet: maxBet })
+        notice: this.getNoticeObj(noticeHelper.maxBet, { maxBet: maxBet })
       },
     ];
   }
@@ -33,13 +33,14 @@ export default class UserDealConsumer extends BasePlaceBetConsumer {
   async composeBettingTimeValidationCriteria(player) {
     const result = await super.composeBettingTimeValidationCriteria(player);
     const { betTracks } = this.gameData.ingame[player.profile.name] || { betTracks: {} };
+
     result.push({
       failure: !!betTracks.roundId,
-      notice: this.getNoticeObj(helpers.noticeHelper.invalidBet)
+      notice: this.getNoticeObj(noticeHelper.invalidDealDueToRunningRound)
     });
     result.push({
       failure: !!betTracks?.isDealing,
-      notice: this.getNoticeObj(helpers.noticeHelper.invalidBet)
+      notice: this.getNoticeObj(noticeHelper.invalidDealDueToRunningRound)
     });
 
     return result;

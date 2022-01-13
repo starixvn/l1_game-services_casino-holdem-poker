@@ -21,7 +21,7 @@
   "type": "module",
   "dependencies": {
     "nodemon": "^2.0.4",
-    "sc-game-base": "2.2.1"
+    "sc-game-base": "2.3.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.14.7",

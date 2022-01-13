@@ -102,9 +102,9 @@ describe('UserDealConsumer test', () => {
       const expected = [
         {
           failure: false,
-          notice: { errorCode: helpers.noticeHelper.invalidBet },
+          notice: { errorCode: "SB1923" },
         },
-        { failure: false, notice: { errorCode: helpers.noticeHelper.invalidBet } },
+        { failure: false, notice: { errorCode: "SB1923" } },
       ];
 
       // Act
@@ -121,9 +121,9 @@ describe('UserDealConsumer test', () => {
       const expected = [
         {
           failure: true,
-          notice: { errorCode: helpers.noticeHelper.invalidBet },
+          notice: { errorCode: "SB1923" },
         },
-        { failure: false, notice: { errorCode: helpers.noticeHelper.invalidBet } },
+        { failure: false, notice: { errorCode: "SB1923" } },
       ];
 
       // Act
