@@ -197,7 +197,8 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       memberId: player.session?.memberId,
       siteId: player.session?.siteId,
       currency: player.session?.currencyName,
-      partnerId: player.session?.partnerId
+      partnerId: player.session?.partnerId,
+      rate: this.calculateCurrencyRate(player.session)
     });
   }
 

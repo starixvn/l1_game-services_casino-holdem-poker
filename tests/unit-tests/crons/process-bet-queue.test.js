@@ -351,6 +351,10 @@ describe('Process bet queue test', () => {
       const definition = { settle: jest.fn().mockReturnValue({ id: 1 }) };
       const betsRepository = { create: jest.fn() };
       const process = new ProcessBetQueue({ definition, gameData, betsRepository });
+      process.calculateCurrencyRate =  jest
+      .fn({session: player.session})
+      .mockReturnValue(1);
+      
       const data = {
         uid: player.UID,
         name: player.profile.name,
@@ -363,6 +367,7 @@ describe('Process bet queue test', () => {
         time: new Date(123456),
         memberId: player.session.memberId,
         siteId: player.session.siteId,
+        rate: 1
       };
 
       // Act
