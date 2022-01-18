@@ -4,6 +4,7 @@ import HttpRouter from '../../../src/routes/http-router';
 import { isQualified } from '../../../src/helpers/result-helper';
 
 jest.mock('sc-common');
+jest.mock('../../../src/helpers/result-helper');
 
 describe('Http Router test', () => {
   it('inherit TableHttpRouter', () => {
@@ -40,7 +41,7 @@ describe('Http Router test', () => {
       const res = { sendStatus: jest.fn() };
       const fn = router.handleSetResult();
       isQualified.mockReturnValue(false);
-      
+
       // Act
       fn({}, res);
 
