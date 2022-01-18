@@ -1,8 +1,10 @@
 import TableHttpRouter from 'sc-game-base/src/table/routers/table-http-router';
 import { logger } from 'sc-common';
 import HttpRouter from '../../../src/routes/http-router';
+import { isQualified } from '../../../src/helpers/result-helper';
 
 jest.mock('sc-common');
+
 describe('Http Router test', () => {
   it('inherit TableHttpRouter', () => {
     // Act
@@ -37,7 +39,8 @@ describe('Http Router test', () => {
       router.appConfigs = { env: 'UAT' };
       const res = { sendStatus: jest.fn() };
       const fn = router.handleSetResult();
-
+      isQualified.mockReturnValue(false);
+      
       // Act
       fn({}, res);
 
