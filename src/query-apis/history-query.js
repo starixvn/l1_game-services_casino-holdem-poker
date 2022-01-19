@@ -36,13 +36,18 @@ export default class HistoryQuery {
       odds: bet.anteOdds,
       stake: bet.ante,
       win: bet.settlementResult.ante
-    },{
-      betChoice: "aa",
-      time: bet.time,
-      odds: bet.aaOdds,
-      stake: bet.aa,
-      win: bet.settlementResult.aa
     }];
+
+    if(bet.aa > 0)
+    {
+      bets.push({
+        betChoice: "aa",
+        time: bet.time,
+        odds: bet.aaOdds,
+        stake: bet.aa,
+        win: bet.settlementResult.aa
+      });
+    }
 
     if(!bet.isFold)
     {
