@@ -307,7 +307,7 @@ describe('Process bet queue test', () => {
       };
       const
         definition = {
-          generateResult: jest.fn().mockReturnValue(result),
+          generateResult: jest.fn().mockReturnValue(betTracks.communityCards),
           settle: jest.fn().mockReturnValue({ id: 1 }),
         };
 

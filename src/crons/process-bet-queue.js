@@ -157,7 +157,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     const resultKeySuffix = randomString();
     const cards = betTracks.player.concat(betTracks.dealer).concat(communityCardsGenerated);
 
-    const resultKeyRaw = `[${cards.map(card => cardLabels[card.rank]).join(', ')}]${resultKeySuffix}`;
+    const resultKeyRaw = `[${await this.buildResultKeyRawSuffix([betTracks.player, betTracks.dealer, communityCardsGenerated])}]${resultKeySuffix}`;
     const md5 = createHashMD5(resultKeyRaw);
 
     betTracks.md5= md5;
@@ -175,6 +175,11 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       resultKeyRaw,
       exchangeRateId: this.gameData.exchangeRates.exId,
     });
+  }
+
+  async buildResultKeyRawSuffix(segments)
+  {
+    return segments.map(segment => segment.map(card => cardLabels[card.rank]).join(' ')).join(', ')
   }
 
   async createBet(player) {
