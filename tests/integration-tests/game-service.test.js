@@ -28,6 +28,170 @@ describe("Casino Casino Holdem Service", () => {
                 done();
             });
         });
+
+        it("should return user information when user joins game.", (done) => {
+            // Arrange
+            const expectedUser = {
+                UID: 1,
+                avatarId: 1,
+                currency: "$US",
+                name: "NormalUser",
+                rate: 1,
+                red: 25000,
+            };
+
+            // Act
+            gameClientDriver.sendInGameEvent();
+
+            // Assert
+            gameClientDriver.handleInGameEvent((inGameData) => {
+                if (inGameData?.user?.UID) {
+                    expect(inGameData.user).toStrictEqual(expectedUser);
+
+                    done();
+                }
+            });
+        });
+
+        it("should return game configuration (odds, min bet, max bet) when user joins game.", (done) => {
+            // Arrange
+            const expectedGameConfigs = {
+                minBet: 1,
+                maxBet: 3000,
+                maxBetPerChoices: {
+                    "anteBet": 600,
+                    "aaBet": 200,
+                    "callBet": 1200
+                },
+                odds: {
+                    "CallBet_callBet": 2.5,
+                    "AnteBet_highCards": 3,
+                    "AnteBet_onePair": 3,
+                    "AnteBet_twoPairs": 3,
+                    "AnteBet_threeKind": 3,
+                    "AnteBet_straight": 3,
+                    "AnteBet_flush": 4,
+                    "AnteBet_fullHouse": 5,
+                    "AnteBet_fourKind": 12,
+                    "AnteBet_straightFlush": 22,
+                    "AnteBet_royalFlush": 102,
+                    "AABet_pairAces": 9,
+                    "AABet_twoPairs": 9,
+                    "AABet_threeKind": 9,
+                    "AABet_straight": 9,
+                    "AABet_flush": 22,
+                    "AABet_fullHouse": 44,
+                    "AABet_fourKind": 42,
+                    "AABet_straightFlush": 52,
+                    "AABet_royalFlush": 102
+                }
+            };
+
+            // Act
+            gameClientDriver.sendInGameEvent();
+
+            // Assert
+            gameClientDriver.handleInGameEvent((inGameData) => {
+                if (inGameData?.gameConfigs) {
+                    if (inGameData.gameConfigs) {
+                        expect(inGameData.gameConfigs.minBet).toEqual(expectedGameConfigs.minBet);
+                        expect(inGameData.gameConfigs.maxBet).toEqual(expectedGameConfigs.maxBet);
+                        expect(inGameData.gameConfigs.maxBetPerChoices).toStrictEqual(expectedGameConfigs.maxBetPerChoices);
+                        expect(inGameData.gameConfigs.odds).toStrictEqual(expectedGameConfigs.odds);
+
+                        done();
+                    }
+                }
+            });
+        });
+
+        it("should return current user ticket result when user is playing game.", (done) => {
+            // Arrange
+            const expectedEndBetResponse = {
+                deal: {
+                    choices: {
+                        ante: 10,
+                        aa: 0
+                    }
+                },
+                user: { maxBet: 2000, minBet: 1, red: 24250, scoins: 0 },
+            };
+
+            // Act
+            gameClientDriver.socket.emit("bet", {
+                deal: {
+                    ante: 10
+                }
+            });
+
+            // Assert
+            gameClientDriver.handleEndBetEvent((endBetData) => {
+                if (endBetData.endBet) {
+                    expect(endBetData.deal.choices).toEqual(expectedEndBetResponse.deal.choices);
+                    expect(endBetData.deal.combinationResult.player.cards.length).toEqual(5);
+                    expect(endBetData.deal.player.length).toEqual(2);
+                    expect(endBetData.deal.totalAmount).toEqual(10);
+                    expect(endBetData.user).toEqual(expectedEndBetResponse.user);
+
+                    done();
+                }
+            });
+        });
+    });
+
+    describe("Unhappy Path Cases", () => {
+        it("should return error when place bet failed", (done) => {
+            // Arrange
+            gameClientDriver = new GameClientDriver(socketOptions, initUserSession(errorUser));
+
+            gameClientDriver.handleSignedInEvent(() => {
+                gameClientDriver.sendInGameEvent();
+
+                // Act
+                gameClientDriver.socket.emit("bet", {
+                    deal: {
+                        ante: 10
+                    }
+                });
+
+                // Assert
+                gameClientDriver.handleEndBetEvent((endBetData) => {
+                    if (endBetData.endBet == -1) {
+                        expect(endBetData.betChoice).toEqual("deal");
+                        expect(endBetData.apiError.errorCode).toEqual(3002);
+                        expect(endBetData.apiError.isPlaceBetFailed).toEqual(true);
+                        done();
+                    }
+                });
+            });
+        });
+
+        it("should return error when get internal server error from api", (done) => {
+            // Arrange
+            gameClientDriver = new GameClientDriver(socketOptions, initUserSession(internalServerErrorUser));
+
+            gameClientDriver.handleSignedInEvent(() => {
+                gameClientDriver.sendInGameEvent();
+
+                // Act
+                gameClientDriver.socket.emit("bet", {
+                    deal: {
+                        ante: 10
+                    }
+                });
+
+                // Assert
+                gameClientDriver.handleEndBetEvent((endBetData) => {
+                    if (endBetData.endBet == -1) {
+                        expect(endBetData.betChoice).toEqual("deal");
+                        expect(endBetData.apiError.errorCode).toEqual("SB1900");
+                        expect(endBetData.apiError.isPlaceBetFailed).toEqual(true);
+                        done();
+                    }
+
+                });
+            });
+        });
     });
 });
 
