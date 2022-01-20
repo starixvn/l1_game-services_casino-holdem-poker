@@ -4,19 +4,23 @@
   "description": "",
   "main": "./src/app.js",
   "scripts": {
+    "test": "jest --testPathPattern=tests/unit-tests/",
+    "test-:-integration-:-setup-test-data": "node --es-module-specifier-resolution=node ./tests/integration-tests/stubs/test-data-setup.js",
+    "test-:-integration-:-start-service": "node --es-module-specifier-resolution=node ./tests/integration-tests/game-service-setup/game-service-app.js",
+    "test-:-integration-:-start-test": "jest --testPathPattern=tests/integration-tests/  --detectOpenHandles --ci --reporters=default --reporters=jest-junit",
+    "integration-test": "(npm run test-:-integration-:-setup-test-data && npm run test-:-integration-:-start-service) & npm run test-:-integration-:-start-test",
+    "test-coverage": "jest --collect-coverage --testPathPattern=tests/unit-tests/",
     "dev": "nodemon --es-module-specifier-resolution=node --watch ./src ./src/app.js",
     "debug": "nodemon --es-module-specifier-resolution=node --watch ./ --inspect ./src/app.js",
     "prod": "node --max-old-space-size=8192 --es-module-specifier-resolution=node ./src/app.js",
-    "reg": "npm set registry http://npm.lumigame.com",
-    "test": "jest",
-    "test-coverage": "jest --collect-coverage"
+    "reg": "npm set registry http://npm.lumigame.com"
   },
   "jestSonar": {
     "reportPath": "reports",
     "reportFile": "test-reporter.xml",
     "indent": 4
   },
-  "author": "NEX3",
+  "author": "NEX5",
   "license": "ISC",
   "type": "module",
   "dependencies": {
@@ -24,6 +28,7 @@
     "sc-game-base": "2.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.14.7",
     "@commitlint/cli": "^9.1.2",
     "@commitlint/config-conventional": "^9.1.2",
@@ -37,12 +42,13 @@
     "babel-jest": "^27.0.6",
     "husky": "^4.2.5",
     "install": "^0.13.0",
-    "jest": "^27.0.6",
+    "jest": "^26.6.3",
     "jest-extended": "^0.11.5",
-    "jest-micro-auto-stub": "^1.0.7",
+    "jest-junit": "^12.2.0",
+    "jest-micro-auto-stub": "^1.0.6",
     "jest-sonar-reporter": "^2.0.0",
-    "sc-semantic-release": "^1.2.0",
-    "semantic-release": "^17.2.1"
+    "semantic-release": "^17.2.1",
+    "sc-game-service-integration-utils": "1.0.0-beta.22"
   },
   "husky": {
     "hooks": {

@@ -4,7 +4,7 @@ import { isQualified } from '../helpers/result-helper';
 import gameSettings from '../game-settings';
 import { helpers } from "sc-common";
 import { createHashMD5, randomString } from "../helpers/crypto-helper";
-import {cardLabels} from "../helpers/card"; 
+import {cardLabels} from "../helpers/card";
 
 export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   constructor({
@@ -259,7 +259,6 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     const combinationPlayerResult = this.definition.settle(
       betTracks.player.concat(communityCardsGenerated),
     );
-    
     const combinationDealerResult = this.definition.settle(
       betTracks.dealer.concat(communityCardsGenerated),
     );

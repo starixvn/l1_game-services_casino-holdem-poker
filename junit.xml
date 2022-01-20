@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="7" failures="1" errors="0" time="12.961">
+  <testsuite name="Casino Casino Holdem Service" errors="0" failures="1" skipped="0" timestamp="2022-01-20T03:32:56" time="12.746" tests="7">
+    <testcase classname="Casino Casino Holdem Service Happy Path Cases should start and allow game client connect to." name="Casino Casino Holdem Service Happy Path Cases should start and allow game client connect to." time="0.15">
+    </testcase>
+    <testcase classname="Casino Casino Holdem Service Happy Path Cases should return user information when user joins game." name="Casino Casino Holdem Service Happy Path Cases should return user information when user joins game." time="0.031">
+    </testcase>
+    <testcase classname="Casino Casino Holdem Service Happy Path Cases should does not return bet history when user request" name="Casino Casino Holdem Service Happy Path Cases should does not return bet history when user request" time="5.014">
+    </testcase>
+    <testcase classname="Casino Casino Holdem Service Happy Path Cases should return game configuration (odds, min bet, max bet) when user joins game." name="Casino Casino Holdem Service Happy Path Cases should return game configuration (odds, min bet, max bet) when user joins game." time="0.017">
+    </testcase>
+    <testcase classname="Casino Casino Holdem Service Happy Path Cases should return current user ticket result when user is playing game." name="Casino Casino Holdem Service Happy Path Cases should return current user ticket result when user is playing game." time="0.127">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: 2
+Received: 5
+    at Socket.&lt;anonymous&gt; (D:\DEV\NEX5\casino-holdem-poker-nex5\tests\integration-tests\game-service.test.js:147:83)
+    at Socket.Object.&lt;anonymous&gt;.Emitter.emit (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\@socket.io\component-emitter\index.js:143:20)
+    at Socket.emitEvent (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\socket.io-client\build\cjs\socket.js:292:20)
+    at Socket.onevent (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\socket.io-client\build\cjs\socket.js:279:18)
+    at Socket.onpacket (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\socket.io-client\build\cjs\socket.js:242:22)
+    at Manager.Object.&lt;anonymous&gt;.Emitter.emit (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\@socket.io\component-emitter\index.js:143:20)
+    at Manager.ondecoded (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\socket.io-client\build\cjs\manager.js:233:14)
+    at Decoder.Object.&lt;anonymous&gt;.Emitter.emit (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\@socket.io\component-emitter\index.js:143:20)
+    at Decoder.add (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\socket.io-client\node_modules\socket.io-parser\build\cjs\index.js:118:23)
+    at Manager.ondata (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\socket.io-client\build\cjs\manager.js:225:22)
+    at Socket.Object.&lt;anonymous&gt;.Emitter.emit (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\@socket.io\component-emitter\index.js:143:20)
+    at Socket.onPacket (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\engine.io-client\build\cjs\socket.js:347:26)
+    at WS.Object.&lt;anonymous&gt;.Emitter.emit (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\@socket.io\component-emitter\index.js:143:20)
+    at WS.onPacket (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\engine.io-client\build\cjs\transport.js:109:15)
+    at WS.onData (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\engine.io-client\build\cjs\transport.js:101:14)
+    at WebSocket.ws.onmessage (D:\DEV\NEX5\casino-holdem-poker-nex5\node_modules\engine.io-client\build\cjs\transports\websocket.js:84:40)</failure>
+    </testcase>
+    <testcase classname="Casino Casino Holdem Service Unhappy Path Cases should return error when place bet failed" name="Casino Casino Holdem Service Unhappy Path Cases should return error when place bet failed" time="0.114">
+    </testcase>
+    <testcase classname="Casino Casino Holdem Service Unhappy Path Cases should return error when get internal server error from api" name="Casino Casino Holdem Service Unhappy Path Cases should return error when get internal server error from api" time="0.111">
+    </testcase>
+  </testsuite>
+</testsuites>
