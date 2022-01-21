@@ -138,6 +138,34 @@ describe("Casino Casino Holdem Service", () => {
             });
         });
     });
+
+    describe("Unhappy Path Cases", () => {
+        it("should return error when place bet failed", (done) => {
+            // Arrange
+            gameClientDriver = new GameClientDriver(socketOptions, initUserSession(errorUser));
+
+            gameClientDriver.handleSignedInEvent(() => {
+                gameClientDriver.sendInGameEvent();
+
+                // Act
+                gameClientDriver.socket.emit("bet", {
+                    deal: {
+                        ante: 10
+                    }
+                });
+
+                // Assert
+                gameClientDriver.handleEndBetEvent((endBetData) => {
+                    if (endBetData.endBet == -1) {
+                        expect(endBetData.betChoice).toEqual("deal");
+                        expect(endBetData.apiError.errorCode).toEqual(3002);
+                        expect(endBetData.apiError.isPlaceBetFailed).toEqual(true);
+                        done();
+                    }
+                });
+            });
+        });
+    });
 });
 
 const initUserSession = (user) => {
