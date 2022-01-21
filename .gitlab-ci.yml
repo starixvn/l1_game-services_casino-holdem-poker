@@ -35,7 +35,7 @@ integration-tests:
     - npm set registry http://npm.lumigame.com
     - yarn install
     - npm run test-:-integration-:-setup-test-data
-    - nohup npm run test-:-integration-:-start-service &
+    - nohup npm run test-:-integration-:-start-service
 
   script:
     - npm run test-:-integration-:-start-test
@@ -60,9 +60,9 @@ integration-tests:
         - junit.xml
     expire_in: 1 day
 
-unit-test-js:
-  artifacts:
-    reports:
-      junit: coverage/*.xml
-      cobertura: coverage/cobertura-coverage.xml
+#unit-test-js:
+#  artifacts:
+#    reports:
+#      junit: coverage/*.xml
+#      cobertura: coverage/cobertura-coverage.xml
 
