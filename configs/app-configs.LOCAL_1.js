@@ -2,8 +2,8 @@ export default {
     hostingPort: 5000,
     apiSettings: {
         enabledApi: true,
-        apiUrl: "http://l1_game_api_local_1:5000",
-        authUrl: "http://l1_auth_api_local_1:5000",
+        apiUrl: "http://l2_game_api_local_1:5000",
+        authUrl: "http://l2_auth_api_local_1:5000",
         client: {
             id: "game-server",
             secret: "gameserver@20luminet&",
@@ -14,9 +14,9 @@ export default {
         enabledApiLogs: true,
     },
     mainServerApiSettings: {
-        url: "http://l1_game_server_local_1:5000/api",
+        url: "http://l2_game_server_local_1:5000/api",
         auth: {
-            url: "http://l1_auth_api_local_1:5000",
+            url: "http://l2_auth_api_local_1:5000",
             id: "game-services",
             secret: "gameservices@20luminet&",
         },
@@ -32,7 +32,7 @@ export default {
     },
     enabledLogs: true,
     database: {
-        url: "mongodb://lmn_backend:LmnBackend@10.10.50.14:17101/?replicaSet=L1pLocal",
+        url: "mongodb://lmn_backend:LmnBackend@10.10.50.14:17101/?replicaSet=L2pLocal",
         options: {
             dbName: "minigame",
             useNewUrlParser: true,
@@ -52,12 +52,12 @@ export default {
     enableCorsWs: false,
     corsUrls: [
         "http://localhost:7456",
+        "https://l2-games1.lumigame.com",
+        "https://l2-admin1.lumigame.com",
         "http://localhost:7000",
         "http://localhost:3000",
-        "http://10.6.10.176:3000",
-        "https://l1-games1.lumigame.com",
-        "https://l1-admin1.lumigame.com",
-        "https://l1-m1.lumigame.com",
+        "http://l2-m1.lumigame.com",
+        "https://l2-m1.lumigame.com",
     ],
     metrics: {
         enable: true,

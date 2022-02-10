@@ -52,12 +52,12 @@ export default {
     enableCorsWs: false,
     corsUrls: [
         "http://localhost:7456",
-        "http://10.5.10.14:7456",
+        "https://l2-games.lumigame.com",
+        "https://l2-admin.lumigame.com",
         "http://localhost:7000",
         "http://localhost:3000",
-        "https://games.lumigame.com",
-        "https://admin.lumigame.com",
-        "https://l1-m.lumigame.com",
+        "http://l2-m.lumigame.com",
+        "https://l2-m.lumigame.com",
     ],
     metrics: {
         enable: true,
