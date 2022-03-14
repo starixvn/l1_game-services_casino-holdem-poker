@@ -5,9 +5,6 @@
   "main": "./src/app.js",
   "scripts": {
     "test": "jest --testPathPattern=tests/unit-tests/",
-    "test-:-integration-:-setup-test-data": "node --es-module-specifier-resolution=node ./tests/integration-tests/stubs/test-data-setup.js",
-    "test-:-integration-:-start-service": "node --es-module-specifier-resolution=node ./tests/integration-tests/game-service-setup/game-service-app.js",
-    "test-:-integration-:-start-test": "jest --testPathPattern=tests/integration-tests/  --detectOpenHandles --ci --reporters=default --reporters=jest-junit",
     "test-coverage": "jest --collect-coverage --testPathPattern=tests/unit-tests/",
     "dev": "nodemon --es-module-specifier-resolution=node --watch ./src ./src/app.js",
     "debug": "nodemon --es-module-specifier-resolution=node --watch ./ --inspect ./src/app.js",
@@ -24,7 +21,7 @@
   "type": "module",
   "dependencies": {
     "nodemon": "^2.0.4",
-    "sc-game-base": "2.3.0"
+    "sc-game-base": "2.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -46,8 +43,7 @@
     "jest-junit": "^12.2.0",
     "jest-micro-auto-stub": "^1.0.6",
     "jest-sonar-reporter": "^2.0.0",
-    "semantic-release": "^17.2.1",
-    "sc-game-service-integration-utils": "1.0.0-beta.22"
+    "semantic-release": "^17.2.1"
   },
   "husky": {
     "hooks": {

@@ -1,10 +1,10 @@
-import { Core } from "sc-game-base";
+import { Core } from 'sc-game-base';
 import { deal, generateDecks, reGenerateDecks } from '../helpers/deck-helper';
 import { isQualified } from '../helpers/result-helper';
 import gameSettings from '../game-settings';
-import { helpers } from "sc-common";
-import { createHashMD5, randomString } from "../helpers/crypto-helper";
-import {cardLabels} from "../helpers/card";
+import { helpers } from 'sc-common';
+import { createHashMD5, randomString } from '../helpers/crypto-helper';
+import { cardLabels } from '../helpers/card';
 
 export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   constructor({
@@ -85,34 +85,34 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
   async processDeal(player, payload) {
     const { betTracks } = this.gameData.ingame[player.profile.name];
-      betTracks.player = [];
-      betTracks.dealer = [];
-      betTracks.communityCards = [];
-      betTracks.uid = player.UID;
-      betTracks.combinationResult = {};
-      betTracks.bets = { ...payload };
-      betTracks.isDealing = true;
+    betTracks.player = [];
+    betTracks.dealer = [];
+    betTracks.communityCards = [];
+    betTracks.uid = player.UID;
+    betTracks.combinationResult = {};
+    betTracks.bets = { ...payload };
+    betTracks.isDealing = true;
 
-      this.gameData.roundId++;
-      const roundId = this.gameData.roundId;
+    this.gameData.roundId++;
+    const roundId = this.gameData.roundId;
 
-      const betInfo = {
-        amount: payload.aa + payload.ante,
-        gameId: this.definition.id,
-        gameRoundId: roundId,
-        choiceId: this.definition.choicesMapper[gameSettings.actions.deal],
-        freeBet: payload.freeBet,
-        clientSentTime: payload.time ?? new Date(),
-      };
+    const betInfo = {
+      amount: payload.aa + payload.ante,
+      gameId: this.definition.id,
+      gameRoundId: roundId,
+      choiceId: this.definition.choicesMapper[gameSettings.actions.deal],
+      freeBet: payload.freeBet,
+      clientSentTime: payload.time ?? new Date(),
+    };
 
-      const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
-      const { response } = apiResult;
-      if (apiResult.isOk) {
-        await this.handleSuccessDeal(player, response, roundId);
-      } else {
-        this.handleFailPlaceBetResponse(player, response, gameSettings.actions.deal);
-      }
-      betTracks.isDealing = false;
+    const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
+    const { response } = apiResult;
+    if (apiResult.isOk) {
+      await this.handleSuccessDeal(player, response, roundId);
+    } else {
+      this.handleFailPlaceBetResponse(player, response, gameSettings.actions.deal);
+    }
+    betTracks.isDealing = false;
   }
 
   async handleSuccessDeal(player, balance, roundId) {
@@ -141,7 +141,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       },
       endBet: betTracks.bets.ante + betTracks.bets.aa,
       user: balance,
-      md5: { key: betTracks.md5 }
+      md5: { key: betTracks.md5 },
     });
   }
 
@@ -157,11 +157,18 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     const resultKeySuffix = randomString();
     const cards = betTracks.player.concat(betTracks.dealer).concat(communityCardsGenerated);
 
-    const resultKeyRaw = `[${await this.buildResultKeyRawSuffix([betTracks.player, betTracks.dealer, communityCardsGenerated])}]${resultKeySuffix}`;
+    const resultKeyRaw = `[${await this.buildResultKeyRawSuffix([
+      betTracks.player,
+      betTracks.dealer,
+      communityCardsGenerated,
+    ])}]${resultKeySuffix}`;
     const md5 = createHashMD5(resultKeyRaw);
 
-    betTracks.md5= md5;
-    betTracks.resultKey = { rawValue: resultKeyRaw, formatValue: { cards, suffix: resultKeySuffix } };
+    betTracks.md5 = md5;
+    betTracks.resultKey = {
+      rawValue: resultKeyRaw,
+      formatValue: { cards, suffix: resultKeySuffix },
+    };
 
     return this.roundsRepository.create({
       id: roundId,
@@ -177,9 +184,10 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     });
   }
 
-  async buildResultKeyRawSuffix(segments)
-  {
-    return segments.map(segment => segment.map(card => cardLabels[card.rank]).join(' ')).join(', ')
+  async buildResultKeyRawSuffix(segments) {
+    return segments
+      .map((segment) => segment.map((card) => cardLabels[card.rank]).join(' '))
+      .join(', ');
   }
 
   async createBet(player) {
@@ -203,28 +211,29 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       siteId: player.session?.siteId,
       currency: player.session?.currencyName,
       partnerId: player.session?.partnerId,
-      rate: this.calculateCurrencyRate(player.session)
+      rate: this.calculateCurrencyRate(player.session),
+      roundId: betTracks.roundId,
     });
   }
 
   async processDoubleCall(player) {
     const { betTracks } = this.gameData.ingame[player.profile.name];
-      betTracks.isDealing = true;
+    betTracks.isDealing = true;
 
-      const betInfo = {
-        amount: betTracks.bets.ante * 2,
-        gameId: this.definition.id,
-        gameRoundId: betTracks.roundId,
-        choiceId: this.definition.choicesMapper[gameSettings.actions.doubleCall],
-      };
-      const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
-      const { response } = apiResult;
-      if (apiResult.isOk) {
-        await this.handleSuccessCall(player, betInfo.amount, response);
-      } else {
-        this.handleFailPlaceBetResponse(player, response, gameSettings.actions.doubleCall);
-      }
-      betTracks.isDealing = false;
+    const betInfo = {
+      amount: betTracks.bets.ante * 2,
+      gameId: this.definition.id,
+      gameRoundId: betTracks.roundId,
+      choiceId: this.definition.choicesMapper[gameSettings.actions.doubleCall],
+    };
+    const apiResult = await this.placeBet({ id: player.UID, session: player.session }, betInfo);
+    const { response } = apiResult;
+    if (apiResult.isOk) {
+      await this.handleSuccessCall(player, betInfo.amount, response);
+    } else {
+      this.handleFailPlaceBetResponse(player, response, gameSettings.actions.doubleCall);
+    }
+    betTracks.isDealing = false;
   }
 
   async handleSuccessCall(player, amount, balance) {
@@ -237,7 +246,11 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     const { betTracks } = this.gameData.ingame[player.profile.name];
     await this.betsRepository.update(
       { phien: betTracks.roundId },
-      { $inc: { call: amount, bet: amount }, result: betTracks.combinationResult.player, callTime: new Date(), },
+      {
+        $inc: { call: amount, bet: amount },
+        result: betTracks.combinationResult.player,
+        callTime: new Date(),
+      },
     );
 
     const call = {
@@ -245,7 +258,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       combinationResult: betTracks.combinationResult,
       dealer: betTracks.dealer,
       totalAmount: Object.values(betTracks.bets).reduce((total, item) => total + item),
-      choices: betTracks.bets
+      choices: betTracks.bets,
     };
 
     this.publisher.publishToUser(player.UID, { endBet: amount, user: balance, call });
@@ -255,7 +268,10 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
   async updateBetTracksAfterCall(player, amount) {
     const { betTracks } = this.gameData.ingame[player.profile.name];
-    const { communityCardsGenerated, result } = await this.roundsRepository.findOne({ id: betTracks.roundId }, { _id: false }).lean().exec();
+    const { communityCardsGenerated, result } = await this.roundsRepository
+      .findOne({ id: betTracks.roundId }, { _id: false })
+      .lean()
+      .exec();
 
     betTracks.bets.call = amount;
     betTracks.dealer = result.dealer;

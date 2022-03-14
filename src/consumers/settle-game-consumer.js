@@ -68,15 +68,16 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       bet.aaOdds = betResult.aaOdds;
       bet.anteOdds = betResult.anteOdds;
       bet.callOdds = betResult.callOdds;
+      bet.paid = true;
 
       const { betTracks } = this.gameData.ingame[playerName];
       let resultKey = betTracks.resultKey;
 
-      if(resultKey === undefined){
+      if (resultKey === undefined) {
         const round = await this.roundsRepository.findOne({ id: roundId }).exec();
-        const cards =  bet.cards.concat(round.result.dealer).concat(round.communityCardsGenerated);
-        const suffix = round.resultKeyRaw.split("]")[1];
-        resultKey =  { rawValue: round.resultKeyRaw, formatValue: { cards, suffix } };
+        const cards = bet.cards.concat(round.result.dealer).concat(round.communityCardsGenerated);
+        const suffix = round.resultKeyRaw.split(']')[1];
+        resultKey = { rawValue: round.resultKeyRaw, formatValue: { cards, suffix } };
       }
 
       await bet.save();
@@ -201,10 +202,9 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
     const originalOdds = odds[combinationResult.id] || 1;
     const winAmount = betAmount * originalOdds;
 
-    if (type === "aa") {
+    if (type === 'aa') {
       result.aaOdds = originalOdds;
-    }
-    else {
+    } else {
       result.anteOdds = originalOdds;
     }
     result.totalWin += winAmount;
