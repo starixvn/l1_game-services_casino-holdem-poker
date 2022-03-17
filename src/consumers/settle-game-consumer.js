@@ -70,14 +70,6 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       bet.callOdds = betResult.callOdds;
 
       const { betTracks } = this.gameData.ingame[playerName];
-      let resultKey = betTracks.resultKey;
-
-      if(resultKey === undefined){
-        const round = await this.roundsRepository.findOne({ id: roundId }).exec();
-        const cards =  bet.cards.concat(round.result.dealer).concat(round.communityCardsGenerated);
-        const suffix = round.resultKeyRaw.split("]")[1];
-        resultKey =  { rawValue: round.resultKeyRaw, formatValue: { cards, suffix } };
-      }
 
       await bet.save();
       await this.callEndGame(bet, roundId, time, betResult);
@@ -88,7 +80,7 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
         finish: {
           settlementResult: betResult.settlementResult,
         },
-        md5: { key: resultKey },
+        md5: { key: betTracks.resultKey },
       });
     }
   }

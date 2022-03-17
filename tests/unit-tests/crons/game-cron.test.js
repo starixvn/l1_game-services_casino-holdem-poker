@@ -3,12 +3,22 @@ import { Table } from "sc-game-base";
 
 import { reGenerateDecks } from '../../../src/helpers/deck-helper';
 import GameCron from '../../../src/crons/game-cron';
- 
+import { encrypt, decrypt } from '../../../src/helpers/crypto-helper';
+
 jest.mock('cron');
 jest.mock('sc-common');
 jest.mock('../../../src/helpers/deck-helper');
+jest.mock('../../../src/helpers/crypto-helper');
 
 describe('Game Cron test', () => {
+  const cardsRaw ='{"dealer":[{"rank": 1}], "communityCardsGenerated":[{"rank": 1}]}';
+  const resultKeyRaw = "[7,8,9]aaa";
+  const md5 = "abcd";
+
+  beforeEach(function() {
+    decrypt.mockReturnValueOnce(cardsRaw).mockReturnValueOnce(resultKeyRaw);
+  });
+
   it('inherit Table.Crons.TableGameCron', () => {
     // Act
     const game = new GameCron({});
@@ -20,7 +30,7 @@ describe('Game Cron test', () => {
   describe('start', () => {
     it('should set last roundId when have last round', async () => {
       // Arrange
-      const lastRound = { id: 10 };
+      const lastRound = {  id: 10, result: { dealer: [{ rank: 1 }] }, cards: {iv: "iv", content: "content"}, md5, resultKeyRaw };
       const game = new GameCron({});
       game.getSettingForNewRound = jest.fn();
       game.updateExchangeRates = jest.fn();
@@ -71,9 +81,9 @@ describe('Game Cron test', () => {
       roundStartTime: new Date(123456),
       uid: player.uid,
       result: {
-        dealer: [{ rank: 1 }, { rank: 2 }],
         communityCards: [{ rank: 1 }, { rank: 2 }, { rank: 3 }],
       },
+      cardsRaw: { iv: "iv", content: "content" },
       name: player.name,
     };
 
@@ -86,6 +96,7 @@ describe('Game Cron test', () => {
           lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue([round]) }),
         }),
       };
+
       const bet = { cards: [{ rank: 4 }, { rank: 5 }], aa: 10, ante: 10, result: { id: 3 } };
       game.betsRepository = {
         findOne: jest.fn().mockReturnValue({
@@ -104,8 +115,10 @@ describe('Game Cron test', () => {
           combinationResult: { player: { ...bet.result } },
           player: bet.cards,
           bets: { aa: bet.aa, ante: bet.ante },
-          dealer: [...round.result.dealer],
+          dealer: [{rank: 1}],
           communityCards: [...round.result.communityCards],
+          communityCardsGenerated: [{rank: 1}],
+          resultKey:{ rawValue: resultKeyRaw, formatValue: { cards: [{ rank: 4 }, { rank: 5 }, { rank: 1 }, { rank: 1 }], suffix: "aaa" } }
         },
         betQueue: [],
       };
@@ -141,10 +154,12 @@ describe('Game Cron test', () => {
           uid: round.uid,
           deck: deckCards,
           combinationResult: { player: {} },
-          player: undefined,
+          player: [],
           bets: { aa: undefined, ante: undefined },
-          dealer: [...round.result.dealer],
+          dealer: [{rank: 1}],
           communityCards: [...round.result.communityCards],
+          communityCardsGenerated: [{rank: 1}],
+          resultKey:{ rawValue: resultKeyRaw, formatValue: { cards: [{ rank: 1 }, { rank: 1 }], suffix: "aaa" } }
         },
         betQueue: [],
       };

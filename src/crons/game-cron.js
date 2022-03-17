@@ -4,6 +4,7 @@ import { logger } from 'sc-common';
 import appConfigs from '../app-configs';
 import { reGenerateDecks } from '../helpers/deck-helper';
 import { Core } from "sc-game-base";
+import { decrypt } from "../helpers/crypto-helper";
 
 export default class GameCron extends Core.Crons.BaseGameCron {
   constructor({
@@ -79,12 +80,17 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     await Promise.all(
       runningRounds.map(async (round) => {
-        const usedCards = [...round.result.communityCards, ...round.result.dealer];
-        const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
+        const { dealer, communityCardsGenerated } = JSON.parse(decrypt(round.cardsRaw));
+        const usedCards = [...round.result.communityCards, ...dealer];
 
-        if (bet) {
-          usedCards.push(...bet.cards);
-        }
+        // TO DO : Update new structure when release
+        const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
+        const playerCards = bet ? bet.cards : [];
+        usedCards.push(...playerCards);
+
+        const resultKeyRaw = decrypt(round.resultKeyRaw);
+        const suffix = resultKeyRaw.split("]")[1];
+        const resultKey = { rawValue: resultKeyRaw, formatValue: { cards: playerCards.concat(dealer).concat(communityCardsGenerated), suffix } };
 
         const newPlayer = {
           name: round.name,
@@ -94,10 +100,12 @@ export default class GameCron extends Core.Crons.BaseGameCron {
             uid: round.uid,
             deck: reGenerateDecks(usedCards),
             combinationResult: { player: { ...bet?.result } },
-            player: bet?.cards,
+            player: playerCards,
             bets: { aa: bet?.aa, ante: bet?.ante },
-            dealer: [...round.result.dealer],
+            dealer,
             communityCards: [...round.result.communityCards],
+            communityCardsGenerated: communityCardsGenerated,
+            resultKey
           },
           betQueue: [],
         };

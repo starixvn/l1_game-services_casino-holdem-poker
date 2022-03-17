@@ -1,7 +1,11 @@
 import HistoryQuery from '../../../src/query-apis/history-query';
 import { compareCombination } from '../../../src/helpers/result-helper';
+import { decrypt } from '../../../src/helpers/crypto-helper';
 
 jest.mock('../../../src/helpers/result-helper');
+jest.mock('../../../src/helpers/crypto-helper');
+decrypt.mockReturnValue('{"dealer":[{"rank": 2}], "communityCardsGenerated":[{"rank": 2}]}');
+
 describe('History query test', () => {
   const query = new HistoryQuery();
   describe('convertBet', () => {

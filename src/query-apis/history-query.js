@@ -1,4 +1,5 @@
 import { compareCombination } from '../helpers/result-helper';
+import { decrypt } from "../helpers/crypto-helper";
 
 export default class HistoryQuery {
   constructor(roundQuery, betsRepository) {
@@ -22,10 +23,13 @@ export default class HistoryQuery {
       combination: bet.result.cards,
       handId: bet.result.id,
     };
+
+    const cards = JSON.parse(decrypt(round.cardsRaw));
+
     const dealer = bet.isFold
       ? {}
       : {
-          cards: round.result.dealer,
+          cards: cards.dealer,
           combination: round.settlementResult?.cards,
           handId: round.settlementResult?.id,
           isQualified: round.settlementResult?.isQualified,

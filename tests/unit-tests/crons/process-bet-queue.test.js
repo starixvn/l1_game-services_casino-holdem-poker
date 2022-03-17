@@ -3,10 +3,12 @@ import ProcessBetQueue from '../../../src/crons/process-bet-queue';
 import gameSettings from '../../../src/game-settings';
 import { deal, generateDecks, reGenerateDecks } from '../../../src/helpers/deck-helper';
 import { isQualified } from '../../../src/helpers/result-helper';
+import { createHashMD5, randomString, encrypt } from '../../../src/helpers/crypto-helper';
 
 jest.mock('sc-common');
 jest.mock('../../../src/helpers/result-helper');
 jest.mock('../../../src/helpers/deck-helper');
+jest.mock('../../../src/helpers/crypto-helper');
 
 describe('Process bet queue test', () => {
   const mockDate = new Date(123456);
@@ -311,6 +313,16 @@ describe('Process bet queue test', () => {
           settle: jest.fn().mockReturnValue({ id: 1 }),
         };
 
+      const md5 = "md5"
+      const rawResultEncrypt = {
+        iv: "iv",
+        content: "content"
+      };
+
+      createHashMD5.mockReturnValue(md5);
+      randomString.mockReturnValue("efgkh");
+      encrypt.mockReturnValue(rawResultEncrypt);
+
       const expected = {
         id: 10,
         result,
@@ -318,6 +330,8 @@ describe('Process bet queue test', () => {
         uid: player.UID,
         name: player.profile.name,
         odds: gameData.gameConfigs.odds,
+        md5,
+        resultKeyRaw: rawResultEncrypt
       };
       const roundsRepository = { create: jest.fn().mockReturnValue(expected) };
       const process = new ProcessBetQueue({ definition, gameData, roundsRepository });
@@ -351,10 +365,10 @@ describe('Process bet queue test', () => {
       const definition = { settle: jest.fn().mockReturnValue({ id: 1 }) };
       const betsRepository = { create: jest.fn() };
       const process = new ProcessBetQueue({ definition, gameData, betsRepository });
-      process.calculateCurrencyRate =  jest
-      .fn({session: player.session})
-      .mockReturnValue(1);
-      
+      process.calculateCurrencyRate = jest
+        .fn({ session: player.session })
+        .mockReturnValue(1);
+
       const data = {
         uid: player.UID,
         name: player.profile.name,
@@ -499,8 +513,7 @@ describe('Process bet queue test', () => {
   });
 
   describe('updateBetTracksAfterCall', () => {
-    it('should run correctly', async () => {
-      // Arrange
+    it('should run smoothly when bettrack.communityCardsGenerated exist.', async () => {
       const player = { profile: { name: 'a' }, session: { partnerId: "1W" } };
       const combinationResult = { id: 1 };
       const definition = {
@@ -511,17 +524,13 @@ describe('Process bet queue test', () => {
         communityCards: [{ rank: 2 }],
         deck: [],
         player: [{ rank: 0 }],
+        dealer: [{ rank: 1 }],
+        communityCardsGenerated: { rank: 2 },
         bets: { ante: 100 }
       };
       const gameData = { ingame: { [player.profile.name]: { betTracks } } };
       const process = new ProcessBetQueue({ definition, gameData });
 
-      const roundRepo = { result: { dealer: [{ rank: 1 }] }, communityCardsGenerated: [{ rank: 2 }] };
-      process.roundsRepository = {
-        findOne: jest.fn().mockReturnValue({
-          lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(roundRepo) }),
-        }),
-      };
       isQualified.mockReturnValue(false);
 
       // Act
@@ -529,8 +538,7 @@ describe('Process bet queue test', () => {
 
       // Assert
       expect(betTracks.bets.call).toBe(100);
-      expect(betTracks.dealer).toStrictEqual(roundRepo.result.dealer);
-      expect(betTracks.communityCards).toStrictEqual(roundRepo.communityCardsGenerated);
+      expect(betTracks.communityCards).toStrictEqual({ rank: 2 });
       expect(definition.settle).toHaveBeenCalledWith([{ rank: 0 }, { rank: 2 }]);
       expect(definition.settle).toHaveBeenCalledWith([{ rank: 1 }, { rank: 2 }]);
       expect(betTracks.combinationResult.player).toStrictEqual(combinationResult);
