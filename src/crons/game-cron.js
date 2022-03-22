@@ -80,19 +80,20 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     await Promise.all(
       runningRounds.map(async (round) => {
-        let dealerCards =[], communityCardsGenerated = [], resultKeyRaw = round.resultKeyRaw;
+        let dealerCards =[], communityCardsGenerated = [], md5ResultKey = null;
 
         if(round.result.dealer)
         {
           dealerCards = round.result.dealer;
           communityCardsGenerated = round.communityCardsGenerated;
+          md5ResultKey = round.resultKeyRaw
         }
         else
         {
-          const cards = JSON.parse(decrypt(round.cardsRaw));
+          const cards = JSON.parse(decrypt(round.encryptedResult));
           dealerCards = cards.dealer;
           communityCardsGenerated = cards.communityCardsGenerated;
-          resultKeyRaw = decrypt(round.resultKeyRaw);
+          md5ResultKey = decrypt(round.encryptedMD5);
         }
 
         const usedCards = [...round.result.communityCards, ...dealerCards];
@@ -100,8 +101,8 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         const playerCards = bet?.cards ?? [];
         usedCards.push(...playerCards);
 
-        const suffix = resultKeyRaw.split("]")[1];
-        const resultKey = { rawValue: resultKeyRaw, formatValue: { cards: playerCards.concat(dealerCards).concat(communityCardsGenerated), suffix } };
+        const suffix = md5ResultKey.split("]")[1];
+        const resultKey = { rawValue: md5ResultKey, formatValue: { cards: playerCards.concat(dealerCards).concat(communityCardsGenerated), suffix } };
 
         const newPlayer = {
           name: round.name,

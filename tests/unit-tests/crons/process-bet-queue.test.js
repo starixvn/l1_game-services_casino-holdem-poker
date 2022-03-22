@@ -331,7 +331,7 @@ describe('Process bet queue test', () => {
         name: player.profile.name,
         odds: gameData.gameConfigs.odds,
         md5,
-        resultKeyRaw: rawResultEncrypt
+        encryptedResult: rawResultEncrypt
       };
       const roundsRepository = { create: jest.fn().mockReturnValue(expected) };
       const process = new ProcessBetQueue({ definition, gameData, roundsRepository });

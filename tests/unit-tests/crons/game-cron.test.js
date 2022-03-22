@@ -87,7 +87,6 @@ describe('Game Cron test', () => {
         decrypt.mockReturnValueOnce(cardsRaw).mockReturnValueOnce(resultKeyRaw);
       });
 
-
       it('should set ingame when round and bet are exist.', async () => {
         // Arrange
         const game = new GameCron({});

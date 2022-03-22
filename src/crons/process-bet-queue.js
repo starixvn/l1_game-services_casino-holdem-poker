@@ -156,12 +156,12 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
     betTracks.communityCardsGenerated = communityCardsGenerated;
     const resultKeySuffix = randomString();
-    const resultKeyRaw = `[${await this.buildResultKeyRawSuffix([betTracks.player, betTracks.dealer, communityCardsGenerated])}]${resultKeySuffix}`;
-    const md5 = createHashMD5(resultKeyRaw);
+    const md5ResultKey = `[${await this.buildMD5ResultKeySuffix([betTracks.player, betTracks.dealer, communityCardsGenerated])}]${resultKeySuffix}`;
+    const md5 = createHashMD5(md5ResultKey);
 
     betTracks.md5 = md5;
     betTracks.resultKey = {
-      rawValue: resultKeyRaw,
+      rawValue: md5ResultKey,
       formatValue: {
         cards: betTracks.player.concat(betTracks.dealer).concat(communityCardsGenerated),
         suffix: resultKeySuffix
@@ -175,14 +175,14 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       uid: player.UID,
       name: player.profile.name,
       odds,
-      cardsRaw: encrypt(JSON.stringify({communityCardsGenerated, dealer: betTracks.dealer})),
+      encryptedResult: encrypt(JSON.stringify({communityCardsGenerated, dealer: betTracks.dealer})),
       md5,
-      resultKeyRaw: encrypt(resultKeyRaw),
+      encryptedMD5: encrypt(md5ResultKey),
       exchangeRateId: this.gameData.exchangeRates.exId,
     });
   }
 
-  async buildResultKeyRawSuffix(segments) {
+  async buildMD5ResultKeySuffix(segments) {
     return segments.map(segment => segment.map(card => cardLabels[card.rank]).join(' ')).join(', ')
   }
 
