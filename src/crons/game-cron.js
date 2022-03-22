@@ -80,17 +80,28 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     await Promise.all(
       runningRounds.map(async (round) => {
-        const { dealer, communityCardsGenerated } = JSON.parse(decrypt(round.cardsRaw));
-        const usedCards = [...round.result.communityCards, ...dealer];
+        let dealerCards =[], communityCardsGenerated = [], resultKeyRaw = round.resultKeyRaw;
 
-        // TO DO : Update new structure when release
+        if(round.result.dealer)
+        {
+          dealerCards = round.result.dealer;
+          communityCardsGenerated = round.communityCardsGenerated;
+        }
+        else
+        {
+          const cards = JSON.parse(decrypt(round.cardsRaw));
+          dealerCards = cards.dealer;
+          communityCardsGenerated = cards.communityCardsGenerated;
+          resultKeyRaw = decrypt(round.resultKeyRaw);
+        }
+
+        const usedCards = [...round.result.communityCards, ...dealerCards];
         const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
-        const playerCards = bet ? bet.cards : [];
+        const playerCards = bet?.cards ?? [];
         usedCards.push(...playerCards);
 
-        const resultKeyRaw = decrypt(round.resultKeyRaw);
         const suffix = resultKeyRaw.split("]")[1];
-        const resultKey = { rawValue: resultKeyRaw, formatValue: { cards: playerCards.concat(dealer).concat(communityCardsGenerated), suffix } };
+        const resultKey = { rawValue: resultKeyRaw, formatValue: { cards: playerCards.concat(dealerCards).concat(communityCardsGenerated), suffix } };
 
         const newPlayer = {
           name: round.name,
@@ -102,9 +113,9 @@ export default class GameCron extends Core.Crons.BaseGameCron {
             combinationResult: { player: { ...bet?.result } },
             player: playerCards,
             bets: { aa: bet?.aa, ante: bet?.ante },
-            dealer,
+            dealer: dealerCards,
             communityCards: [...round.result.communityCards],
-            communityCardsGenerated: communityCardsGenerated,
+            communityCardsGenerated,
             resultKey
           },
           betQueue: [],
