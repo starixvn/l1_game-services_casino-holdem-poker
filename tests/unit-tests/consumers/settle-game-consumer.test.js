@@ -222,59 +222,6 @@ describe('Settle game test', () => {
         md5: { key: { rawValue: "456", formatValue: { cards: [], suffix: "aaa" } } }
       });
     });
-
-    it('should get md5 from db when bettrack.resultKey does not exist.', async () => {
-      // Arrange
-      const betTracks = { bets: { ante: 10, aa: 10 }, combinationResult: { player: { id: 1 } } };
-      const gameData = { ingame: { a: { betTracks } }, gameConfigs: {}, resultKey, md5 };
-      const bet = { save: jest.fn(), cards: [{ rank: 2 }] };
-      const betsRepository = {
-        findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),
-      };
-
-      const resultKeyRaw = "[7,8,9]aaa";
-      const roundRepo = { result: { dealer: [{ rank: 1 }] }, communityCardsGenerated: [{ rank: 2 }], md5, resultKeyRaw };
-      const roundsRepository = {
-        findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(roundRepo) }),
-      };
-
-      const publisher = { publishToUser: jest.fn() };
-      const consumer = new SettleGameConsumer({ gameData, betsRepository, roundsRepository, publisher });
-      const betResult = { totalWin: 10, result: { id: 1 }, settlementResult: { ante: 10 } };
-      consumer.calculateBetResult = jest.fn().mockReturnValue(betResult);
-      consumer.callEndGame = jest.fn();
-      const finish = {
-        roundId: 1,
-        odds: {},
-        time: new Date(123456),
-        playerName: 'a',
-        playerUID: 123
-      };
-
-      // Act
-      await consumer.settleBets(finish);
-
-      // Assert
-      expect(bet.isFold).toBeFalse();
-      expect(bet.betwin).toBe(betResult.totalWin);
-      expect(bet.thanhtoan).toBeTrue();
-      expect(bet.result).toStrictEqual(betResult.result);
-      expect(bet.settlementResult).toStrictEqual(betResult.settlementResult);
-      expect(bet.endTime).toEqual(finish.time);
-      expect(bet.save).toHaveBeenCalled();
-      expect(consumer.callEndGame).toHaveBeenCalledWith(
-        bet,
-        finish.roundId,
-        finish.time,
-        betResult,
-      );
-      expect(consumer.gameData.ingame).toStrictEqual({});
-      expect(publisher.publishToUser).toHaveBeenCalledWith(finish.playerUID, {
-        finish: { settlementResult: betResult.settlementResult },
-        md5: { key: { rawValue: resultKeyRaw, formatValue: { cards: [{ rank: 2 }, { rank: 1 }, { rank: 2 }], suffix: "aaa" } } }
-      });
-    });
-
   });
 
   describe('calculateBetResult', () => {
