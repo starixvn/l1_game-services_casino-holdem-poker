@@ -15,7 +15,8 @@ const Schema = new mongoose.Schema({
   odds: { type: Object },
   md5: { type: String, require: true },
   encryptedMD5: {type: Object , require: true },
-  encryptedResult: { type: Object , require: true },
+  encryptedResult: { type: Object, require: true },
+  isSwappedOrHold: { type: Boolean, default: false },
 });
 
 export default mongoose.model(modelName, Schema);

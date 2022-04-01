@@ -1,4 +1,4 @@
-import { Core } from "sc-game-base";
+import { Core } from 'sc-game-base';
 import ProcessBetQueue from '../../../src/crons/process-bet-queue';
 import gameSettings from '../../../src/game-settings';
 import { deal, generateDecks, reGenerateDecks } from '../../../src/helpers/deck-helper';
@@ -22,6 +22,7 @@ describe('Process bet queue test', () => {
     jest.clearAllMocks();
     spy.mockRestore();
   });
+
   it('inherit Core.Crons.ProcessBetQueue', () => {
     // Act
     const process = new ProcessBetQueue({});
@@ -89,6 +90,34 @@ describe('Process bet queue test', () => {
         player.profile.name,
         true,
       );
+    });
+
+    it('should process hold when action hold', async () => {
+      // Arrange
+      const process = new ProcessBetQueue({});
+      const betTrack = { action: gameSettings.actions.hold };
+      const player = { profile: { name: 'a' } };
+      process.processHold = jest.fn();
+
+      // Act
+      await process.proceedBet(player, betTrack);
+
+      // Assert
+      expect(process.processHold).toHaveBeenCalledWith(player);
+    });
+
+    it('should process swap when action hold', async () => {
+      // Arrange
+      const process = new ProcessBetQueue({});
+      const betTrack = { action: gameSettings.actions.swap };
+      const player = { profile: { name: 'a' } };
+      process.processSwap = jest.fn();
+
+      // Act
+      await process.proceedBet(player, betTrack);
+
+      // Assert
+      expect(process.processSwap).toHaveBeenCalledWith(player);
     });
   });
 
@@ -259,7 +288,7 @@ describe('Process bet queue test', () => {
         player: [],
         communityCards: [],
         combinationResult: {},
-        md5: "123"
+        md5: '123',
       };
       const gameData = { ingame: { [player.profile.name]: { betTracks } } };
       const publisher = { publishToUser: jest.fn() };
@@ -273,15 +302,13 @@ describe('Process bet queue test', () => {
       const data = {
         deal: {
           roundId: newRound.id,
-          player: betTracks.player,
           communityCards: betTracks.communityCards,
-          combinationResult: betTracks.combinationResult,
           totalAmount: 110,
           choices: betTracks.bets,
         },
         endBet: betTracks.bets.ante + betTracks.bets.aa,
         user: {},
-        md5: { key: betTracks.md5 }
+        md5: { key: betTracks.md5 },
       };
 
       // Act
@@ -300,27 +327,30 @@ describe('Process bet queue test', () => {
   describe('createRound', () => {
     it('should return expected', async () => {
       const player = { UID: 1, profile: { name: 'profile' } };
-      const betTracks = { player: [{ rank: 2 }], dealer: [{ rank: 1 }], communityCards: [{ rank: 2 }] };
+      const betTracks = {
+        player: [{ rank: 2 }],
+        dealer: [{ rank: 1 }],
+        communityCards: [{ rank: 2 }],
+      };
       const result = { dealer: betTracks.dealer, communityCards: betTracks.communityCards };
       const gameData = {
         exchangeRates: { exId: 1 },
         gameConfigs: { odds: { callBet: 2 } },
         ingame: { [player.profile.name]: { betTracks } },
       };
-      const
-        definition = {
-          generateResult: jest.fn().mockReturnValue(betTracks.communityCards),
-          settle: jest.fn().mockReturnValue({ id: 1 }),
-        };
+      const definition = {
+        generateResult: jest.fn().mockReturnValue(betTracks.communityCards),
+        settle: jest.fn().mockReturnValue({ id: 1 }),
+      };
 
-      const md5 = "md5"
+      const md5 = 'md5';
       const rawResultEncrypt = {
-        iv: "iv",
-        content: "content"
+        iv: 'iv',
+        content: 'content',
       };
 
       createHashMD5.mockReturnValue(md5);
-      randomString.mockReturnValue("efgkh");
+      randomString.mockReturnValue('efgkh');
       encrypt.mockReturnValue(rawResultEncrypt);
 
       const expected = {
@@ -331,7 +361,7 @@ describe('Process bet queue test', () => {
         name: player.profile.name,
         odds: gameData.gameConfigs.odds,
         md5,
-        encryptedResult: rawResultEncrypt
+        encryptedResult: rawResultEncrypt,
       };
       const roundsRepository = { create: jest.fn().mockReturnValue(expected) };
       const process = new ProcessBetQueue({ definition, gameData, roundsRepository });
@@ -365,9 +395,7 @@ describe('Process bet queue test', () => {
       const definition = { settle: jest.fn().mockReturnValue({ id: 1 }) };
       const betsRepository = { create: jest.fn() };
       const process = new ProcessBetQueue({ definition, gameData, betsRepository });
-      process.calculateCurrencyRate = jest
-        .fn({ session: player.session })
-        .mockReturnValue(1);
+      process.calculateCurrencyRate = jest.fn({ session: player.session }).mockReturnValue(1);
 
       const data = {
         uid: player.UID,
@@ -375,13 +403,13 @@ describe('Process bet queue test', () => {
         phien: betTracks.roundId,
         aa: betTracks.bets.aa,
         ante: betTracks.bets.ante,
-        cards: betTracks.player,
+        cards: [],
         bet: betTracks.bets.aa + betTracks.bets.ante,
-        result: { id: 1 },
+        result: {},
         time: new Date(123456),
         memberId: player.session.memberId,
         siteId: player.session.siteId,
-        rate: 1
+        rate: 1,
       };
 
       // Act
@@ -425,7 +453,7 @@ describe('Process bet queue test', () => {
       expect(process.handleSuccessCall).toHaveBeenCalledWith(
         player,
         betInfo.amount,
-        apiResult.response
+        apiResult.response,
       );
     });
 
@@ -465,7 +493,7 @@ describe('Process bet queue test', () => {
   describe('handleSuccessCall', () => {
     it('should run correctly', async () => {
       // Arrange
-      const player = { profile: { name: 'a' }, session: { partnerId: "1W" } };
+      const player = { profile: { name: 'a' }, session: { partnerId: '1W' } };
       const betTracks = {
         roundId: 1,
         combinationResult: { player: { id: 3 } },
@@ -501,7 +529,11 @@ describe('Process bet queue test', () => {
       expect(process.updateBetTracksAfterCall).toHaveBeenCalledWith(player, 100);
       expect(betsRepository.update).toHaveBeenCalledWith(
         { phien: betTracks.roundId },
-        { $inc: { call: 100, bet: 100 }, result: betTracks.combinationResult.player, callTime: new Date(123456) },
+        {
+          $inc: { call: 100, bet: 100 },
+          result: betTracks.combinationResult.player,
+          callTime: new Date(123456),
+        },
       );
       expect(publisher.publishToUser).toHaveBeenCalledWith(player.UID, {
         endBet: 100,
@@ -514,7 +546,7 @@ describe('Process bet queue test', () => {
 
   describe('updateBetTracksAfterCall', () => {
     it('should run smoothly when bettrack.communityCardsGenerated exist.', async () => {
-      const player = { profile: { name: 'a' }, session: { partnerId: "1W" } };
+      const player = { profile: { name: 'a' }, session: { partnerId: '1W' } };
       const combinationResult = { id: 1 };
       const definition = {
         settle: jest.fn().mockReturnValue(combinationResult),
@@ -526,7 +558,7 @@ describe('Process bet queue test', () => {
         player: [{ rank: 0 }],
         dealer: [{ rank: 1 }],
         communityCardsGenerated: { rank: 2 },
-        bets: { ante: 100 }
+        bets: { ante: 100 },
       };
       const gameData = { ingame: { [player.profile.name]: { betTracks } } };
       const process = new ProcessBetQueue({ definition, gameData });
@@ -561,11 +593,12 @@ describe('Process bet queue test', () => {
 
       // Assert
       expect(process.handleFailedBet).toHaveBeenCalledWith(
-        { session: { language: "" } },
-        "SB1905",
+        { session: { language: '' } },
+        'SB1905',
         {
           betChoice: gameSettings.actions.deal,
-        });
+        },
+      );
     });
 
     it('should run correctly', () => {
@@ -585,6 +618,192 @@ describe('Process bet queue test', () => {
           betChoice: gameSettings.actions.deal,
         },
       );
+    });
+  });
+
+  describe('processHold', () => {
+    const betTracks = {
+      roundId: 1,
+      player: [],
+      dealer: [],
+      isSwappedOrHold: false,
+      combinationResult: {
+        player: {},
+      },
+      communityCards: [],
+      generatedResult: {
+        player: [],
+        dealer: [],
+      },
+    };
+    const player = { profile: { name: 'a' }, UID: 'uid' };
+    const gameData = { roundId: 1, ingame: { [player.profile.name]: { betTracks } } };
+    let process;
+
+    beforeEach(() => {
+      process = new ProcessBetQueue({
+        definition: {
+          settle: jest.fn(),
+        },
+        gameData,
+        betsRepository: {
+          update: jest.fn(),
+        },
+        roundsRepository: {
+          update: jest.fn(),
+        },
+        publisher: {
+          publishToUser: jest.fn(),
+        },
+      });
+    });
+
+    describe('when called', () => {
+      it('should change isSwappedOrHold property', async () => {
+        // Act
+        await process.processHold(player);
+
+        // Assert
+        expect(betTracks.isSwappedOrHold).toBeTrue();
+      });
+
+      it('should update bet record', async () => {
+        // Act
+        await process.processHold(player);
+
+        // Assert
+        expect(process.betsRepository.update).toBeCalledWith(
+          { phien: 1 },
+          {
+            holdTime: mockDate,
+            cards: [],
+            result: undefined,
+          },
+        );
+      });
+
+      it('should update round record', async () => {
+        // Act
+        await process.processHold(player);
+
+        // Assert
+        expect(process.roundsRepository.update).toBeCalledWith(
+          { id: 1 },
+          {
+            isSwappedOrHold: true,
+            result: { dealer: [], communityCards: [] },
+          },
+        );
+      });
+
+      it('should publish data to user', async () => {
+        // Act
+        await process.processHold(player);
+
+        // Assert
+        expect(process.publisher.publishToUser).toBeCalledWith('uid', {
+          hold: {
+            roundId: 1,
+            player: [],
+            combinationResult: {
+              player: undefined,
+            },
+          },
+        });
+      });
+    });
+  });
+
+  describe('processSwap', () => {
+    const betTracks = {
+      roundId: 1,
+      player: [],
+      dealer: [],
+      isSwappedOrHold: false,
+      combinationResult: {
+        player: {},
+      },
+      communityCards: [],
+      generatedResult: {
+        player: [],
+        dealer: [],
+      },
+    };
+    const player = { profile: { name: 'a' }, UID: 'uid' };
+    const gameData = { roundId: 1, ingame: { [player.profile.name]: { betTracks } } };
+    let process;
+
+    beforeEach(() => {
+      process = new ProcessBetQueue({
+        definition: {
+          settle: jest.fn(),
+        },
+        gameData,
+        betsRepository: {
+          update: jest.fn(),
+        },
+        roundsRepository: {
+          update: jest.fn(),
+        },
+        publisher: {
+          publishToUser: jest.fn(),
+        },
+      });
+    });
+
+    describe('when called', () => {
+      it('should change isSwappedOrHold property', async () => {
+        // Act
+        await process.processSwap(player);
+
+        // Assert
+        expect(betTracks.isSwappedOrHold).toBeTrue();
+      });
+
+      it('should update bet record', async () => {
+        // Act
+        await process.processSwap(player);
+
+        // Assert
+        expect(process.betsRepository.update).toBeCalledWith(
+          { phien: 1 },
+          {
+            swapTime: mockDate,
+            cards: [],
+            result: undefined,
+          },
+        );
+      });
+
+      it('should update round record', async () => {
+        // Act
+        await process.processSwap(player);
+
+        // Assert
+        expect(process.roundsRepository.update).toBeCalledWith(
+          { id: 1 },
+          {
+            isSwappedOrHold: true,
+            result: { dealer: [], communityCards: [] },
+          },
+        );
+      });
+
+      it('should publish data to user', async () => {
+        // Act
+        await process.processSwap(player);
+
+        // Assert
+        expect(process.publisher.publishToUser).toBeCalledWith('uid', {
+          swap: {
+            roundId: 1,
+            player: [],
+            combinationResult: {
+              player: undefined,
+            },
+          },
+        });
+      });
     });
   });
 });

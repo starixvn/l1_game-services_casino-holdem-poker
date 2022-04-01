@@ -80,7 +80,8 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     await Promise.all(
       runningRounds.map(async (round) => {
-        let dealerCards =[], communityCardsGenerated = [], md5ResultKey = null;
+        let dealerCards = [], communityCardsGenerated = [], md5ResultKey = null;
+        const generatedResult = JSON.parse(decrypt(round.encryptedResult));
 
         if(round.result.dealer)
         {
@@ -90,9 +91,8 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         }
         else
         {
-          const cards = JSON.parse(decrypt(round.encryptedResult));
-          dealerCards = cards.dealer;
-          communityCardsGenerated = cards.communityCardsGenerated;
+          dealerCards = generatedResult.dealer;
+          communityCardsGenerated = generatedResult.communityCardsGenerated;
           md5ResultKey = decrypt(round.encryptedMD5);
         }
 
@@ -117,7 +117,9 @@ export default class GameCron extends Core.Crons.BaseGameCron {
             dealer: dealerCards,
             communityCards: [...round.result.communityCards],
             communityCardsGenerated,
-            resultKey
+            resultKey,
+            generatedResult,
+            isSwappedOrHold: !!round.isSwappedOrHold,
           },
           betQueue: [],
         };

@@ -31,6 +31,9 @@ const schema = new mongoose.Schema({
   currency: { type: String, require: true },
   rate: { type: Number, require: true },
   partnerId: { type: String, require: true },
+
+  swapTime: { type: Date },
+  holdTime: { type: Date },
 });
 
 const bets = mongoose.model(modelName, schema);

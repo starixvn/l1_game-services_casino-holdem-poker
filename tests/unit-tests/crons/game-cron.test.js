@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { Table } from "sc-game-base";
+import { Table } from 'sc-game-base';
 
 import { reGenerateDecks } from '../../../src/helpers/deck-helper';
 import GameCron from '../../../src/crons/game-cron';
@@ -69,7 +69,7 @@ describe('Game Cron test', () => {
   describe('initBetTracks', () => {
     const player = { uid: 1, name: 'a' };
     const cardsRaw = '{"dealer":[{"rank": 1}], "communityCardsGenerated":[{"rank": 1}]}';
-    const resultKeyRaw = "[7,8,9]aaa";
+    const resultKeyRaw = '[7,8,9]aaa';
 
     describe('when data is new format with encrypt data', () => {
       const roundWithNewFormat = {
@@ -79,8 +79,9 @@ describe('Game Cron test', () => {
         result: {
           communityCards: [{ rank: 1 }, { rank: 2 }, { rank: 3 }],
         },
-        cardsRaw: { iv: "iv", content: "content" },
+        cardsRaw: { iv: 'iv', content: 'content' },
         name: player.name,
+        isSwappedOrHold: false,
       };
 
       beforeEach(function () {
@@ -93,7 +94,9 @@ describe('Game Cron test', () => {
         game.gameData = { ingame: {} };
         game.roundsRepository = {
           find: jest.fn().mockReturnValue({
-            lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue([roundWithNewFormat]) }),
+            lean: jest
+              .fn()
+              .mockReturnValue({ exec: jest.fn().mockReturnValue([roundWithNewFormat]) }),
           }),
         };
 
@@ -118,7 +121,18 @@ describe('Game Cron test', () => {
             dealer: [{ rank: 1 }],
             communityCards: [...roundWithNewFormat.result.communityCards],
             communityCardsGenerated: [{ rank: 1 }],
-            resultKey: { rawValue: resultKeyRaw, formatValue: { cards: [{ rank: 4 }, { rank: 5 }, { rank: 1 }, { rank: 1 }], suffix: "aaa" } }
+            resultKey: {
+              rawValue: resultKeyRaw,
+              formatValue: {
+                cards: [{ rank: 4 }, { rank: 5 }, { rank: 1 }, { rank: 1 }],
+                suffix: 'aaa',
+              },
+            },
+            generatedResult: {
+              communityCardsGenerated: [{ rank: 1 }],
+              dealer: [{ rank: 1 }],
+            },
+            isSwappedOrHold: false,
           },
           betQueue: [],
         };
@@ -136,7 +150,9 @@ describe('Game Cron test', () => {
         game.gameData = { ingame: {} };
         game.roundsRepository = {
           find: jest.fn().mockReturnValue({
-            lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue([roundWithNewFormat]) }),
+            lean: jest
+              .fn()
+              .mockReturnValue({ exec: jest.fn().mockReturnValue([roundWithNewFormat]) }),
           }),
         };
         game.betsRepository = {
@@ -159,7 +175,15 @@ describe('Game Cron test', () => {
             dealer: [{ rank: 1 }],
             communityCards: [...roundWithNewFormat.result.communityCards],
             communityCardsGenerated: [{ rank: 1 }],
-            resultKey: { rawValue: resultKeyRaw, formatValue: { cards: [{ rank: 1 }, { rank: 1 }], suffix: "aaa" } }
+            resultKey: {
+              rawValue: resultKeyRaw,
+              formatValue: { cards: [{ rank: 1 }, { rank: 1 }], suffix: 'aaa' },
+            },
+            generatedResult: {
+              communityCardsGenerated: [{ rank: 1 }],
+              dealer: [{ rank: 1 }],
+            },
+            isSwappedOrHold: false,
           },
           betQueue: [],
         };
@@ -170,64 +194,78 @@ describe('Game Cron test', () => {
         // Assert
         expect(game.gameData.ingame[player.name]).toStrictEqual(newPlayer);
       });
-
     });
 
+    describe('when data is old format', () => {
+      beforeEach(function () {
+        decrypt.mockReturnValue(cardsRaw);
+      });
 
-    it('should set ingame when data is old format.', async () => {
-      // Arrange
-      const game = new GameCron({});
-      game.gameData = { ingame: {} };
-      const roundWithOldFormat = {
-        id: 2,
-        roundStartTime: new Date(123456),
-        uid: player.uid,
-        result: {
-          dealer: [{ rank: 1 }],
-          communityCards: [{ rank: 1 }, { rank: 2 }, { rank: 3 }],
-        },
-        communityCardsGenerated: [{ rank: 1 }],
-        cardsRaw: { iv: "iv", content: "content" },
-        resultKeyRaw: "[7,8,9]aaa",
-        name: player.name,
-      };
-
-      game.roundsRepository = {
-        find: jest.fn().mockReturnValue({
-          lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue([roundWithOldFormat]) }),
-        }),
-      };
-      game.betsRepository = {
-        findOne: jest.fn().mockReturnValue({
-          lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(undefined) }),
-        }),
-      };
-
-      const deckCards = [{ rank: 0 }];
-      reGenerateDecks.mockReturnValue(deckCards);
-      const newPlayer = {
-        name: roundWithOldFormat.name,
-        betTracks: {
-          roundId: roundWithOldFormat.id,
-          roundStartTime: roundWithOldFormat.roundStartTime,
-          uid: roundWithOldFormat.uid,
-          deck: deckCards,
-          combinationResult: { player: {} },
-          player: [],
-          bets: { aa: undefined, ante: undefined },
-          dealer: [{ rank: 1 }],
-          communityCards: [...roundWithOldFormat.result.communityCards],
+      it('should set ingame.', async () => {
+        // Arrange
+        const game = new GameCron({});
+        game.gameData = { ingame: {} };
+        const roundWithOldFormat = {
+          id: 2,
+          roundStartTime: new Date(123456),
+          uid: player.uid,
+          result: {
+            dealer: [{ rank: 1 }],
+            communityCards: [{ rank: 1 }, { rank: 2 }, { rank: 3 }],
+          },
           communityCardsGenerated: [{ rank: 1 }],
-          resultKey: { rawValue: resultKeyRaw, formatValue: { cards: [{ rank: 1 }, { rank: 1 }], suffix: "aaa" } }
-        },
-        betQueue: [],
-      };
+          cardsRaw: { iv: 'iv', content: 'content' },
+          resultKeyRaw: '[7,8,9]aaa',
+          name: player.name,
+        };
 
-      // Act
-      await game.initBetTracks();
+        game.roundsRepository = {
+          find: jest.fn().mockReturnValue({
+            lean: jest
+              .fn()
+              .mockReturnValue({ exec: jest.fn().mockReturnValue([roundWithOldFormat]) }),
+          }),
+        };
+        game.betsRepository = {
+          findOne: jest.fn().mockReturnValue({
+            lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(undefined) }),
+          }),
+        };
 
-      // Assert
-      expect(game.gameData.ingame[player.name]).toStrictEqual(newPlayer);
+        const deckCards = [{ rank: 0 }];
+        reGenerateDecks.mockReturnValue(deckCards);
+        const newPlayer = {
+          name: roundWithOldFormat.name,
+          betTracks: {
+            roundId: roundWithOldFormat.id,
+            roundStartTime: roundWithOldFormat.roundStartTime,
+            uid: roundWithOldFormat.uid,
+            deck: deckCards,
+            combinationResult: { player: {} },
+            player: [],
+            bets: { aa: undefined, ante: undefined },
+            dealer: [{ rank: 1 }],
+            communityCards: [...roundWithOldFormat.result.communityCards],
+            communityCardsGenerated: [{ rank: 1 }],
+            resultKey: {
+              rawValue: resultKeyRaw,
+              formatValue: { cards: [{ rank: 1 }, { rank: 1 }], suffix: 'aaa' },
+            },
+            generatedResult: {
+              communityCardsGenerated: [{ rank: 1 }],
+              dealer: [{ rank: 1 }],
+            },
+            isSwappedOrHold: false,
+          },
+          betQueue: [],
+        };
+
+        // Act
+        await game.initBetTracks();
+
+        // Assert
+        expect(game.gameData.ingame[player.name]).toStrictEqual(newPlayer);
+      });
     });
   });
 
