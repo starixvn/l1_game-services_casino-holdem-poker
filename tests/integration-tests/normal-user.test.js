@@ -139,8 +139,6 @@ describe("Casino Casino Holdem Service", () => {
         await gameClientDriver.handleEndBetEvent((endBetData) => {
             if (endBetData.endBet) {
                 expect(endBetData.deal.choices).toEqual(expectedEndBetResponse.deal.choices);
-                expect(endBetData.deal.combinationResult.player.cards.length).toEqual(5);
-                expect(endBetData.deal.player.length).toEqual(2);
                 expect(endBetData.deal.totalAmount).toEqual(10);
                 expect(endBetData.user).toEqual(expectedEndBetResponse.user);
 
