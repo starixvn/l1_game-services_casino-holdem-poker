@@ -708,6 +708,7 @@ describe('Process bet queue test', () => {
             combinationResult: {
               player: undefined,
             },
+            communityCards: [],
           },
         });
       });
@@ -801,6 +802,7 @@ describe('Process bet queue test', () => {
             combinationResult: {
               player: undefined,
             },
+            communityCards: [],
           },
         });
       });

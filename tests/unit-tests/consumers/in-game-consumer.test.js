@@ -13,13 +13,13 @@ describe('InGameConsumer test', () => {
     profile: { name: 'a' },
     session: {
       currencyGroupId: 1,
-      currencyCode: "USD",
+      currencyCode: 'USD',
       multiplier: 1000,
-    }
+    },
   };
 
-  preGameData.md5 = "123";
-  preGameData.resultKey = { rawValue: "456", formatValue: { cards: [], suffix: "aaa" } };
+  preGameData.md5 = '123';
+  preGameData.resultKey = { rawValue: '456', formatValue: { cards: [], suffix: 'aaa' } };
   preGameData.gameConfigs = {
     enabled: true,
     minbet: 1,
@@ -42,7 +42,7 @@ describe('InGameConsumer test', () => {
   };
 
   const roundsRepository = {
-    findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue({md5: "123"}) }),
+    findOne: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue({ md5: '123' }) }),
   };
   it('inherit BaseInGameConsumer', () => {
     // Act
@@ -65,6 +65,7 @@ describe('InGameConsumer test', () => {
         player: [],
         communityCards: [{ rank: 0, suit: 1 }],
         combinationResult: { player: {} },
+        isSwappedOrHold: true,
       };
       const gameData = {
         ...preGameData,
@@ -94,7 +95,7 @@ describe('InGameConsumer test', () => {
         user: { uid: realPlayer.UID, rate: 1000 },
         lastRoundId: gameData.roundId,
         md5: {
-          key: "123",
+          key: '123',
         },
         totalBets: {},
       };

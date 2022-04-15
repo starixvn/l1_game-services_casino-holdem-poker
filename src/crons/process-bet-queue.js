@@ -231,6 +231,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       roundId: betTracks.roundId,
       player: betTracks.player,
       combinationResult: betTracks.combinationResult,
+      communityCards: betTracks.communityCards,
     };
 
     this.publisher.publishToUser(player.UID, { hold });
@@ -269,6 +270,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       roundId: betTracks.roundId,
       player: betTracks.player,
       combinationResult: betTracks.combinationResult,
+      communityCards: betTracks.communityCards,
     };
 
     this.publisher.publishToUser(player.UID, { swap });
