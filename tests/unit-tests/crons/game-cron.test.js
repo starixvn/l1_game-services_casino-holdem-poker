@@ -73,6 +73,15 @@ describe('Game Cron test', () => {
     const resultKeyRaw = '[7,8,9]aaa';
 
     describe('when data is new format with encrypt data', () => {
+      const md5Raw = '{xx}_{xxyy}';
+
+      const generatedResult = {
+        dealer: [{ rank: 1 }],
+        player: [{ rank: 2 }],
+        communityCardsGenerated: [{ rank: 1 }],
+        suffix: 'aaa',
+      };
+
       const roundWithNewFormat = {
         id: 2,
         roundStartTime: new Date(123456),
@@ -80,13 +89,14 @@ describe('Game Cron test', () => {
         result: {
           communityCards: [{ rank: 1 }, { rank: 2 }, { rank: 3 }],
         },
-        cardsRaw: { iv: 'iv', content: 'content' },
         name: player.name,
         isSwappedOrHold: false,
+        encryptedResult: { iv: 'iv', content: 'content' },
+        md5: 'md5',
       };
 
       beforeEach(function () {
-        decrypt.mockReturnValueOnce(cardsRaw).mockReturnValue(resultKeyRaw);
+        decrypt.mockReturnValueOnce(JSON.stringify(generatedResult)).mockReturnValue(md5Raw);
       });
 
       it('should set ingame when round and bet are exist.', async () => {
@@ -123,7 +133,7 @@ describe('Game Cron test', () => {
             communityCards: [...roundWithNewFormat.result.communityCards],
             communityCardsGenerated: [{ rank: 1 }],
             resultKey: {
-              rawValue: resultKeyRaw,
+              rawValue: md5Raw,
               formatValue: {
                 cards: [{ rank: 4 }, { rank: 5 }, { rank: 1 }, { rank: 1 }],
                 suffix: 'aaa',
@@ -133,6 +143,7 @@ describe('Game Cron test', () => {
             generatedResult: {
               communityCardsGenerated: [{ rank: 1 }],
               dealer: [{ rank: 1 }],
+              player: [{ rank: 2 }],
               suffix: 'aaa',
             },
             isSwappedOrHold: false,
@@ -179,7 +190,7 @@ describe('Game Cron test', () => {
             communityCards: [...roundWithNewFormat.result.communityCards],
             communityCardsGenerated: [{ rank: 1 }],
             resultKey: {
-              rawValue: resultKeyRaw,
+              rawValue: md5Raw,
               formatValue: {
                 cards: [{ rank: 1 }, { rank: 1 }],
                 suffix: 'aaa',
@@ -189,6 +200,7 @@ describe('Game Cron test', () => {
             generatedResult: {
               communityCardsGenerated: [{ rank: 1 }],
               dealer: [{ rank: 1 }],
+              player: [{ rank: 2 }],
               suffix: 'aaa',
             },
             isSwappedOrHold: false,
@@ -205,8 +217,15 @@ describe('Game Cron test', () => {
     });
 
     describe('when data is old format', () => {
+      const md5Raw = '[7,8,9]aaa';
+
+      const generatedResult = {
+        dealer: [{ rank: 1 }],
+        communityCardsGenerated: [{ rank: 1 }],
+      };
+      
       beforeEach(function () {
-        decrypt.mockReturnValue(cardsRaw);
+        decrypt.mockReturnValueOnce(JSON.stringify(generatedResult)).mockReturnValue(md5Raw);
       });
 
       it('should set ingame.', async () => {
@@ -221,10 +240,9 @@ describe('Game Cron test', () => {
             dealer: [{ rank: 1 }],
             communityCards: [{ rank: 1 }, { rank: 2 }, { rank: 3 }],
           },
-          communityCardsGenerated: [{ rank: 1 }],
-          cardsRaw: { iv: 'iv', content: 'content' },
-          resultKeyRaw: '[7,8,9]aaa',
           name: player.name,
+          encryptedResult: { iv: 'iv', content: 'content' },
+          md5: 'md5',
         };
 
         game.roundsRepository = {
@@ -262,9 +280,10 @@ describe('Game Cron test', () => {
             generatedResult: {
               communityCardsGenerated: [{ rank: 1 }],
               dealer: [{ rank: 1 }],
+              player: [],
               suffix: 'aaa',
             },
-            isSwappedOrHold: false,
+            isSwappedOrHold: true,
           },
           betQueue: [],
         };
