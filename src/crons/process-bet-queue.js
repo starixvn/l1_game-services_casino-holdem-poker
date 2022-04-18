@@ -4,7 +4,7 @@ import { isQualified } from '../helpers/result-helper';
 import gameSettings from '../game-settings';
 import { helpers } from 'sc-common';
 import { createHashMD5, randomString, encrypt } from '../helpers/crypto-helper';
-import { cardLabels } from '../helpers/card';
+import { cardLabels, cardToString } from '../helpers/card';
 
 export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   constructor({
@@ -162,27 +162,27 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       betTracks.deck,
     );
 
-    betTracks.communityCardsGenerated = communityCardsGenerated;
     const resultKeySuffix = randomString();
-    const md5ResultKey = `[${await this.buildMD5ResultKeySuffix([
-      betTracks.player,
-      betTracks.dealer,
-      communityCardsGenerated,
-    ])}]${resultKeySuffix}`;
-    const md5 = createHashMD5(md5ResultKey);
     const generatedResult = {
       communityCardsGenerated,
       dealer: betTracks.dealer,
       player: betTracks.player,
+      suffix: resultKeySuffix,
     };
+
+    betTracks.communityCardsGenerated = communityCardsGenerated;
+
+    const md5Raw = this.createMD5Raw(generatedResult, roundId);
+    const md5 = createHashMD5(md5Raw);
 
     betTracks.generatedResult = generatedResult;
     betTracks.md5 = md5;
     betTracks.resultKey = {
-      rawValue: md5ResultKey,
+      rawValue: md5Raw,
       formatValue: {
         cards: betTracks.player.concat(betTracks.dealer).concat(communityCardsGenerated),
         suffix: resultKeySuffix,
+        roundId,
       },
     };
 
@@ -195,9 +195,19 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       odds,
       encryptedResult: encrypt(JSON.stringify(generatedResult)),
       md5,
-      encryptedMD5: encrypt(md5ResultKey),
+      encryptedMD5: encrypt(md5Raw),
       exchangeRateId: this.gameData.exchangeRates.exId,
     });
+  }
+
+  createMD5Raw(generatedResult, roundId) {
+    const cardString = [
+      generatedResult.player.map(cardToString).join(' '),
+      generatedResult.dealer.map(cardToString).join(' '),
+      generatedResult.communityCardsGenerated.map(cardToString).join(' '),
+    ].join(', ');
+
+    return `{${cardString}}_{#${roundId}${generatedResult.suffix}}`;
   }
 
   async processHold(player) {
@@ -274,12 +284,6 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     };
 
     this.publisher.publishToUser(player.UID, { swap });
-  }
-
-  async buildMD5ResultKeySuffix(segments) {
-    return segments
-      .map((segment) => segment.map((card) => cardLabels[card.rank]).join(' '))
-      .join(', ');
   }
 
   async createBet(player) {

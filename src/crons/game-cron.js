@@ -3,8 +3,8 @@ import moment from 'moment';
 import { logger } from 'sc-common';
 import appConfigs from '../app-configs';
 import { reGenerateDecks } from '../helpers/deck-helper';
-import { Core } from "sc-game-base";
-import { decrypt } from "../helpers/crypto-helper";
+import { Core } from 'sc-game-base';
+import { decrypt } from '../helpers/crypto-helper';
 
 export default class GameCron extends Core.Crons.BaseGameCron {
   constructor({
@@ -80,17 +80,16 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     await Promise.all(
       runningRounds.map(async (round) => {
-        let dealerCards = [], communityCardsGenerated = [], md5ResultKey = null;
+        let dealerCards = [],
+          communityCardsGenerated = [],
+          md5ResultKey = null;
         const generatedResult = JSON.parse(decrypt(round.encryptedResult));
 
-        if(round.result.dealer)
-        {
+        if (round.result.dealer) {
           dealerCards = round.result.dealer;
           communityCardsGenerated = round.communityCardsGenerated;
-          md5ResultKey = round.resultKeyRaw
-        }
-        else
-        {
+          md5ResultKey = round.resultKeyRaw;
+        } else {
           dealerCards = generatedResult.dealer;
           communityCardsGenerated = generatedResult.communityCardsGenerated;
           md5ResultKey = decrypt(round.encryptedMD5);
@@ -101,8 +100,15 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         const playerCards = bet?.cards ?? [];
         usedCards.push(...playerCards);
 
-        const suffix = md5ResultKey.split("]")[1];
-        const resultKey = { rawValue: md5ResultKey, formatValue: { cards: playerCards.concat(dealerCards).concat(communityCardsGenerated), suffix } };
+        const suffix = generatedResult.suffix;
+        const resultKey = {
+          rawValue: md5ResultKey,
+          formatValue: {
+            cards: playerCards.concat(dealerCards).concat(communityCardsGenerated),
+            suffix,
+            roundId: round.id,
+          },
+        };
 
         const newPlayer = {
           name: round.name,

@@ -68,7 +68,8 @@ describe('Game Cron test', () => {
 
   describe('initBetTracks', () => {
     const player = { uid: 1, name: 'a' };
-    const cardsRaw = '{"dealer":[{"rank": 1}], "communityCardsGenerated":[{"rank": 1}]}';
+    const cardsRaw =
+      '{"dealer":[{"rank": 1}], "communityCardsGenerated":[{"rank": 1}], "suffix": "aaa"}';
     const resultKeyRaw = '[7,8,9]aaa';
 
     describe('when data is new format with encrypt data', () => {
@@ -85,7 +86,7 @@ describe('Game Cron test', () => {
       };
 
       beforeEach(function () {
-        decrypt.mockReturnValueOnce(cardsRaw).mockReturnValueOnce(resultKeyRaw);
+        decrypt.mockReturnValueOnce(cardsRaw).mockReturnValue(resultKeyRaw);
       });
 
       it('should set ingame when round and bet are exist.', async () => {
@@ -126,11 +127,13 @@ describe('Game Cron test', () => {
               formatValue: {
                 cards: [{ rank: 4 }, { rank: 5 }, { rank: 1 }, { rank: 1 }],
                 suffix: 'aaa',
+                roundId: 2,
               },
             },
             generatedResult: {
               communityCardsGenerated: [{ rank: 1 }],
               dealer: [{ rank: 1 }],
+              suffix: 'aaa',
             },
             isSwappedOrHold: false,
           },
@@ -177,11 +180,16 @@ describe('Game Cron test', () => {
             communityCardsGenerated: [{ rank: 1 }],
             resultKey: {
               rawValue: resultKeyRaw,
-              formatValue: { cards: [{ rank: 1 }, { rank: 1 }], suffix: 'aaa' },
+              formatValue: {
+                cards: [{ rank: 1 }, { rank: 1 }],
+                suffix: 'aaa',
+                roundId: 2,
+              },
             },
             generatedResult: {
               communityCardsGenerated: [{ rank: 1 }],
               dealer: [{ rank: 1 }],
+              suffix: 'aaa',
             },
             isSwappedOrHold: false,
           },
@@ -249,11 +257,12 @@ describe('Game Cron test', () => {
             communityCardsGenerated: [{ rank: 1 }],
             resultKey: {
               rawValue: resultKeyRaw,
-              formatValue: { cards: [{ rank: 1 }, { rank: 1 }], suffix: 'aaa' },
+              formatValue: { cards: [{ rank: 1 }, { rank: 1 }], suffix: 'aaa', roundId: 2 },
             },
             generatedResult: {
               communityCardsGenerated: [{ rank: 1 }],
               dealer: [{ rank: 1 }],
+              suffix: 'aaa',
             },
             isSwappedOrHold: false,
           },
