@@ -49,6 +49,7 @@ export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsum
         communityCards: betTracks.communityCards,
         totalAmount,
         ...cardsInfo,
+        hasSwappedOrHold: betTracks.isSwappedOrHold,
       };
 
       const round = await this.roundsRepository.findOne({ id: betTracks.roundId }).exec();

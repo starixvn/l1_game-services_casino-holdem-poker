@@ -91,6 +91,7 @@ describe('InGameConsumer test', () => {
           communityCards: betTracks.communityCards,
           combinationResult: betTracks.combinationResult,
           totalAmount: 20,
+          hasSwappedOrHold: true,
         },
         user: { uid: realPlayer.UID, rate: 1000 },
         lastRoundId: gameData.roundId,
