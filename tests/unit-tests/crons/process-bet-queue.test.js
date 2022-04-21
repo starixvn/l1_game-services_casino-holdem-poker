@@ -292,7 +292,8 @@ describe('Process bet queue test', () => {
       };
       const gameData = { ingame: { [player.profile.name]: { betTracks } } };
       const publisher = { publishToUser: jest.fn() };
-      const process = new ProcessBetQueue({ gameData, publisher });
+      const definition = { settle: jest.fn(() => 1) };
+      const process = new ProcessBetQueue({ gameData, publisher, definition });
       process.getPresetCards = jest.fn().mockReturnValue([]);
       const deck = [{ rank: 1 }, { rank: 2 }];
       generateDecks.mockReturnValue(deck);
@@ -305,6 +306,9 @@ describe('Process bet queue test', () => {
           communityCards: betTracks.communityCards,
           totalAmount: 110,
           choices: betTracks.bets,
+          combinationResult: {
+            player: 1,
+          },
         },
         endBet: betTracks.bets.ante + betTracks.bets.aa,
         user: {},

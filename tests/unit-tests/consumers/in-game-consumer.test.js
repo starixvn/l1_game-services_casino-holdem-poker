@@ -17,6 +17,7 @@ describe('InGameConsumer test', () => {
       multiplier: 1000,
     },
   };
+  definition.settle = jest.fn(() => 1);
 
   preGameData.md5 = '123';
   preGameData.resultKey = { rawValue: '456', formatValue: { cards: [], suffix: 'aaa' } };

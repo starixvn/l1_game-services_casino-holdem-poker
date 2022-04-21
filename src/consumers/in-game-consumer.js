@@ -33,16 +33,20 @@ export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsum
         ? Object.values(betTracks.bets).reduce((total, item) => total + item, 0)
         : 0;
 
-    const cardsInfo = betTracks.isSwappedOrHold
-      ? {
-          player: betTracks.player,
-          combinationResult: betTracks.combinationResult,
-        }
-      : {};
-
     let ownBets = {},
       md5 = {};
     if (betTracks.roundId > 0) {
+      const cardsInfo = betTracks.isSwappedOrHold
+        ? {
+            player: betTracks.player,
+            combinationResult: betTracks.combinationResult,
+          }
+        : {
+            combinationResult: {
+              player: this.definition.settle(betTracks.communityCards),
+            },
+          };
+
       ownBets = {
         roundId: betTracks.roundId,
         bets: betTracks.bets,

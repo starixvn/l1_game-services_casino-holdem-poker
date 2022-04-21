@@ -144,6 +144,9 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       deal: {
         roundId: betTracks.roundId,
         communityCards: betTracks.communityCards,
+        combinationResult: {
+          player: this.definition.settle(betTracks.communityCards),
+        },
         totalAmount: Object.values(betTracks.bets).reduce((total, item) => total + item),
         choices: betTracks.bets,
       },
