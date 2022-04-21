@@ -43,7 +43,7 @@ export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsum
           }
         : {
             combinationResult: {
-              player: this.definition.settle(betTracks.communityCards),
+              player: this.definition.settle(betTracks.communityCards, 3),
             },
           };
 
