@@ -367,6 +367,7 @@ describe('Process bet queue test', () => {
         result: { id: 1 },
         time: new Date(123456),
         memberId: player.session.memberId,
+        playerId: player.session.memberId,
         siteId: player.session.siteId,
         rate: 1,
         roundId: betTracks.roundId,
