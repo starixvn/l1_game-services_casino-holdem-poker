@@ -68,6 +68,7 @@ export default class HistoryQuery {
       bets,
       isFold: bet.isFold,
       roundId: bet.phien,
+      isSwappedOrHold: round.isSwappedOrHold,
       isPlayerWin: round.settlementResult
         ? compareCombination(round.settlementResult, bet.result)
         : -1,
