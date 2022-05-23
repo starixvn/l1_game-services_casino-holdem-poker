@@ -1,7 +1,6 @@
 variables:
   SMOKE_PRODUCT_NAME: casinoHoldem
 
-
 include:
   - project: "ci/repos-ci/pentagon_l2_casino_holdem_poker_service"
     ref: master

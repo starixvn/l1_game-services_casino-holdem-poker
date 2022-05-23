@@ -16,6 +16,8 @@ const Schema = new mongoose.Schema({
   md5: { type: String, require: true },
   resultKeyRaw: { type: String, require: true },
   communityCardsGenerated: { type: Array },
+  encryptedMD5: {type: Object , require: true },
+  encryptedResult: { type: Object , require: true },
 });
 
 export default mongoose.model(modelName, Schema);

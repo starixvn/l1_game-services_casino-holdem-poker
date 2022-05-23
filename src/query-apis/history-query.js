@@ -22,10 +22,11 @@ export default class HistoryQuery {
       combination: bet.result.cards,
       handId: bet.result.id,
     };
+
     const dealer = bet.isFold
       ? {}
       : {
-          cards: round.result.dealer,
+          cards: round.result?.dealer ?? [],
           combination: round.settlementResult?.cards,
           handId: round.settlementResult?.id,
           isQualified: round.settlementResult?.isQualified,
