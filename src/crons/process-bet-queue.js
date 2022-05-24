@@ -1,10 +1,10 @@
-import { Core } from "sc-game-base";
+import { Core } from 'sc-game-base';
 import { deal, generateDecks, reGenerateDecks } from '../helpers/deck-helper';
 import { isQualified } from '../helpers/result-helper';
 import gameSettings from '../game-settings';
-import { helpers } from "sc-common";
-import { createHashMD5, randomString, encrypt } from "../helpers/crypto-helper";
-import { cardLabels } from "../helpers/card";
+import { helpers } from 'sc-common';
+import { createHashMD5, randomString, encrypt } from '../helpers/crypto-helper';
+import { cardLabels } from '../helpers/card';
 
 export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   constructor({
@@ -141,7 +141,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       },
       endBet: betTracks.bets.ante + betTracks.bets.aa,
       user: balance,
-      md5: { key: betTracks.md5 }
+      md5: { key: betTracks.md5 },
     });
   }
 
@@ -156,7 +156,11 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
     betTracks.communityCardsGenerated = communityCardsGenerated;
     const resultKeySuffix = randomString();
-    const md5ResultKey = `[${await this.buildMD5ResultKeySuffix([betTracks.player, betTracks.dealer, communityCardsGenerated])}]${resultKeySuffix}`;
+    const md5ResultKey = `[${await this.buildMD5ResultKeySuffix([
+      betTracks.player,
+      betTracks.dealer,
+      communityCardsGenerated,
+    ])}]${resultKeySuffix}`;
     const md5 = createHashMD5(md5ResultKey);
 
     betTracks.md5 = md5;
@@ -164,8 +168,8 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       rawValue: md5ResultKey,
       formatValue: {
         cards: betTracks.player.concat(betTracks.dealer).concat(communityCardsGenerated),
-        suffix: resultKeySuffix
-      }
+        suffix: resultKeySuffix,
+      },
     };
 
     return this.roundsRepository.create({
@@ -175,7 +179,9 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       uid: player.UID,
       name: player.profile.name,
       odds,
-      encryptedResult: encrypt(JSON.stringify({communityCardsGenerated, dealer: betTracks.dealer})),
+      encryptedResult: encrypt(
+        JSON.stringify({ communityCardsGenerated, dealer: betTracks.dealer }),
+      ),
       md5,
       encryptedMD5: encrypt(md5ResultKey),
       exchangeRateId: this.gameData.exchangeRates.exId,
@@ -183,7 +189,9 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   }
 
   async buildMD5ResultKeySuffix(segments) {
-    return segments.map(segment => segment.map(card => cardLabels[card.rank]).join(' ')).join(', ')
+    return segments
+      .map((segment) => segment.map((card) => cardLabels[card.rank]).join(' '))
+      .join(', ');
   }
 
   async createBet(player) {
@@ -204,10 +212,13 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       result: combinationResult,
       time: new Date(),
       memberId: player.session?.memberId,
+      playerId: player.session?.memberId,
       siteId: player.session?.siteId,
       currency: player.session?.currencyName,
       partnerId: player.session?.partnerId,
-      rate: this.calculateCurrencyRate(player.session)
+      operatorId: player.session?.partnerId,
+      rate: this.calculateCurrencyRate(player.session),
+      roundId: betTracks.roundId,
     });
   }
 
@@ -241,7 +252,11 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
     const { betTracks } = this.gameData.ingame[player.profile.name];
     await this.betsRepository.update(
       { phien: betTracks.roundId },
-      { $inc: { call: amount, bet: amount }, result: betTracks.combinationResult.player, callTime: new Date(), },
+      {
+        $inc: { call: amount, bet: amount },
+        result: betTracks.combinationResult.player,
+        callTime: new Date(),
+      },
     );
 
     const call = {
@@ -249,7 +264,7 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       combinationResult: betTracks.combinationResult,
       dealer: betTracks.dealer,
       totalAmount: Object.values(betTracks.bets).reduce((total, item) => total + item),
-      choices: betTracks.bets
+      choices: betTracks.bets,
     };
 
     this.publisher.publishToUser(player.UID, { endBet: amount, user: balance, call });
