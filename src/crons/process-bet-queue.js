@@ -3,7 +3,7 @@ import { deal, generateDecks, reGenerateDecks } from '../helpers/deck-helper';
 import { isQualified } from '../helpers/result-helper';
 import gameSettings from '../game-settings';
 import { helpers } from 'sc-common';
-import { createHashMD5, randomString } from '../helpers/crypto-helper';
+import { createHashMD5, randomString, encrypt } from '../helpers/crypto-helper';
 import { cardLabels } from '../helpers/card';
 
 export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
@@ -154,37 +154,41 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
       betTracks.deck,
     );
 
+    betTracks.communityCardsGenerated = communityCardsGenerated;
     const resultKeySuffix = randomString();
-    const cards = betTracks.player.concat(betTracks.dealer).concat(communityCardsGenerated);
-
-    const resultKeyRaw = `[${await this.buildResultKeyRawSuffix([
+    const md5ResultKey = `[${await this.buildMD5ResultKeySuffix([
       betTracks.player,
       betTracks.dealer,
       communityCardsGenerated,
     ])}]${resultKeySuffix}`;
-    const md5 = createHashMD5(resultKeyRaw);
+    const md5 = createHashMD5(md5ResultKey);
 
     betTracks.md5 = md5;
     betTracks.resultKey = {
-      rawValue: resultKeyRaw,
-      formatValue: { cards, suffix: resultKeySuffix },
+      rawValue: md5ResultKey,
+      formatValue: {
+        cards: betTracks.player.concat(betTracks.dealer).concat(communityCardsGenerated),
+        suffix: resultKeySuffix,
+      },
     };
 
     return this.roundsRepository.create({
       id: roundId,
-      result: { dealer: betTracks.dealer, communityCards: betTracks.communityCards },
+      result: { communityCards: betTracks.communityCards },
       roundStartTime: new Date(),
       uid: player.UID,
       name: player.profile.name,
       odds,
-      communityCardsGenerated,
+      encryptedResult: encrypt(
+        JSON.stringify({ communityCardsGenerated, dealer: betTracks.dealer }),
+      ),
       md5,
-      resultKeyRaw,
+      encryptedMD5: encrypt(md5ResultKey),
       exchangeRateId: this.gameData.exchangeRates.exId,
     });
   }
 
-  async buildResultKeyRawSuffix(segments) {
+  async buildMD5ResultKeySuffix(segments) {
     return segments
       .map((segment) => segment.map((card) => cardLabels[card.rank]).join(' '))
       .join(', ');
@@ -270,20 +274,15 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
 
   async updateBetTracksAfterCall(player, amount) {
     const { betTracks } = this.gameData.ingame[player.profile.name];
-    const { communityCardsGenerated, result } = await this.roundsRepository
-      .findOne({ id: betTracks.roundId }, { _id: false })
-      .lean()
-      .exec();
 
     betTracks.bets.call = amount;
-    betTracks.dealer = result.dealer;
-    betTracks.communityCards = communityCardsGenerated;
+    betTracks.communityCards = betTracks.communityCardsGenerated;
 
     const combinationPlayerResult = this.definition.settle(
-      betTracks.player.concat(communityCardsGenerated),
+      betTracks.player.concat(betTracks.communityCardsGenerated),
     );
     const combinationDealerResult = this.definition.settle(
-      betTracks.dealer.concat(communityCardsGenerated),
+      betTracks.dealer.concat(betTracks.communityCardsGenerated),
     );
 
     betTracks.combinationResult = {

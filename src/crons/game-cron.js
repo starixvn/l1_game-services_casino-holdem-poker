@@ -4,6 +4,7 @@ import { logger } from 'sc-common';
 import appConfigs from '../app-configs';
 import { reGenerateDecks } from '../helpers/deck-helper';
 import { Core } from "sc-game-base";
+import { decrypt } from "../helpers/crypto-helper";
 
 export default class GameCron extends Core.Crons.BaseGameCron {
   constructor({
@@ -79,12 +80,29 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     await Promise.all(
       runningRounds.map(async (round) => {
-        const usedCards = [...round.result.communityCards, ...round.result.dealer];
-        const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
+        let dealerCards =[], communityCardsGenerated = [], md5ResultKey = null;
 
-        if (bet) {
-          usedCards.push(...bet.cards);
+        if(round.result.dealer)
+        {
+          dealerCards = round.result.dealer;
+          communityCardsGenerated = round.communityCardsGenerated;
+          md5ResultKey = round.resultKeyRaw
         }
+        else
+        {
+          const cards = JSON.parse(decrypt(round.encryptedResult));
+          dealerCards = cards.dealer;
+          communityCardsGenerated = cards.communityCardsGenerated;
+          md5ResultKey = decrypt(round.encryptedMD5);
+        }
+
+        const usedCards = [...round.result.communityCards, ...dealerCards];
+        const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
+        const playerCards = bet?.cards ?? [];
+        usedCards.push(...playerCards);
+
+        const suffix = md5ResultKey.split("]")[1];
+        const resultKey = { rawValue: md5ResultKey, formatValue: { cards: playerCards.concat(dealerCards).concat(communityCardsGenerated), suffix } };
 
         const newPlayer = {
           name: round.name,
@@ -94,10 +112,12 @@ export default class GameCron extends Core.Crons.BaseGameCron {
             uid: round.uid,
             deck: reGenerateDecks(usedCards),
             combinationResult: { player: { ...bet?.result } },
-            player: bet?.cards,
+            player: playerCards,
             bets: { aa: bet?.aa, ante: bet?.ante },
-            dealer: [...round.result.dealer],
+            dealer: dealerCards,
             communityCards: [...round.result.communityCards],
+            communityCardsGenerated,
+            resultKey
           },
           betQueue: [],
         };
