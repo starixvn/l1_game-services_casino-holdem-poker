@@ -56,6 +56,7 @@ describe('Game Cron test', () => {
         }),
       };
       game.gameData = { roundId: 1 };
+      game.getLastArchiveRound = jest.fn().mockResolvedValue(2)
 
       // Act
       await game.start();
