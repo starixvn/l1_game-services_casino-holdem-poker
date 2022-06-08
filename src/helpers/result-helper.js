@@ -12,12 +12,12 @@ export const generateResult = (communityCards, deck) => {
 };
 
 
-export const getSettleResult = (cards) => {
+export const getSettleResult = (cards, numberOfCards = 5) => {
   if (cards) {
     const sortedCards = JSON.parse(JSON.stringify(cards)).sort(
       (cardA, cardB) => (cardB.rank || 13) - (cardA.rank || 13),
     );
-    const combinations = combination(sortedCards, 5);
+    const combinations = combination(sortedCards, numberOfCards);
     const cardCombinations = combinations
       .map((newCards) => new CardCombination([...newCards]).result)
       .sort(compareCombination);

@@ -15,5 +15,7 @@ export default {
     deal: 'deal',
     doubleCall: 'doubleCall',
     fold: 'fold',
+    hold: 'hold',
+    swap: 'swap',
   },
 };

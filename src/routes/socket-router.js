@@ -1,4 +1,5 @@
-import { BaseSocketRouter } from "sc-game-base/src/core/routers";
+import { BaseSocketRouter } from 'sc-game-base/src/core/routers';
+import settings from '../game-settings';
 
 export default class SocketRouter extends BaseSocketRouter {
   constructor({
@@ -16,6 +17,7 @@ export default class SocketRouter extends BaseSocketRouter {
     userDealConsumer = null,
     userDoubleCallConsumer = null,
     userFoldConsumer = null,
+    userHoldOrSwapConsumer,
   }) {
     super({
       definition,
@@ -27,20 +29,21 @@ export default class SocketRouter extends BaseSocketRouter {
       userSignInPublisher,
       historyQuery,
       logService,
-      playGamePermissionValidator
+      playGamePermissionValidator,
     });
 
     this.getGameConfigsConsumer = getGameConfigsConsumer;
     this.userDealConsumer = userDealConsumer;
     this.userDoubleCallConsumer = userDoubleCallConsumer;
     this.userFoldConsumer = userFoldConsumer;
+    this.userHoldOrSwapConsumer = userHoldOrSwapConsumer;
   }
 
   init(socketClient) {
     super.init(socketClient);
 
     this.socketClient.on('getTicketDetail', this.handleGetTicketDetail.bind(this));
-    this.socketClient.on("getGameConfigs", this.handleGetGameConfigs.bind(this));
+    this.socketClient.on('getGameConfigs', this.handleGetGameConfigs.bind(this));
   }
 
   async handlePlaceBet(payload) {
@@ -58,7 +61,10 @@ export default class SocketRouter extends BaseSocketRouter {
       }
 
       if (payload.fold) {
-        await this.userFoldConsumer.consume(this.gameData.realPlayers[this.socketClient.id], payload);
+        await this.userFoldConsumer.consume(
+          this.gameData.realPlayers[this.socketClient.id],
+          payload,
+        );
         return;
       }
 
@@ -67,6 +73,20 @@ export default class SocketRouter extends BaseSocketRouter {
           this.gameData.realPlayers[this.socketClient.id],
           payload,
         );
+        return;
+      }
+
+      if (payload.hold) {
+        await this.userHoldOrSwapConsumer.consume(this.gameData.realPlayers[this.socketClient.id], {
+          action: settings.actions.hold,
+        });
+        return;
+      }
+
+      if (payload.swap) {
+        await this.userHoldOrSwapConsumer.consume(this.gameData.realPlayers[this.socketClient.id], {
+          action: settings.actions.swap,
+        });
         return;
       }
     } catch (error) {
