@@ -54,6 +54,7 @@ describe('History query test', () => {
         result: { dealer: [{ rank: 2 }], communityCards: [{ rank: 1 }] },
         settlementResult: { id: 1, cards: [{ rank: 2 }, { rank: 1 }], isQualified: false },
         other: 'b',
+        isSwappedOrHold: true
       };
       const player = {
         cards: bet.cards,
@@ -94,7 +95,8 @@ describe('History query test', () => {
         bets,
         isFold: bet.isFold,
         isPlayerWin: 0,
-        roundId: 1
+        roundId: 1,
+        isSwappedOrHold: true
       };
       compareCombination.mockReturnValue(0);
 
@@ -125,6 +127,7 @@ describe('History query test', () => {
       const round = {
         result: { dealer: [{ rank: 2 }], communityCards: [{ rank: 1 }] },
         other: 'b',
+        isSwappedOrHold: false
       };
       const player = {
         cards: bet.cards,
@@ -151,7 +154,8 @@ describe('History query test', () => {
         bets,
         isFold: bet.isFold,
         isPlayerWin: -1,
-        roundId: 1
+        roundId: 1,
+        isSwappedOrHold: false
       };
 
       // Act

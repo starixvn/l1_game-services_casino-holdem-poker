@@ -34,6 +34,8 @@ const schema = new mongoose.Schema({
 
   playerId: { type: Number },
   operatorId: { type: String, required: false },
+  swapTime: { type: Date },
+  holdTime: { type: Date },
   roundId: { type: Number, default: 0 },
   paid: { type: Boolean, default: false },
 });
