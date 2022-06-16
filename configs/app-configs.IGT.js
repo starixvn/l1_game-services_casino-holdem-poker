@@ -10,7 +10,7 @@ export default {
         },
         useAuthenticate: false,
         requestTimeout: 10000,
-        placeBetTimeout: 4500,
+        placeBetTimeout: 4000,
         enabledApiLogs: true,
     },
     mainServerApiSettings: {
