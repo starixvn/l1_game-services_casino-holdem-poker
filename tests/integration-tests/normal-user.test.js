@@ -37,6 +37,7 @@ describe('Casino Casino Holdem Service', () => {
       name: 'NormalUser',
       rate: 1,
       red: 25000,
+      type: false,
     };
 
     // Act
