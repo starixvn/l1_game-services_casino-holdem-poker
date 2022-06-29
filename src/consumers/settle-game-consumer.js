@@ -68,6 +68,7 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
       bet.aaOdds = betResult.aaOdds;
       bet.anteOdds = betResult.anteOdds;
       bet.callOdds = betResult.callOdds;
+      bet.paid = true;
 
       const { betTracks } = this.gameData.ingame[playerName];
 
@@ -193,10 +194,9 @@ export default class SettleGameConsumer extends Core.BaseEventConsumers.SettleGa
     const originalOdds = odds[combinationResult.id] || 1;
     const winAmount = betAmount * originalOdds;
 
-    if (type === "aa") {
+    if (type === 'aa') {
       result.aaOdds = originalOdds;
-    }
-    else {
+    } else {
       result.anteOdds = originalOdds;
     }
     result.totalWin += winAmount;

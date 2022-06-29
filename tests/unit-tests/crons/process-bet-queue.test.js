@@ -404,7 +404,10 @@ describe('Process bet queue test', () => {
       const data = {
         uid: player.UID,
         name: player.profile.name,
+        operatorId: undefined,
+        partnerId: undefined,
         phien: betTracks.roundId,
+        playerId: 123,
         aa: betTracks.bets.aa,
         ante: betTracks.bets.ante,
         cards: [],
@@ -412,6 +415,7 @@ describe('Process bet queue test', () => {
         result: {},
         time: new Date(123456),
         memberId: player.session.memberId,
+        roundId: 1,
         siteId: player.session.siteId,
         rate: 1,
       };
