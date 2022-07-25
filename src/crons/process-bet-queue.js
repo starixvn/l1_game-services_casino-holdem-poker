@@ -4,7 +4,7 @@ import { isQualified } from '../helpers/result-helper';
 import gameSettings from '../game-settings';
 import { helpers } from 'sc-common';
 import { createHashMD5, randomString, encrypt } from '../helpers/crypto-helper';
-import { cardLabels, cardToString } from '../helpers/card';
+import { cardToString } from '../helpers/card';
 
 export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   constructor({
@@ -61,10 +61,11 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   }
 
   buildPresetCards(resultFromAdmin) {
+    const { randomMode } = this.gameData.gameConfigs;
     const player = resultFromAdmin.player || [];
     const dealer = resultFromAdmin.dealer || [];
     const communityCards = resultFromAdmin.communityCards || [];
-    const unusedCards = reGenerateDecks(player.concat(dealer, communityCards));
+    const unusedCards = reGenerateDecks(player.concat(dealer, communityCards), randomMode);
     const cards = [];
     cards.push(player[0] || unusedCards.shift());
     cards.push(dealer[0] || unusedCards.shift());
@@ -125,10 +126,11 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
   }
 
   async handleSuccessDeal(player, balance, roundId) {
+    const { randomMode } = this.gameData.gameConfigs;
     const presetCards = this.getPresetCards(player);
     const { betTracks } = this.gameData.ingame[player.profile.name];
 
-    betTracks.deck = generateDecks(presetCards);
+    betTracks.deck = generateDecks(presetCards, randomMode);
     deal(betTracks);
 
     const newRound = await this.createRound(player, roundId);

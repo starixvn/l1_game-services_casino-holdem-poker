@@ -56,7 +56,7 @@ describe('Game Cron test', () => {
         }),
       };
       game.gameData = { roundId: 1 };
-      game.getLastArchiveRound = jest.fn().mockResolvedValue(2)
+      game.getLastArchiveRound = jest.fn().mockResolvedValue(2);
 
       // Act
       await game.start();
@@ -103,7 +103,7 @@ describe('Game Cron test', () => {
       it('should set ingame when round and bet are exist.', async () => {
         // Arrange
         const game = new GameCron({});
-        game.gameData = { ingame: {} };
+        game.gameData = { ingame: {}, gameConfigs: {} };
         game.roundsRepository = {
           find: jest.fn().mockReturnValue({
             lean: jest
@@ -162,7 +162,7 @@ describe('Game Cron test', () => {
       it('should set ingame when round is exist and bet does not exist.', async () => {
         // Arrange
         const game = new GameCron({});
-        game.gameData = { ingame: {} };
+        game.gameData = { ingame: {}, gameConfigs: {} };
         game.roundsRepository = {
           find: jest.fn().mockReturnValue({
             lean: jest
@@ -224,7 +224,7 @@ describe('Game Cron test', () => {
         dealer: [{ rank: 1 }],
         communityCardsGenerated: [{ rank: 1 }],
       };
-      
+
       beforeEach(function () {
         decrypt.mockReturnValueOnce(JSON.stringify(generatedResult)).mockReturnValue(md5Raw);
       });
@@ -232,7 +232,7 @@ describe('Game Cron test', () => {
       it('should set ingame.', async () => {
         // Arrange
         const game = new GameCron({});
-        game.gameData = { ingame: {} };
+        game.gameData = { ingame: {}, gameConfigs: {} };
         const roundWithOldFormat = {
           id: 2,
           roundStartTime: new Date(123456),

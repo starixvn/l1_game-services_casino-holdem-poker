@@ -1,4 +1,5 @@
 import { reGenerateDecks, deal, generateDecks } from '../../../src/helpers/deck-helper';
+import * as _ from 'lodash';
 
 describe('deck-helper test', () => {
   describe('generateDecks', () => {

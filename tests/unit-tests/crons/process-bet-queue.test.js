@@ -124,7 +124,7 @@ describe('Process bet queue test', () => {
   describe('buildPresetCards', () => {
     it('should return expected when resultFromAdmin has value', () => {
       // Arrange
-      const process = new ProcessBetQueue({});
+      const process = new ProcessBetQueue({ gameData: { gameConfigs: {} } });
       const resultFromAdmin = {
         player: [{ rank: 1 }, { rank: 1 }],
         dealer: [{ rank: 2 }, { rank: 2 }],
@@ -147,7 +147,7 @@ describe('Process bet queue test', () => {
 
     it('should return expected when resultFromAdmin empty', () => {
       // Arrange
-      const process = new ProcessBetQueue({});
+      const process = new ProcessBetQueue({ gameData: { gameConfigs: {} } });
       const unusedCards = [{ rank: 1 }, { rank: 1 }, { rank: 2 }, { rank: 2 }, { rank: 3 }];
       reGenerateDecks.mockReturnValue(unusedCards);
       const expected = [{ rank: 1 }, { rank: 1 }, { rank: 2 }, { rank: 2 }];
@@ -290,7 +290,7 @@ describe('Process bet queue test', () => {
         combinationResult: {},
         md5: '123',
       };
-      const gameData = { ingame: { [player.profile.name]: { betTracks } } };
+      const gameData = { ingame: { [player.profile.name]: { betTracks } }, gameConfigs: {} };
       const publisher = { publishToUser: jest.fn() };
       const definition = { settle: jest.fn(() => 1) };
       const process = new ProcessBetQueue({ gameData, publisher, definition });
