@@ -136,7 +136,7 @@ describe('Game Cron test', () => {
             resultKey: {
               rawValue: md5Raw,
               formatValue: {
-                cards: [{ rank: 4 }, { rank: 5 }, { rank: 1 }, { rank: 1 }],
+                cards: [{ rank: 1 }, { rank: 4 }, { rank: 5 }, { rank: 1 }],
                 suffix: 'aaa',
                 roundId: 2,
               },

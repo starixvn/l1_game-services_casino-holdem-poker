@@ -5,6 +5,7 @@ import appConfigs from '../app-configs';
 import { reGenerateDecks } from '../helpers/deck-helper';
 import { Core } from 'sc-game-base';
 import { decrypt } from '../helpers/crypto-helper';
+import _ from 'lodash';
 
 export default class GameCron extends Core.Crons.BaseGameCron {
   constructor({
@@ -87,7 +88,6 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         const md5RawValue = decrypt(round.encryptedMD5);
         const communityCardsGenerated = generatedResult.communityCardsGenerated || [];
         const dealerCards = round.result.dealer ?? generatedResult.dealer;
-
         const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
         const playerCards = bet?.cards ?? [];
 
@@ -105,10 +105,15 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         const usedCards = [...round.result.communityCards, ...dealerCards];
         usedCards.push(...playerCards);
 
+        const isNotSwapped = _.isEqual(dealerCards, generatedResult.dealer);
+        const formatValueCards = isNotSwapped
+          ? [...playerCards, ...dealerCards, ...communityCardsGenerated]
+          : [...dealerCards, ...playerCards, ...communityCardsGenerated];
+
         const resultKey = {
           rawValue: md5RawValue,
           formatValue: {
-            cards: playerCards.concat(dealerCards).concat(communityCardsGenerated),
+            cards: formatValueCards,
             suffix,
             roundId: round.id,
           },

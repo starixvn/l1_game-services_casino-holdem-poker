@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import { init as initApis } from 'sc-base-apis';
 import { init as initBaseDatabase } from 'sc-base-database';
 import { logger } from 'sc-common';
-import { Core } from "sc-game-base";
+import { Core } from 'sc-game-base';
 import { authenticationHelpers } from 'sc-game-base/src/core/helpers';
 
 export default class GameStartup extends Core.BaseStartup {
@@ -18,7 +18,10 @@ export default class GameStartup extends Core.BaseStartup {
     try {
       const gameConfigsRepository = this.container.resolve(this.dependencies.gameConfigsRepository);
 
-      this.gameData.gameConfigs = await gameConfigsRepository.findOne({ name: this.definition.configName }).lean().exec();
+      this.gameData.gameConfigs = await gameConfigsRepository
+        .findOne({ name: this.definition.configName })
+        .lean()
+        .exec();
 
       if (this.appConfigs.enableCron) {
         await this.gameCron.start();
