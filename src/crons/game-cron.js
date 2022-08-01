@@ -86,7 +86,7 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         const generatedResult = JSON.parse(decrypt(round.encryptedResult));
         const md5RawValue = decrypt(round.encryptedMD5);
         const communityCardsGenerated = generatedResult.communityCardsGenerated || [];
-        const dealerCards = generatedResult.dealer;
+        const dealerCards = round.result.dealer ?? generatedResult.dealer;
 
         const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
         const playerCards = bet?.cards ?? [];
