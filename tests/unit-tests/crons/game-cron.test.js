@@ -91,7 +91,7 @@ describe('Game Cron test', () => {
           communityCards: [{ rank: 1 }, { rank: 2 }, { rank: 3 }],
         },
         name: player.name,
-        isSwappedOrHold: false,
+        isSwappedOrHold: true,
         encryptedResult: { iv: 'iv', content: 'content' },
         md5: 'md5',
       };
@@ -147,7 +147,7 @@ describe('Game Cron test', () => {
               player: [{ rank: 2 }],
               suffix: 'aaa',
             },
-            isSwappedOrHold: false,
+            isSwappedOrHold: true,
           },
           betQueue: [],
         };
@@ -165,9 +165,9 @@ describe('Game Cron test', () => {
         game.gameData = { ingame: {}, gameConfigs: {} };
         game.roundsRepository = {
           find: jest.fn().mockReturnValue({
-            lean: jest
-              .fn()
-              .mockReturnValue({ exec: jest.fn().mockReturnValue([roundWithNewFormat]) }),
+            lean: jest.fn().mockReturnValue({
+              exec: jest.fn().mockReturnValue([{ ...roundWithNewFormat, isSwappedOrHold: false }]),
+            }),
           }),
         };
         game.betsRepository = {
@@ -187,13 +187,13 @@ describe('Game Cron test', () => {
             combinationResult: { player: {} },
             player: [],
             bets: { aa: undefined, ante: undefined },
-            dealer: [{ rank: 1 }],
+            dealer: [],
             communityCards: [...roundWithNewFormat.result.communityCards],
             communityCardsGenerated: [{ rank: 1 }],
             resultKey: {
               rawValue: md5Raw,
               formatValue: {
-                cards: [{ rank: 1 }, { rank: 1 }],
+                cards: [{ rank: 1 }],
                 suffix: 'aaa',
                 roundId: 2,
               },

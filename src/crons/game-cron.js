@@ -87,7 +87,6 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         const generatedResult = JSON.parse(decrypt(round.encryptedResult));
         const md5RawValue = decrypt(round.encryptedMD5);
         const communityCardsGenerated = generatedResult.communityCardsGenerated || [];
-        const dealerCards = round.result.dealer ?? generatedResult.dealer;
         const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
         const playerCards = bet?.cards ?? [];
 
@@ -101,6 +100,10 @@ export default class GameCron extends Core.Crons.BaseGameCron {
           generatedResult.suffix = suffix;
           round.isSwappedOrHold = true;
         }
+
+        const dealerCards = round.isSwappedOrHold
+          ? round.result.dealer ?? generatedResult.dealer
+          : [];
 
         const usedCards = [...round.result.communityCards, ...dealerCards];
         usedCards.push(...playerCards);
