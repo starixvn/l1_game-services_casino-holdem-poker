@@ -87,36 +87,20 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         const generatedResult = JSON.parse(decrypt(round.encryptedResult));
         const md5RawValue = decrypt(round.encryptedMD5);
         const communityCardsGenerated = generatedResult.communityCardsGenerated || [];
+        const dealerCards = round.result.dealer ?? generatedResult.dealer;
         const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
-        const playerCards = bet?.cards ?? [];
-
-        const isOldData = !generatedResult.player;
-        let suffix = generatedResult.suffix;
-
-        if (isOldData) {
-          suffix = md5RawValue.split(']')[1];
-
-          generatedResult.player = playerCards;
-          generatedResult.suffix = suffix;
-          round.isSwappedOrHold = true;
-        }
-
-        const dealerCards = round.isSwappedOrHold
-          ? round.result.dealer ?? generatedResult.dealer
-          : [];
-
-        const usedCards = [...round.result.communityCards, ...dealerCards];
-        usedCards.push(...playerCards);
-
-        const isNotSwapped = _.isEqual(dealerCards, generatedResult.dealer);
-        const formatValueCards = isNotSwapped
-          ? [...playerCards, ...dealerCards, ...communityCardsGenerated]
-          : [...dealerCards, ...playerCards, ...communityCardsGenerated];
+        const playerCards = bet?.cards ?? generatedResult.player;
+        const suffix = generatedResult.suffix;
+        const usedCards = [
+          ...generatedResult.player,
+          ...generatedResult.dealer,
+          ...round.result.communityCards,
+        ];
 
         const resultKey = {
           rawValue: md5RawValue,
           formatValue: {
-            cards: formatValueCards,
+            cards: usedCards,
             suffix,
             roundId: round.id,
           },
