@@ -94,7 +94,7 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         const usedCards = [
           ...generatedResult.player,
           ...generatedResult.dealer,
-          ...round.result.communityCards,
+          ...generatedResult.communityCardsGenerated,
         ];
 
         const resultKey = {
