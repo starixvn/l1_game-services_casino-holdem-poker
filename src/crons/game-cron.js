@@ -5,6 +5,7 @@ import appConfigs from '../app-configs';
 import { reGenerateDecks } from '../helpers/deck-helper';
 import { Core } from 'sc-game-base';
 import { decrypt } from '../helpers/crypto-helper';
+import _ from 'lodash';
 
 export default class GameCron extends Core.Crons.BaseGameCron {
   constructor({
@@ -79,35 +80,27 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
   async initBetTracks() {
     const runningRounds = await this.roundsRepository.find({ ended: false }).lean().exec();
+    const { randomMode } = this.gameData.gameConfigs;
 
     await Promise.all(
       runningRounds.map(async (round) => {
         const generatedResult = JSON.parse(decrypt(round.encryptedResult));
         const md5RawValue = decrypt(round.encryptedMD5);
         const communityCardsGenerated = generatedResult.communityCardsGenerated || [];
-        const dealerCards = generatedResult.dealer;
-
+        const dealerCards = round.result.dealer ?? generatedResult.dealer;
         const bet = await this.betsRepository.findOne({ phien: round.id }).lean().exec();
-        const playerCards = bet?.cards ?? [];
-
-        const isOldData = !generatedResult.player;
-        let suffix = generatedResult.suffix;
-
-        if (isOldData) {
-          suffix = md5RawValue.split(']')[1];
-
-          generatedResult.player = playerCards;
-          generatedResult.suffix = suffix;
-          round.isSwappedOrHold = true;
-        }
-
-        const usedCards = [...round.result.communityCards, ...dealerCards];
-        usedCards.push(...playerCards);
+        const playerCards = bet?.cards ?? generatedResult.player;
+        const suffix = generatedResult.suffix;
+        const usedCards = [
+          ...generatedResult.player,
+          ...generatedResult.dealer,
+          ...generatedResult.communityCardsGenerated,
+        ];
 
         const resultKey = {
           rawValue: md5RawValue,
           formatValue: {
-            cards: playerCards.concat(dealerCards).concat(communityCardsGenerated),
+            cards: usedCards,
             suffix,
             roundId: round.id,
           },
@@ -119,7 +112,7 @@ export default class GameCron extends Core.Crons.BaseGameCron {
             roundId: round.id,
             roundStartTime: round.roundStartTime,
             uid: round.uid,
-            deck: reGenerateDecks(usedCards),
+            deck: reGenerateDecks(usedCards, randomMode),
             combinationResult: { player: { ...bet?.result } },
             player: playerCards,
             bets: { aa: bet?.aa, ante: bet?.ante },
