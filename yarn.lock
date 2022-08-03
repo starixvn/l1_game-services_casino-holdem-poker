@@ -8375,6 +8375,13 @@ sc-api-client@1.3.1:
     axios "^0.19.2"
     openid-client "^3.15.9"
 
+sc-api-client@1.3.2-beta.0:
+  version "1.3.2-beta.0"
+  resolved "http://npm.lumigame.com/sc-api-client/-/sc-api-client-1.3.2-beta.0.tgz#18c039319e522f0e2c4f768b9a66ac9954964a72"
+  integrity sha512-mSdTtKbyLc7nG5YcWlyTcbwPQ1aXYm3ooas0JwTE96y0MbR2KTJRT98v+PNX11H8HSGXS4Ela8/rXVpaWo29Og==
+  dependencies:
+    axios "^0.19.2"
+
 sc-base-apis@1.17.2:
   version "1.17.2"
   resolved "http://npm.lumigame.com/sc-base-apis/-/sc-base-apis-1.17.2.tgz#aec6665f5a6fb9b4e8c64114c36263a3b92197f1"
@@ -8382,6 +8389,16 @@ sc-base-apis@1.17.2:
   dependencies:
     moment "^2.27.0"
     sc-api-client "1.3.1"
+    sc-base-database "1.10.1"
+    sc-common "1.8.1"
+
+sc-base-apis@1.17.3-beta.0:
+  version "1.17.3-beta.0"
+  resolved "http://npm.lumigame.com/sc-base-apis/-/sc-base-apis-1.17.3-beta.0.tgz#8f28bf0600356441ac62c1777868dbfbd09b9f01"
+  integrity sha512-NtRajLQabuzm4Dxe6iqUM6BSkWiAy2TS91t0rSsS4gthYPaK+IBnxTpAkF4sn5pmhvn8U8XOGGVArYXN0zeHJg==
+  dependencies:
+    moment "^2.27.0"
+    sc-api-client "1.3.2-beta.0"
     sc-base-database "1.10.1"
     sc-common "1.8.1"
 
@@ -8422,6 +8439,30 @@ sc-game-base@3.0.6:
     morgan "^1.10.0"
     openid-client "^4.2.0"
     sc-base-apis "1.17.2"
+    sc-base-database "1.10.1"
+    sc-common "1.8.1"
+    socket.io "^4.1.2"
+    socket.io-msgpack-parser "^3.0.1"
+    socket.io-prom-metrics "^1.0.3"
+
+sc-game-base@3.0.7-beta.0:
+  version "3.0.7-beta.0"
+  resolved "http://npm.lumigame.com/sc-game-base/-/sc-game-base-3.0.7-beta.0.tgz#24a263506babdc991905e1f693081fd7c8e32020"
+  integrity sha512-s73MkyRz6cKCipgicO25u3dkrUC0NpHTx0j51pK1KflSwxQJghtlR/ccuKdw/3oJQ2vOrohBRnrumhema/KmPw==
+  dependencies:
+    awilix "^4.3.1"
+    axios "^0.20.0"
+    body-parser "^1.19.0"
+    chance "^1.1.7"
+    cors "^2.8.5"
+    cron "^1.8.2"
+    express "^4.17.1"
+    helmet "^3.23.3"
+    lodash "^4.17.19"
+    mongoose "^5.9.25"
+    morgan "^1.10.0"
+    openid-client "^4.2.0"
+    sc-base-apis "1.17.3-beta.0"
     sc-base-database "1.10.1"
     sc-common "1.8.1"
     socket.io "^4.1.2"
