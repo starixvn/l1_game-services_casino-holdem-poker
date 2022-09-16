@@ -2009,15 +2009,6 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/got@^9.6.9":
-  version "9.6.12"
-  resolved "http://npm.lumigame.com/@types%2fgot/-/got-9.6.12.tgz#fd42a6e1f5f64cd6bb422279b08c30bb5a15a56f"
-  integrity sha512-X4pj/HGHbXVLqTpKjA2ahI4rV/nNBc9mGO2I/0CgAra+F2dKgMXnENv2SRpemScBzBAI4vMelIVYViQxlSE6xA==
-  dependencies:
-    "@types/node" "*"
-    "@types/tough-cookie" "*"
-    form-data "^2.5.0"
-
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "http://npm.lumigame.com/@types%2fgraceful-fs/-/graceful-fs-4.1.5.tgz#21ffba0d98da4350db64891f92a9e5db3cdb4e15"
@@ -2154,11 +2145,6 @@
   version "2.0.1"
   resolved "http://npm.lumigame.com/@types%2fstack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
-
-"@types/tough-cookie@*":
-  version "4.0.2"
-  resolved "http://npm.lumigame.com/@types%2ftough-cookie/-/tough-cookie-4.0.2.tgz#6286b4c7228d58ab7866d19716f3696e03a09397"
-  integrity sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==
 
 "@types/yargs-parser@*":
   version "21.0.0"
@@ -2640,11 +2626,6 @@ base64id@2.0.0, base64id@~2.0.0:
   version "2.0.0"
   resolved "http://npm.lumigame.com/base64id/-/base64id-2.0.0.tgz#2770ac6bc47d312af97a8bf9a634342e0cd25cb6"
   integrity sha512-lGe34o6EHj9y3Kts9R4ZYs/Gr+6N7MCaMlIFA3F1R2O5/m7K06AxfSeO5530PEERE6/WyEg3lsuyw4GHlPZHog==
-
-base64url@^3.0.1:
-  version "3.0.1"
-  resolved "http://npm.lumigame.com/base64url/-/base64url-3.0.1.tgz#6399d572e2bc3f90a9a8b22d5dbb0a32d33f788d"
-  integrity sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==
 
 base@^0.11.1:
   version "0.11.2"
@@ -4270,15 +4251,6 @@ forever-agent@~0.6.1:
   resolved "http://npm.lumigame.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
-form-data@^2.5.0:
-  version "2.5.1"
-  resolved "http://npm.lumigame.com/form-data/-/form-data-2.5.1.tgz#f2cbec57b5e59e23716e128fe44d4e5dd23895f4"
-  integrity sha512-m21N3WOmEEURgk6B9GLOE4RuWOFf28Lhh9qGYeNlGq4VDXUlJy2th2slBNU8Gp8EzloYZOibZJ7t5ecIrFSjVA==
-  dependencies:
-    asynckit "^0.4.0"
-    combined-stream "^1.0.6"
-    mime-types "^2.1.12"
-
 form-data@^3.0.0:
   version "3.0.1"
   resolved "http://npm.lumigame.com/form-data/-/form-data-3.0.1.tgz#ebd53791b78356a99af9a300d4282c4d5eb9755f"
@@ -5880,13 +5852,6 @@ jest@^26.6.3:
     import-local "^3.0.2"
     jest-cli "^26.6.3"
 
-jose@^1.27.1:
-  version "1.28.1"
-  resolved "http://npm.lumigame.com/jose/-/jose-1.28.1.tgz#34a0f851a534be59ffab82a6e8845f6874e8c128"
-  integrity sha512-6JK28rFu5ENp/yxMwM+iN7YeaInnY9B9Bggjkz5fuwLiJhbVrl2O4SJr65bdNBPl9y27fdC3Mymh+FVCvozLIg==
-  dependencies:
-    "@panva/asn1.js" "^1.0.0"
-
 jose@^2.0.5:
   version "2.0.5"
   resolved "http://npm.lumigame.com/jose/-/jose-2.0.5.tgz#29746a18d9fff7dcf9d5d2a6f62cb0c7cd27abd3"
@@ -7303,7 +7268,7 @@ object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
-oidc-token-hash@^5.0.0, oidc-token-hash@^5.0.1:
+oidc-token-hash@^5.0.1:
   version "5.0.1"
   resolved "http://npm.lumigame.com/oidc-token-hash/-/oidc-token-hash-5.0.1.tgz#ae6beec3ec20f0fd885e5400d175191d6e2f10c6"
   integrity sha512-EvoOtz6FIEBzE+9q253HsLCVRiK/0doEJ2HCvvqMQb3dHZrP3WlJKYtJ55CRTw4jmYomzH4wkPuCj/I3ZvpKxQ==
@@ -7351,21 +7316,6 @@ opener@^1.5.2:
   resolved "http://npm.lumigame.com/opener/-/opener-1.5.2.tgz#5d37e1f35077b9dcac4301372271afdeb2a13598"
   integrity sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==
 
-openid-client@^3.15.9:
-  version "3.15.10"
-  resolved "http://npm.lumigame.com/openid-client/-/openid-client-3.15.10.tgz#35978f629bb95fdeeb0ab7365aa4800ca0b6558e"
-  integrity sha512-C9r6/iVzNQ7aGp0krS5mFIY5nY8AH6ajYCH0Njns6AXy2fM3Khw/dY97QlaFJWW2QLhec6xfEk23LZw9EeX66Q==
-  dependencies:
-    "@types/got" "^9.6.9"
-    base64url "^3.0.1"
-    got "^9.6.0"
-    jose "^1.27.1"
-    lru-cache "^6.0.0"
-    make-error "^1.3.6"
-    object-hash "^2.0.1"
-    oidc-token-hash "^5.0.0"
-    p-any "^3.0.0"
-
 openid-client@^4.2.0:
   version "4.9.1"
   resolved "http://npm.lumigame.com/openid-client/-/openid-client-4.9.1.tgz#4f00a9d1566c0fa08f0dd5986cf0e6b1e5d14186"
@@ -7402,14 +7352,6 @@ optionator@^0.8.1:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
     word-wrap "~1.2.3"
-
-p-any@^3.0.0:
-  version "3.0.0"
-  resolved "http://npm.lumigame.com/p-any/-/p-any-3.0.0.tgz#79847aeed70b5d3a10ea625296c0c3d2e90a87b9"
-  integrity sha512-5rqbqfsRWNb0sukt0awwgJMlaep+8jV45S15SKKB34z4UuzjcofIfnriCBhWjZP2jbVtjt9yRl7buB6RlKsu9w==
-  dependencies:
-    p-cancelable "^2.0.0"
-    p-some "^5.0.0"
 
 p-cancelable@^1.0.0:
   version "1.1.0"
@@ -7516,14 +7458,6 @@ p-retry@^4.0.0:
   dependencies:
     "@types/retry" "0.12.0"
     retry "^0.13.1"
-
-p-some@^5.0.0:
-  version "5.0.0"
-  resolved "http://npm.lumigame.com/p-some/-/p-some-5.0.0.tgz#8b730c74b4fe5169d7264a240ad010b6ebc686a4"
-  integrity sha512-Js5XZxo6vHjB9NOYAzWDYAIyyiPvva0DWESAIWIK7uhSpGsyg5FwUPxipU/SOQx5x9EqhOh545d1jo6cVkitig==
-  dependencies:
-    aggregate-error "^3.0.0"
-    p-cancelable "^2.0.0"
 
 p-timeout@^3.1.0:
   version "3.2.0"
@@ -8367,21 +8301,20 @@ saxes@^5.0.1:
   dependencies:
     xmlchars "^2.2.0"
 
-sc-api-client@1.3.1:
-  version "1.3.1"
-  resolved "http://npm.lumigame.com/sc-api-client/-/sc-api-client-1.3.1.tgz#0ec3f5e0faaaf6d7bee2b631da9be95a5cae7e09"
-  integrity sha512-8PkFK8Mj/L6q0sVaoxw5HGK21ZNlcQDwvRYn3h4ymia+pp1vv3eGpamIMcVtmxPMlpUiRnFUxly+29arhmmkTw==
+sc-api-client@1.4.0:
+  version "1.4.0"
+  resolved "https://npm.lumigame.com/sc-api-client/-/sc-api-client-1.4.0.tgz#74642168b4a07c6a53c32e8d5175758bdd166620"
+  integrity sha512-Hp6kmKufWQM2KuCdog8pGkjEW5qqGaN1SzKq1jAI/jnrZsevAWMXLS3OU37GHt1ySgI1rEpDxjacOMfXfIfgng==
   dependencies:
     axios "^0.19.2"
-    openid-client "^3.15.9"
 
-sc-base-apis@1.17.2:
-  version "1.17.2"
-  resolved "http://npm.lumigame.com/sc-base-apis/-/sc-base-apis-1.17.2.tgz#aec6665f5a6fb9b4e8c64114c36263a3b92197f1"
-  integrity sha512-olBLiA7jRL8JZRmgI6EBaLkvaP7NlNT7E/T+P2BmgqR8JflIwB1MBuD5MQSnQa2x93S42O1FcPr7J7Zdw0T1wA==
+sc-base-apis@1.18.0:
+  version "1.18.0"
+  resolved "https://npm.lumigame.com/sc-base-apis/-/sc-base-apis-1.18.0.tgz#70cf9bae9e5366b2b46f04bb8df1b1fe2c45b70b"
+  integrity sha512-rAbnKrJ0PkiEy5nKIdGXEv6Hzytde+VYmHqTO751g4eW2ooOQJEa0K8IKd6p975BSLYu/JlTeCWyLOHvEXASrA==
   dependencies:
     moment "^2.27.0"
-    sc-api-client "1.3.1"
+    sc-api-client "1.4.0"
     sc-base-database "1.10.1"
     sc-common "1.8.1"
 
@@ -8404,10 +8337,10 @@ sc-common@1.8.1:
     mongoose-long "^0.3.0"
     numeral "^2.0.6"
 
-sc-game-base@3.0.6:
-  version "3.0.6"
-  resolved "http://npm.lumigame.com/sc-game-base/-/sc-game-base-3.0.6.tgz#2a1418ff36eb81f5d228552378b3d4845a36cbfe"
-  integrity sha512-yqeWmj+bvg6bzjad/GGb90Bm65prU/OzVtQCy0ivSD5n1NqD+HPw8CbEPGpY9uZ84ltnZwBkesCRtz4xZrzd8A==
+sc-game-base@3.1.0:
+  version "3.1.0"
+  resolved "https://npm.lumigame.com/sc-game-base/-/sc-game-base-3.1.0.tgz#f5dac651391c86658dfd99478f81d869ef9f4340"
+  integrity sha512-7bAyn0pP7aWqRAv5ose4ilayU9IzeeHpt8TjaisG8ljGJzPrrLHwg/WiKzspdQM0Sjs5js/h+4tltGdk+wAdqQ==
   dependencies:
     awilix "^4.3.1"
     axios "^0.20.0"
@@ -8421,21 +8354,21 @@ sc-game-base@3.0.6:
     mongoose "^5.9.25"
     morgan "^1.10.0"
     openid-client "^4.2.0"
-    sc-base-apis "1.17.2"
+    sc-base-apis "1.18.0"
     sc-base-database "1.10.1"
     sc-common "1.8.1"
     socket.io "^4.1.2"
     socket.io-msgpack-parser "^3.0.1"
     socket.io-prom-metrics "^1.0.3"
 
-sc-game-service-integration-utils@1.2.8-beta.0:
-  version "1.2.8-beta.0"
-  resolved "http://npm.lumigame.com/sc-game-service-integration-utils/-/sc-game-service-integration-utils-1.2.8-beta.0.tgz#78840bd2d791441a3c91c78a3b43407369a4ad4d"
-  integrity sha512-t3i1Y8f7G8iDj46FpN9ilaUYM3YJrEY3f4Zrx11PJBscWK2kLJHAfQ1cKg+7IUqGPKHebaRmNRcOmfmNaSbz5g==
+sc-game-service-integration-utils@1.3.2:
+  version "1.3.2"
+  resolved "https://npm.lumigame.com/sc-game-service-integration-utils/-/sc-game-service-integration-utils-1.3.2.tgz#b6179049647bc3b99d28a88d54f1a20a448162cd"
+  integrity sha512-0Et2gMd2Ytsf7vVSDnAEdzsqchOha62TIgyj17Tj/4lUAC2CbSRxJEKwo/TaAHv3rpM6cK+fxR+uHwKMhT9VVg==
   dependencies:
     lodash.matches "^4.6.0"
     nock "^13.2.1"
-    sc-game-base "3.0.6"
+    sc-game-base "3.1.0"
     socket.io-client "^4.4.0"
 
 semantic-release@^17.2.1:

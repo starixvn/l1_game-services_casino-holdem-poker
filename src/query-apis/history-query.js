@@ -31,33 +31,33 @@ export default class HistoryQuery {
           handId: round.settlementResult?.id,
           isQualified: round.settlementResult?.isQualified,
         };
-    const bets = [{
-      betChoice: "ante",
-      time: bet.time,
-      odds: bet.anteOdds,
-      stake: bet.ante,
-      win: bet.settlementResult.ante
-    }];
+    const bets = [
+      {
+        betChoice: 'ante',
+        time: bet.time,
+        odds: bet.anteOdds,
+        stake: bet.ante,
+        win: bet.settlementResult.ante,
+      },
+    ];
 
-    if(bet.aa > 0)
-    {
+    if (bet.aa > 0) {
       bets.push({
-        betChoice: "aa",
+        betChoice: 'aa',
         time: bet.time,
         odds: bet.aaOdds,
         stake: bet.aa,
-        win: bet.settlementResult.aa
+        win: bet.settlementResult.aa,
       });
     }
 
-    if(!bet.isFold)
-    {
+    if (!bet.isFold) {
       bets.push({
-        betChoice: "call",
+        betChoice: 'call',
         time: bet.callTime,
         odds: bet.callOdds,
         stake: bet.call,
-        win: bet.settlementResult.call
+        win: bet.settlementResult.call,
       });
     }
 
@@ -67,7 +67,7 @@ export default class HistoryQuery {
       communityCards: round.result.communityCards,
       bets,
       isFold: bet.isFold,
-      roundId: bet.phien,
+      roundId: bet.roundId,
       isSwappedOrHold: round.isSwappedOrHold,
       isPlayerWin: round.settlementResult
         ? compareCombination(round.settlementResult, bet.result)
@@ -80,15 +80,15 @@ export default class HistoryQuery {
       return {};
     }
 
-    const filter = { uid: player.UID, thanhtoan: true };
+    const filter = { uid: player.UID, paid: true };
     const numberOfSkippedBets = (page - 1) * pageSize;
     const total = await this.betsRepository.countDocuments(filter).exec();
     const betProjection = {
       _id: false,
       uid: false,
-      thanhtoan: false,
+      paid: false,
       siteId: false,
-      memberId: false,
+      playerId: false,
       __v: false,
       __archive: false,
     };
@@ -105,7 +105,7 @@ export default class HistoryQuery {
     if (bets && bets.length > 0) {
       betLogs = await Promise.all(
         bets.map(async (bet) => {
-          const round = await this.roundQuery.getOne(bet.phien, { _id: false });
+          const round = await this.roundQuery.getOne(bet.roundId, { _id: false });
           return {
             ...this.convertBet(bet),
             roundId: round.id,
@@ -127,11 +127,11 @@ export default class HistoryQuery {
     }
 
     const bet = await this.betsRepository
-      .findOne({ uid: player.UID, thanhtoan: true, phien: roundId })
+      .findOne({ uid: player.UID, paid: true, roundId })
       .lean()
       .exec();
     if (bet) {
-      const round = await this.roundQuery.getOne(bet.phien, { _id: false });
+      const round = await this.roundQuery.getOne(bet.roundId, { _id: false });
       return { ticketDetail: { ...this.convertTicketDetail(bet, round) } };
     } else {
       return {};
