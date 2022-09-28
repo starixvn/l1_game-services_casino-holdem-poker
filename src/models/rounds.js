@@ -11,11 +11,11 @@ const Schema = new mongoose.Schema({
   ended: { type: Boolean, default: false },
   uid: { type: String, required: true },
   name: { type: String, required: true },
-  exchangeRateId: { type: Number, require: true },
+  exchangeRateId: { type: Number, required: true },
   odds: { type: Object },
-  md5: { type: String, require: true },
-  encryptedMD5: {type: Object , require: true },
-  encryptedResult: { type: Object, require: true },
+  md5: { type: String, required: true },
+  encryptedMD5: { type: Object, required: true },
+  encryptedResult: { type: Object, required: true },
   isSwappedOrHold: { type: Boolean, default: false },
 });
 
