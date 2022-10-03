@@ -32,7 +32,7 @@ const schema = new mongoose.Schema({
   operatorId: { type: String, required: false },
   swapTime: { type: Date },
   holdTime: { type: Date },
-  roundId: { type: Number, default: 0 },
+  roundId: { type: Number, default: 0, required: true },
   paid: { type: Boolean, default: false },
 });
 

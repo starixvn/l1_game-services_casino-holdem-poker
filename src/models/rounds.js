@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const modelName = 'CasinoHoldemPoker_phien';
 
 const Schema = new mongoose.Schema({
-  id: { type: Number, default: 0 },
+  id: { type: Number, default: 0, required: true },
   result: { type: Object },
   settlementResult: { type: Object },
   roundStartTime: { type: Date },
