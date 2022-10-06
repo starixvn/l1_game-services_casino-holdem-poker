@@ -29,7 +29,7 @@ const schema = new mongoose.Schema({
   rate: { type: Number, required: true },
 
   playerId: { type: Number },
-  operatorId: { type: String, required: false },
+  operatorId: { type: String, required: true },
   swapTime: { type: Date },
   holdTime: { type: Date },
   roundId: { type: Number, default: 0, required: true },
