@@ -2,19 +2,19 @@ export default {
   hostingPort: 5000,
   apiSettings: {
     enabledApi: true,
-    apiUrl: 'http://l1_game_api_uat:5000',
-    authUrl: 'http://l1_auth_api_uat:5000',
+    apiUrl: 'http://l1_game_api_local_2:5000',
+    authUrl: 'http://l1_auth_api_local_2:5000',
     client: {
       id: 'game-server',
       secret: 'gameserver@20luminet&',
     },
     useAuthenticate: true,
+    requestTimeout: 10000,
     placeBetTimeout: 4000,
-    requestTimeout: 10000, // 10s
     enabledApiLogs: true,
   },
   authenticateSettings: {
-    url: 'http://l1_auth_api_uat:5000',
+    url: 'http://l1_auth_api_local_2:5000',
     id: 'game-services',
     secret: 'gameservices@20luminet&',
     requestTimeout: 10000,
@@ -22,7 +22,7 @@ export default {
     audiences: ['api', 'admin-api'],
   },
   userServiceSettings: {
-    url: 'http://l1_user_service_uat:5000',
+    url: 'http://l1_user_service_local_2:5000',
   },
   socketOptions: {
     pingInterval: 60 * 1000,
@@ -33,7 +33,7 @@ export default {
   },
   enabledLogs: true,
   database: {
-    url: 'mongodb://lmn_backend:LmnBackend%4022027@10.99.99.187:27201/?replicaSet=SabaUAT',
+    url: 'mongodb://lmn_backend:LmnBackend@10.10.50.12:39102,10.10.50.13:39102,10.10.50.14:39102/?replicaSet=L1pLocal&appName=CasinoHoldemPoker',
     options: {
       dbName: 'minigame',
       useNewUrlParser: true,
@@ -42,24 +42,22 @@ export default {
     },
   },
   sentry: {
-    sentryUrl: 'http://52368c4019044019885440599c180bda@10.2.190.51:9009/24',
+    sentryUrl: 'https://13f39b8359404ed5aec23655e64ccf78@sentry.lumigame.com/2',
     logIdentifier: 'casino-holdem-poker',
-    env: 'UAT',
+    env: 'LOCAL_2',
   },
   adminSecretKey: 'asWDEerfOIdgsdqRTFabvmgh',
   enableCorsWs: true,
   corsUrls: [
-    'http://uat.sabagame.com',
-    'https://uat.sabagame.com',
-    'http://uat-adm.sabagame.com',
-    'https://uat-adm.sabagame.com',
-    'http://uatm.sabagame.com',
-    'https://uatm.sabagame.com',
+    'http://localhost:7456',
+    'https://l1-games2.lumigame.com',
+    'https://l1-admin2.lumigame.com',
+    'http://localhost:7000',
+    'https://l1-m2.lumigame.com',
   ],
   metrics: {
     enable: true,
     secretKey: '6c1f0f28-70f2-46ae-b031-22624a6cd8df',
   },
-  roundMaxDurationInMinutes: 4,
-  enableMsgpackParser: true,
+  roundMaxDurationInMinutes: 5,
 };

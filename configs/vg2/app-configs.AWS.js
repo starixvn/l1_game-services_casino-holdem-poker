@@ -2,8 +2,8 @@ export default {
   hostingPort: 5000,
   apiSettings: {
     enabledApi: true,
-    apiUrl: 'http://l1_game_api_prod:5000',
-    authUrl: 'http://l1_auth_api_prod:5000',
+    apiUrl: 'http://l2_game_api_AWS:5000',
+    authUrl: 'http://l2_auth_api_AWS:5000',
     client: {
       id: 'game-server',
       secret: 'gameserver@20luminet&',
@@ -14,7 +14,7 @@ export default {
     enabledApiLogs: true,
   },
   authenticateSettings: {
-    url: 'http://l1_auth_api_prod:5000',
+    url: 'http://l2_auth_api_aws:5000',
     id: 'game-services',
     secret: 'gameservices@20luminet&',
     requestTimeout: 10000,
@@ -22,7 +22,7 @@ export default {
     audiences: ['api', 'admin-api'],
   },
   userServiceSettings: {
-    url: 'http://l1_user_service_prod:5000',
+    url: 'http://l2_user_service_aws:5000',
   },
   socketOptions: {
     pingInterval: 60 * 1000,
@@ -33,7 +33,7 @@ export default {
   },
   enabledLogs: true,
   database: {
-    url: 'mongodb://lmn_backend:M7K4ttH%2AtZ3ml%3F%29%7CA%5DjN4%3FLBhwF%266IO%3C@10.99.99.54:27101,10.99.99.53:27102/?replicaSet=SabaMain',
+    url: 'mongodb://lmn_backend:ilthODrRz8C4s2%5D%7B%7CLV%3Du%5D2vsf6o%5Ex0m@10.99.99.56:37101/?replicaSet=L2_Sabaaws&appName=CasinoHoldemPoker',
     options: {
       dbName: 'minigame',
       useNewUrlParser: true,
@@ -42,34 +42,16 @@ export default {
     },
   },
   sentry: {
-    sentryUrl: 'http://58fc00e79ab34a3bab04a79038760cb8@10.99.99.187:803/8',
+    sentryUrl: 'http://b3f44a40c9ca4d7c96d59da86f37e9b7@10.99.99.187:803/107',
     logIdentifier: 'casino-holdem-poker',
-    env: 'PROD',
+    env: 'AWS',
   },
   adminSecretKey: 'asWDEer4yGdgsdqR4uqmKQZgh',
   enableCorsWs: true,
-  corsUrls: [
-    'http://sabagame.com',
-    'http://www.sabagame.com',
-    'https://sabagame.com',
-    'https://www.sabagame.com',
-    'https://www.gamesaba.com',
-    'https://gamesaba.com',
-    'http://www.gamesaba.com',
-    'http://gamesaba.com',
-    'http://admg.sabagame.com',
-    'https://admg.sabagame.com',
-    'http://adm.sabagame.com',
-    'https://adm.sabagame.com',
-    'http://m.sabagame.com',
-    'https://m.sabagame.com',
-    'http://m.gamesaba.com',
-    'https://m.gamesaba.com',
-  ],
+  corsUrls: ['https://sc2-games.sportsfun.app', 'https://sc2-adm.sportsfun.app'],
   metrics: {
     enable: true,
-    secretKey: '30d15293-c7de-4c77-9293-b85d6c5bfe1a',
+    secretKey: '6c1f0f28-70f2-46ae-b031-22624a6cd8df',
   },
   roundMaxDurationInMinutes: 1440,
-  enableMsgpackParser: true,
 };

@@ -384,7 +384,7 @@ describe('Process bet queue test', () => {
       const player = {
         UID: 1,
         profile: { name: 'profile' },
-        session: { memberId: 123, siteId: 2 },
+        session: { playerId: 123, siteId: 2 },
       };
       const betTracks = {
         roundId: 1,
@@ -405,8 +405,7 @@ describe('Process bet queue test', () => {
         uid: player.UID,
         name: player.profile.name,
         operatorId: undefined,
-        partnerId: undefined,
-        phien: betTracks.roundId,
+        roundId: betTracks.roundId,
         playerId: 123,
         aa: betTracks.bets.aa,
         ante: betTracks.bets.ante,
@@ -414,7 +413,6 @@ describe('Process bet queue test', () => {
         bet: betTracks.bets.aa + betTracks.bets.ante,
         result: {},
         time: new Date(123456),
-        memberId: player.session.memberId,
         roundId: 1,
         siteId: player.session.siteId,
         rate: 1,
@@ -501,7 +499,7 @@ describe('Process bet queue test', () => {
   describe('handleSuccessCall', () => {
     it('should run correctly', async () => {
       // Arrange
-      const player = { profile: { name: 'a' }, session: { partnerId: '1W' } };
+      const player = { profile: { name: 'a' }, session: { operatorId: '1W' } };
       const betTracks = {
         roundId: 1,
         combinationResult: { player: { id: 3 } },
@@ -536,7 +534,7 @@ describe('Process bet queue test', () => {
       // Assert
       expect(process.updateBetTracksAfterCall).toHaveBeenCalledWith(player, 100);
       expect(betsRepository.update).toHaveBeenCalledWith(
-        { phien: betTracks.roundId },
+        { roundId: betTracks.roundId },
         {
           $inc: { call: 100, bet: 100 },
           result: betTracks.combinationResult.player,
@@ -554,7 +552,7 @@ describe('Process bet queue test', () => {
 
   describe('updateBetTracksAfterCall', () => {
     it('should run smoothly when bettrack.communityCardsGenerated exist.', async () => {
-      const player = { profile: { name: 'a' }, session: { partnerId: '1W' } };
+      const player = { profile: { name: 'a' }, session: { operatorId: '1W' } };
       const combinationResult = { id: 1 };
       const definition = {
         settle: jest.fn().mockReturnValue(combinationResult),
@@ -681,7 +679,7 @@ describe('Process bet queue test', () => {
 
         // Assert
         expect(process.betsRepository.update).toBeCalledWith(
-          { phien: 1 },
+          { roundId: 1 },
           {
             holdTime: mockDate,
             cards: [],
@@ -775,7 +773,7 @@ describe('Process bet queue test', () => {
 
         // Assert
         expect(process.betsRepository.update).toBeCalledWith(
-          { phien: 1 },
+          { roundId: 1 },
           {
             swapTime: mockDate,
             cards: [],

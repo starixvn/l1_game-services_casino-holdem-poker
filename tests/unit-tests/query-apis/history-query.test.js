@@ -47,14 +47,14 @@ describe('History query test', () => {
         other: 'a',
         time: new Date(123),
         callTime: new Date(123),
-        phien: 1
+        roundId: 1,
       };
 
       const round = {
         result: { dealer: [{ rank: 2 }], communityCards: [{ rank: 1 }] },
         settlementResult: { id: 1, cards: [{ rank: 2 }, { rank: 1 }], isQualified: false },
         other: 'b',
-        isSwappedOrHold: true
+        isSwappedOrHold: true,
       };
       const player = {
         cards: bet.cards,
@@ -68,26 +68,30 @@ describe('History query test', () => {
         isQualified: round.settlementResult?.isQualified,
       };
 
-      const bets = [{
-        betChoice: "ante",
-        time: bet.time,
-        odds: bet.anteOdds,
-        stake: bet.ante,
-        win: bet.settlementResult.ante
-      },{
-        betChoice: "aa",
-        time: bet.time,
-        odds: bet.aaOdds,
-        stake: bet.aa,
-        win: bet.settlementResult.aa
-      },{
-        betChoice: "call",
-        time: bet.callTime,
-        odds: bet.callOdds,
-        stake: bet.call,
-        win: bet.settlementResult.call
-      }];
-      
+      const bets = [
+        {
+          betChoice: 'ante',
+          time: bet.time,
+          odds: bet.anteOdds,
+          stake: bet.ante,
+          win: bet.settlementResult.ante,
+        },
+        {
+          betChoice: 'aa',
+          time: bet.time,
+          odds: bet.aaOdds,
+          stake: bet.aa,
+          win: bet.settlementResult.aa,
+        },
+        {
+          betChoice: 'call',
+          time: bet.callTime,
+          odds: bet.callOdds,
+          stake: bet.call,
+          win: bet.settlementResult.call,
+        },
+      ];
+
       const expected = {
         player,
         dealer,
@@ -96,7 +100,7 @@ describe('History query test', () => {
         isFold: bet.isFold,
         isPlayerWin: 0,
         roundId: 1,
-        isSwappedOrHold: true
+        isSwappedOrHold: true,
       };
       compareCombination.mockReturnValue(0);
 
@@ -122,31 +126,34 @@ describe('History query test', () => {
         other: 'a',
         time: new Date(123),
         callTime: new Date(123),
-        phien: 1
+        roundId: 1,
       };
       const round = {
         result: { dealer: [{ rank: 2 }], communityCards: [{ rank: 1 }] },
         other: 'b',
-        isSwappedOrHold: false
+        isSwappedOrHold: false,
       };
       const player = {
         cards: bet.cards,
         combination: bet.result.cards,
         handId: bet.result.id,
       };
-      const bets = [{
-        betChoice: "ante",
-        time: bet.time,
-        odds: bet.anteOdds,
-        stake: bet.ante,
-        win: bet.settlementResult.ante
-      },{
-        betChoice: "aa",
-        time: bet.time,
-        odds: bet.aaOdds,
-        stake: bet.aa,
-        win: bet.settlementResult.aa
-      }];
+      const bets = [
+        {
+          betChoice: 'ante',
+          time: bet.time,
+          odds: bet.anteOdds,
+          stake: bet.ante,
+          win: bet.settlementResult.ante,
+        },
+        {
+          betChoice: 'aa',
+          time: bet.time,
+          odds: bet.aaOdds,
+          stake: bet.aa,
+          win: bet.settlementResult.aa,
+        },
+      ];
       const expected = {
         player,
         dealer: {},
@@ -155,7 +162,7 @@ describe('History query test', () => {
         isFold: bet.isFold,
         isPlayerWin: -1,
         roundId: 1,
-        isSwappedOrHold: false
+        isSwappedOrHold: false,
       };
 
       // Act
@@ -196,7 +203,7 @@ describe('History query test', () => {
     });
 
     it('should return expected when bets length greater than 0', async () => {
-      const bet = { phien: 1, bet: 10 };
+      const bet = { roundId: 1, bet: 10 };
       const round = { id: 1, settlementResult: { id: 2, isQualified: true } };
       query.betsRepository = {
         countDocuments: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(1) }),
@@ -204,7 +211,7 @@ describe('History query test', () => {
           lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue([bet]) }),
         }),
       };
-      query.roundQuery = { getOne: jest.fn(bet.phien, { _id: false }).mockReturnValue(round) };
+      query.roundQuery = { getOne: jest.fn(bet.roundId, { _id: false }).mockReturnValue(round) };
       query.convertBet = jest.fn().mockReturnValue({ stake: bet.bet });
       compareCombination.mockReturnValue(0);
       const expected = {
@@ -232,7 +239,7 @@ describe('History query test', () => {
     });
 
     it('should return expected when bets length greater than 0', async () => {
-      const bet = { phien: 1, bet: 10 };
+      const bet = { roundId: 1, bet: 10 };
       const round = { id: 1 };
       query.betsRepository = {
         countDocuments: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(1) }),
@@ -240,7 +247,7 @@ describe('History query test', () => {
           lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue([bet]) }),
         }),
       };
-      query.roundQuery = { getOne: jest.fn(bet.phien, { _id: false }).mockReturnValue(round) };
+      query.roundQuery = { getOne: jest.fn(bet.roundId, { _id: false }).mockReturnValue(round) };
       query.convertBet = jest.fn().mockReturnValue({ stake: bet.bet });
       compareCombination.mockReturnValue(0);
       const expected = {
@@ -296,7 +303,7 @@ describe('History query test', () => {
 
     it('should return expected when bet has value', async () => {
       // Arrange
-      const bet = { phien: roundId };
+      const bet = { roundId: roundId };
       query.betsRepository = {
         findOne: jest.fn().mockReturnValue({
           lean: jest.fn().mockReturnValue({ exec: jest.fn().mockReturnValue(bet) }),

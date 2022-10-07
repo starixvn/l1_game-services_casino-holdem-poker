@@ -5,6 +5,9 @@ include:
   - project: "ci/repos-ci/pentagon_l1_casino_holdem_poker_service"
     ref: master
     file: "gitlab-ci.yml"
+  - project: "ci/repos-ci/pentagon_l2_casino_holdem_poker_service"
+    ref: master
+    file: "gitlab-ci-mixing.yml"
 
 .if-deploy-local: &if-deploy-local
   if: '$CI_COMMIT_TAG =~ /local/'
