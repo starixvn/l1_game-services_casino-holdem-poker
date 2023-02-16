@@ -47,13 +47,6 @@ export default {
     env: 'LOCAL-3',
   },
   adminSecretKey: 'asWDEerfOIdgsdqRTFabvmgh',
-  enableCorsWs: false,
-  corsUrls: [
-    'https://localhost:7456',
-    'https://localhost:7000',
-    'https://l1-games3.lumigame.com',
-    'https://l1-admin3.lumigame.com',
-  ],
   metrics: {
     enable: true,
     secretKey: '6c1f0f28-70f2-46ae-b031-22624a6cd8df',
