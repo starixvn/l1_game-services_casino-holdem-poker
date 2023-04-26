@@ -8,8 +8,7 @@ import {
     createGameConfig,
     createPartnerConfig,
 } from "sc-game-service-integration-utils";
-
-import configs from "../../../src/app-configs";
+import configs from "../../../src/app-configs.IGT";
 import RoundModel from "../../../src/models/rounds";
 import { currencyData, game, gameConfig, rounds } from "./test-data";
 

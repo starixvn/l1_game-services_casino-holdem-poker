@@ -43,7 +43,7 @@ function getCardIndex(rank, suit) {
 
 describe('Running 10000 rounds', () => {
   it.each([1, 2, 3])('Mode %d', (mode) => {
-    const totalRounds = 10000;
+    const totalRounds = 10000;                       
     const streaks = {
       dealer: {},
       player: {},

@@ -1,10 +1,9 @@
 import { Core, Table } from 'sc-game-base';
 import { initAPIStub, stubUserService } from 'sc-game-service-integration-utils';
-
-import appConfigs from '../../../src/app-configs';
+import appConfigs from '../../../src/app-configs.IGT';
+import ContainerRegistry from '../../../src/container-registry';
 import gameSettings from '../../../src/game-settings';
 import { generateResult, getSettleResult } from '../../../src/helpers/result-helper';
-import ContainerRegistry from '../../../src/container-registry';
 
 export const run = async () => {
   initAPIStub(appConfigs.apiSettings.apiUrl);
