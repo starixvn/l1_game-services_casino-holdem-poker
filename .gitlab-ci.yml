@@ -1,10 +1,70 @@
 variables:
   SMOKE_PRODUCT_NAME: casinoHoldem
-  ENABLE_NODEJS_INTEGRATION_TEST: 'true'
-  NODEJS_INTEGRATION_TEST_IMAGE_VERSION: hub.lumigame.com/docker-hub/library/node:18.1-alpine
-  NODEJS_INTEGRATION_TEST_DB_IMAGE_VERSION: hub.lumigame.com/docker-hub/library/mongo:4.4.8
 
 include:
-  - project: ci/core-cicd
-    ref: main
-    file: luminet.gitlab-ci.yml
+  - project: "ci/repos-ci/pentagon_l1_casino_holdem_poker_service"
+    ref: master
+    file: "gitlab-ci.yml"
+  - project: "ci/repos-ci/pentagon_l2_casino_holdem_poker_service"
+    ref: master
+    file: "gitlab-ci-mixing.yml"
+
+.if-deploy-local: &if-deploy-local
+  if: '$CI_COMMIT_TAG =~ /local/'
+
+.if-deploy-sit: &if-deploy-sit
+  if: '$CI_COMMIT_TAG =~ /sit/'
+
+.if-deploy-uat: &if-deploy-uat
+  if: '$CI_COMMIT_TAG =~ /uat/'
+
+.if-deploy-prod: &if-deploy-prod
+  if: '$CI_COMMIT_TAG =~ /prod/'
+
+integration-tests:
+  stage: test
+  tags:
+    - docker
+
+  services:
+    - name: registry.nexdev.net:5050/docker/database/mongo:4.4.8
+      alias: mongo
+      
+  image: registry.nexdev.net:5050/docker/node:14.15.1-slim
+  before_script:
+    - cp ./src/app-configs.js ./src/app-configs.original.js
+    - cp ./configs/app-configs.IGT.js ./src/app-configs.js
+    - npm set registry http://npm.lumigame.com
+    - yarn install
+    - npm run test-:-integration-:-setup-test-data
+    - nohup npm run test-:-integration-:-start-service &
+
+  script:
+    - npm run test-:-integration-:-start-test
+
+  rules:
+    - <<: *if-deploy-local
+      when: never
+    - <<: *if-deploy-sit
+      when: never
+    - <<: *if-deploy-uat
+      when: never
+    - <<: *if-deploy-prod
+      when: never
+    - when: always
+
+  artifacts:
+    when: always
+    paths:
+      - ./coverage
+    reports:
+      junit:
+        - junit.xml
+    expire_in: 1 day
+
+unit-test-js:
+ artifacts:
+   reports:
+     junit: coverage/*.xml
+     cobertura: coverage/cobertura-coverage.xml
+
