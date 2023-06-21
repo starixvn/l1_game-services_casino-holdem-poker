@@ -27,10 +27,10 @@ integration-tests:
     - docker
 
   services:
-    - name: registry.nexdev.net:5050/docker/database/mongo:4.4.8
+    - name: hub.lumigame.com/pentagon-base/mongo:4.4.8
       alias: mongo
       
-  image: registry.nexdev.net:5050/docker/node:14.15.1-slim
+  image: hub.lumigame.com/base/node:14.15.1-slim
   before_script:
     - cp ./src/app-configs.js ./src/app-configs.original.js
     - cp ./configs/app-configs.IGT.js ./src/app-configs.js
