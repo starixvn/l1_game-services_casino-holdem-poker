@@ -12,6 +12,33 @@ jest.mock('../../../src/helpers/result-helper');
 
 const publisher = new BaseEventPublishers();
 describe('Http Router test', () => {
+  const app = {
+    get: jest.fn(),
+    post: (url, authenticate, callBack) => {
+      callBack && callBack({}, { send: jest.fn() });
+    },
+    calledPost: false,
+  };
+  const appConfigs = {
+    apiSettings: {
+      authUrl: 'http://localhost',
+    },
+    authenticateSettings: {
+      audiences: [],
+    },
+  };
+  const logService = {};
+  const gameData = {};
+  const historyQuery = {};
+  const metricQuery = {};
+
+  let router;
+  beforeEach(() => {
+    // Arrange
+    jest.clearAllMocks();
+
+    router = new HttpRouter(appConfigs, gameData, historyQuery, metricQuery, logService);
+  });
   it('inherit TableHttpRouter', () => {
     // Act
     const router = new HttpRouter();
@@ -23,10 +50,11 @@ describe('Http Router test', () => {
   describe('init', () => {
     it('should run correct', () => {
       // Arrange
-      const router = new HttpRouter();
-      const app = { post: jest.fn() };
-      const fn = jest.fn();
-      router.handleSetResult = jest.fn().mockReturnValue(fn);
+      app.calledPost = false;
+      router.appConfigs = appConfigs;
+      TableHttpRouter.prototype.init = jest.fn();
+      router.handleVoidTicket = jest.fn();
+      router.handleSetResult = jest.fn();
       TableHttpRouter.prototype.init = jest.fn();
 
       // Act
@@ -34,7 +62,8 @@ describe('Http Router test', () => {
 
       // Assert
       expect(TableHttpRouter.prototype.init).toHaveBeenCalledWith(app);
-      expect(app.post).toHaveBeenCalledWith('/api/set-result', fn);
+      expect(router.handleSetResult).toHaveBeenCalled();
+      expect(router.handleVoidTicket).toHaveBeenCalled();
     });
   });
 
@@ -42,7 +71,7 @@ describe('Http Router test', () => {
     it('should send status 404 when env is UAT', () => {
       // Arrange
       const router = new HttpRouter();
-      router.appConfigs = { env: 'UAT' };
+      router.appConfigs = { sentry: { env: 'UAT' } };
       const res = { sendStatus: jest.fn() };
       const fn = router.handleSetResult();
       isQualified.mockReturnValue(false);
@@ -57,7 +86,7 @@ describe('Http Router test', () => {
     it('should run correctly when env is LOCAL', () => {
       // Arrange
       const router = new HttpRouter();
-      router.appConfigs = { env: 'LOCAL' };
+      router.appConfigs = { sentry: { env: 'LOCAL' } };
       const res = { send: jest.fn() };
       const req = {
         body: {
@@ -116,7 +145,7 @@ describe('Http Router test', () => {
 
       // Assert
       expect(router.gameData.resultFromAdmin).toStrictEqual(req.body);
-      expect(logger.logWarning).toHaveBeenCalledWith(
+      expect(logger.logError).toHaveBeenCalledWith(
         `Set result from api: ${JSON.stringify(router.gameData.resultFromAdmin)}`,
       );
     });
@@ -147,7 +176,7 @@ describe('Http Router test', () => {
       // Assert
       expect(router.gameData.ingame).toStrictEqual({});
       expect(gameNotifications.deleteOne).toHaveBeenCalled();
-      expect(logger.logWarning).toHaveBeenCalledWith(
+      expect(logger.logError).toHaveBeenCalledWith(
         `Void running ticket from api call for ${JSON.stringify('a')}`,
       );
       expect(publisher.publishToUser).toHaveBeenCalled();

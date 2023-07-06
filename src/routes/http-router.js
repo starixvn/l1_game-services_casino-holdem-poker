@@ -1,7 +1,8 @@
 import TableHttpRouter from 'sc-game-base/src/table/routers/table-http-router';
 import { logger } from 'sc-common';
 import { isQualified } from '../helpers/result-helper';
-import { gameNotifications } from "sc-base-database";
+import { gameNotifications } from 'sc-base-database';
+import { utils } from 'sc-common';
 
 export default class HttpRouter extends TableHttpRouter {
   constructor(
@@ -22,13 +23,27 @@ export default class HttpRouter extends TableHttpRouter {
   init(app) {
     super.init(app);
 
-    app.post('/api/set-result', this.handleSetResult());
-    app.post('/api/void-ticket', (_req, res) => this.handleVoidTicket(_req, res));
+    app.post(
+      '/api/set-result',
+      utils.authentication.useAuthenticate({
+        authUrl: this.appConfigs.apiSettings.authUrl,
+        audiences: this.appConfigs.authenticateSettings.audiences,
+      }),
+      this.handleSetResult(),
+    );
+    app.post(
+      '/api/void-ticket',
+      utils.authentication.useAuthenticate({
+        authUrl: this.appConfigs.apiSettings.authUrl,
+        audiences: this.appConfigs.authenticateSettings.audiences,
+      }),
+      (_req, res) => this.handleVoidTicket(_req, res),
+    );
   }
 
   handleSetResult() {
     return (req, res) => {
-      if (this.appConfigs.env === 'PRO' || this.appConfigs.env === 'UAT') {
+      if (this.appConfigs.sentry.env === 'PROD' || this.appConfigs.sentry.env === 'UAT') {
         res.sendStatus(404);
         return;
       }
@@ -38,7 +53,7 @@ export default class HttpRouter extends TableHttpRouter {
 
       const dealerResult = this.definition.settle(req.body.dealer.concat(req.body.communityCards));
 
-      logger.logWarning(`Set result from api: ${JSON.stringify(this.gameData.resultFromAdmin)}`);
+      logger.logError(`Set result from api: ${JSON.stringify(this.gameData.resultFromAdmin)}`);
 
       res.send({ playerResult, dealerResult, isQualified: isQualified(dealerResult) });
     };
@@ -55,7 +70,7 @@ export default class HttpRouter extends TableHttpRouter {
 
       delete this.gameData.ingame[Name];
       await gameNotifications.deleteOne({ uid: UserIdentify, gameId: this.definition.id });
-      logger.logWarning(`Void running ticket from api call for ${JSON.stringify(Name)}`);
+      logger.logError(`Void running ticket from api call for ${JSON.stringify(Name)}`);
       this.publisher.publishToUser(UserIdentify, { toLobby: true });
       res.send(true);
     } catch (error) {

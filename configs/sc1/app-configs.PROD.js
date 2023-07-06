@@ -42,7 +42,7 @@ export default {
     },
   },
   sentry: {
-    sentryUrl: 'http://58fc00e79ab34a3bab04a79038760cb8@10.99.99.187:803/8',
+    sentryUrl: 'http://58fc00e79ab34a3bab04a79038760cb8@10.2.189.50:9009/8',
     logIdentifier: 'casino-holdem-poker',
     env: 'PROD',
   },
