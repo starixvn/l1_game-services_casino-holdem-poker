@@ -1,5 +1,5 @@
 variables:
-  SMOKE_PRODUCT_NAME: casinoHoldem
+  SMOKE_PRODUCT_NAME: 39
 
 include:
   - project: "ci/repos-ci/pentagon_l1_casino_holdem_poker_service"
