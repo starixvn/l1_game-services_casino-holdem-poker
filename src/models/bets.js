@@ -28,7 +28,7 @@ const schema = new mongoose.Schema({
   currency: { type: String, required: true },
   rate: { type: Number, required: true },
 
-  playerId: { type: Number },
+  playerId: { type: String },
   operatorId: { type: String, required: true },
   swapTime: { type: Date },
   holdTime: { type: Date },
