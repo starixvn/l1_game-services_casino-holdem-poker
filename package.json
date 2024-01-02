@@ -5,9 +5,7 @@
   "main": "./src/app.js",
   "scripts": {
     "test": "jest --testPathPattern=tests/unit-tests/",
-    "test-:-integration-:-setup-test-data": "node --es-module-specifier-resolution=node ./tests/integration-tests/stubs/test-data-setup.js",
-    "test-:-integration-:-start-service": "node --es-module-specifier-resolution=node ./tests/integration-tests/game-service-setup/game-service-app.js",
-    "test-:-integration-:-start-test": "jest --testPathPattern=tests/integration-tests/  --detectOpenHandles --ci --reporters=default --reporters=jest-junit",
+    "integration-test": "jest --config ./jest.integration-test.config.cjs --testPathPattern=tests/integration-tests/ --ci --forceExit --runInBand",
     "test-coverage": "jest --collect-coverage --testPathPattern=tests/unit-tests/",
     "dev": "nodemon --es-module-specifier-resolution=node --watch ./src ./src/app.js",
     "debug": "nodemon --es-module-specifier-resolution=node --watch ./ --inspect ./src/app.js",
