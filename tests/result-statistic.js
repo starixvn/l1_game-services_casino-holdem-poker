@@ -1,7 +1,7 @@
 import { generateDecks, reGenerateDecks } from '../src/helpers/deck-helper';
 import { getSettleResult, compareCombination } from '../src/helpers/result-helper';
 
-function generateResult(randomMode) {
+export function generateResult(randomMode) {
   const result = {
     player: [],
     dealer: [],
@@ -27,7 +27,7 @@ function generateResult(randomMode) {
   };
 }
 
-function getSettlementResult(result) {
+export function getSettlementResult(result) {
   const combinationDealerResult = compareCombination(result.player, result.dealer);
 
   return {
@@ -37,7 +37,7 @@ function getSettlementResult(result) {
   };
 }
 
-function getCardIndex(rank, suit) {
+export function getCardIndex(rank, suit) {
   return rank * 4 + suit;
 }
 

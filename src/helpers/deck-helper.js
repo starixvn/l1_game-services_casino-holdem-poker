@@ -119,7 +119,7 @@ const shuffle7 = (arr) => {
   return shuffleCards2(arr, 2);
 };
 
-const randomModes = {
+export const randomModes = {
   1: [shuffle1, shuffle2, shuffle3],
   2: [shuffle4, shuffle5, shuffle6],
   3: [shuffle3, shuffle5, shuffle7],
