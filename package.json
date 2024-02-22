@@ -31,7 +31,7 @@
   },
   "resolutions": {
     "sc-game-base": "3.3.0",
-    "sc-base-apis": "1.18.3-beta.0",
+    "sc-base-apis": "1.18.2",
     "sc-base-database": "1.11.1"
   },
   "devDependencies": {
