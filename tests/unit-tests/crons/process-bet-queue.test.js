@@ -35,7 +35,10 @@ describe('Process bet queue test', () => {
     it('should logError when have error', async () => {
       // Arrange
       const error = new Error('error');
-      const process = new ProcessBetQueue({});
+      const process = new ProcessBetQueue({
+        gameData: { ingame: { player1: { betTracks: {} } } },
+        placeBetPublisher: { publishGameFailedBet: jest.fn() },
+      });
       const betTrack = { action: gameSettings.actions.deal };
       process.processDeal = jest.fn(() => {
         throw error;
@@ -43,7 +46,7 @@ describe('Process bet queue test', () => {
       process.logService = { logError: jest.fn() };
 
       // Act
-      await process.proceedBet({}, betTrack);
+      await process.proceedBet({ profile: { name: 'player1' } }, betTrack);
 
       // Assert
       expect(process.logService.logError).toHaveBeenCalledWith(error);
@@ -384,7 +387,7 @@ describe('Process bet queue test', () => {
       const player = {
         UID: 1,
         profile: { name: 'profile' },
-        session: { playerId: "123", siteId: 2 },
+        session: { playerId: '123', siteId: 2 },
       };
       const betTracks = {
         roundId: 1,
@@ -406,7 +409,7 @@ describe('Process bet queue test', () => {
         name: player.profile.name,
         operatorId: undefined,
         roundId: betTracks.roundId,
-        playerId: "123",
+        playerId: '123',
         aa: betTracks.bets.aa,
         ante: betTracks.bets.ante,
         cards: [],

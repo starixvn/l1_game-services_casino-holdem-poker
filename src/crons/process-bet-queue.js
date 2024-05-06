@@ -56,6 +56,11 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
           break;
       }
     } catch (e) {
+      this.gameData.ingame[player.profile.name].betTracks = {};
+      this.placeBetPublisher.publishGameFailedBet(player.UID, {
+        endBet: -1,
+        notice: { errorCode: helpers.noticeHelper.cannotPlaceBet },
+      });
       this.logService.logError(e);
     }
   }
