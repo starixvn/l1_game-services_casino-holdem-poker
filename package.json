@@ -27,12 +27,12 @@
     "random": "^3.0.6",
     "random-js": "^2.1.0",
     "sc-game-base": "3.3.0",
-    "sc-base-database": "1.10.1"
+    "sc-base-database": "1.11.3"
   },
   "resolutions": {
     "sc-game-base": "3.3.0",
     "sc-base-apis": "1.18.2",
-    "sc-base-database": "1.11.1"
+    "sc-base-database": "1.11.3"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -48,7 +48,7 @@
     "jest-junit": "^12.2.0",
     "jest-micro-auto-stub": "^1.0.6",
     "jest-sonar-reporter": "^2.0.0",
-    "sc-game-service-integration-utils": "1.3.3"
+    "sc-game-service-integration-utils": "1.3.9"
   },
   "husky": {
     "hooks": {
