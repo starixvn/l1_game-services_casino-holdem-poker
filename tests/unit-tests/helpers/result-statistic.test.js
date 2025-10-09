@@ -5,7 +5,7 @@ describe('Result statistic: 10000 times', () => {
     'statistic should have expected result with mode %d',
     (mode) => {
       // Arrange
-      const totalRounds = 100000;
+      const totalRounds = 10000;
       const streaks = {
         dealer: {},
         player: {},

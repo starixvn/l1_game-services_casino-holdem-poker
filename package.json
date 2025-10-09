@@ -32,7 +32,11 @@
   "resolutions": {
     "sc-game-base": "3.3.0",
     "sc-base-apis": "1.18.2",
-    "sc-base-database": "1.11.1"
+    "sc-base-database": "1.11.1",
+    "mongoose": "6.13.6",
+    "form-data": "4.0.4",
+    "sc-common": "2.0.0",
+    "socket.io-parser": "4.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

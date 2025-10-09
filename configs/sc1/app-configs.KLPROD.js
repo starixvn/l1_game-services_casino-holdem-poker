@@ -38,11 +38,11 @@ export default {
       dbName: 'minigame',
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      auto_reconnect: true,
     },
   },
   sentry: {
-    sentryUrl: 'http://58fc00e79ab34a3bab04a79038760cb8@sentry-scklprod-ovs.ops-klprod.gamora.prod/8',
+    sentryUrl:
+      'http://58fc00e79ab34a3bab04a79038760cb8@sentry-scklprod-ovs.ops-klprod.gamora.prod/8',
     logIdentifier: 'casino-holdem-poker',
     env: 'PROD',
   },

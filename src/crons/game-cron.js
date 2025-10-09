@@ -146,18 +146,23 @@ export default class GameCron extends Core.Crons.BaseGameCron {
       this.gameData.remainingTime--;
     }
 
-    if (this.gameData.remainingTime < 0) {
+    if (
+      this.gameData.remainingTime < 0 ||
+      (this.gameData.disabled && this.gameData.remainingTime === durations.wholeRound)
+    ) {
       this.gameData.remainingTime = durations.wholeRound;
 
       const expiredTime = moment.utc().subtract(appConfigs.roundMaxDurationInMinutes, 'minutes');
-      await Promise.all(
-        Object.values(this.gameData.ingame)
-          .filter(
-            (userBet) =>
-              userBet.betTracks && moment(userBet.betTracks.roundStartTime) < expiredTime,
-          )
-          .map((userBet) => this.settleGameRoundConsumer.settleRound(userBet.name, true)),
-      );
+      if (this.gameData.ingame) {
+        await Promise.all(
+          Object.values(this.gameData.ingame)
+            .filter(
+              (userBet) =>
+                userBet.betTracks && moment(userBet.betTracks.roundStartTime) < expiredTime,
+            )
+            .map((userBet) => this.settleGameRoundConsumer.settleRound(userBet.name, true)),
+        );
+      }
     }
   }
 }
